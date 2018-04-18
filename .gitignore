@@ -1,0 +1,10 @@
+.DS_Store
+.project
+6502_e
+6502_k
+6502_orig
+obj_dir
+vhd2vl
+vhd2vl-2.5
+vlt_dump.vcd
+archive
