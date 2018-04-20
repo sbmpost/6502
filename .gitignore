@@ -10,3 +10,5 @@ vlt_dump.vcd
 archive
 6502_k.txt
 a.out
+cpu.sublime-project
+cpu.sublime-workspace
