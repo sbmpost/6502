@@ -1,17 +1,10 @@
-// DESCRIPTION: Verilator Example: Top level main for invoking model
-//
-// Copyright 2003-2014 by Wilson Snyder. This program is free software; you can
-// redistribute it and/or modify it under the terms of either the GNU
-// Lesser General Public License Version 3 or the Perl Artistic License
-// Version 2.0.
-
-#include <verilated.h>		   // Defines common routines
-#include "Vcpu.h" // From Verilating "LogisimToplevelShell.v"
+#include <verilated.h>
+#include "Vcpu.h"
 #if VM_TRACE
-# include <verilated_vcd_c.h>	   // Trace file format header
+# include <verilated_vcd_c.h>
 #endif
 
-Vcpu *logisim;			// Instantiation of module
+Vcpu *cpu;
 
 vluint64_t main_time = 0;	// Current simulation time (64-bit unsigned)
 
@@ -21,69 +14,97 @@ double sc_time_stamp () {	// Called by $time in Verilog
 
 int main(int argc, char **argv, char **env) {
     if (0 && argc && argv && env) {}	// Prevent unused variable warnings
-    logisim = new Vcpu;		// Create instance of module
+    cpu = new Vcpu;
 
     Verilated::commandArgs(argc, argv);
     Verilated::debug(0);
 
-#if VM_TRACE			// If verilator was invoked with --trace
-    Verilated::traceEverOn(true);	// Verilator must compute traced signals
+#if VM_TRACE
+    Verilated::traceEverOn(true);
     VL_PRINTF("Enabling waves...\n");
     VerilatedVcdC* tfp = new VerilatedVcdC;
-    logisim->trace (tfp, 99);	// Trace 99 levels of hierarchy
-    tfp->open ("vlt_dump.vcd");	// Open the dump file
+    cpu->trace(tfp, 99);
+    tfp->open("vlt_dump.vcd");
 #endif
 
-    logisim->LOGISIM_CLOCK_TREE_0 = 0;
-    logisim->R = 0;
-    // logisim->passed = 0;
+    while (main_time < 100 && !Verilated::gotFinish()) {
+        if (main_time > 1 && (main_time % 2) == 0) {
+            cpu->CLK = 0x00;
+        }
 
-    while (main_time < 400 // && !logisim->passed
-	&& !Verilated::gotFinish()) {
+        if (main_time > 1 && (main_time % 2) == 1) {
+            cpu->CLK = 0x01;
+        }
 
-	if (main_time > 7 && (main_time % 2) == 0) {	// Toggle clock
-            logisim->LOGISIM_CLOCK_TREE_0 = 0x10;
-	}
-	if (main_time > 7 && (main_time % 2) == 1) {	// Toggle clock
-            logisim->LOGISIM_CLOCK_TREE_0 = 0x00;
-	}
+        if (main_time == 1) {
+            cpu->R = 0;
+        } else if (main_time == 0) {
+            cpu->R = 1;
+        }
+
+/*
+    	if (main_time > 7 && (main_time % 2) == 0) {	// Toggle clock
+            cpu->cpu_CLOCK_TREE_0 = 0x10;
+    	}
+    	if (main_time > 7 && (main_time % 2) == 1) {	// Toggle clock
+            cpu->cpu_CLOCK_TREE_0 = 0x00;
+    	}
         if (main_time > 7 && (main_time % 8) == 0) {
-            logisim->LOGISIM_CLOCK_TREE_0 = 0x14;
+            cpu->cpu_CLOCK_TREE_0 = 0x15;
         }
         if (main_time > 7 && (main_time % 8) == 1) {
-            logisim->LOGISIM_CLOCK_TREE_0 = 0x04;
+            cpu->cpu_CLOCK_TREE_0 = 0x04;
         }
 
-	if (main_time > 7) {
-            logisim->R = 0;
-	} else if (main_time == 0) {
-            logisim->R = 1;
-	}
+    	if (main_time > 7) {
+            cpu->R = 0;
+    	} else if (main_time == 0) {
+            cpu->R = 1;
+    	}
+*/
 
-	logisim->eval();		// Evaluate model
-#if VM_TRACE
-	if (tfp) tfp->dump (main_time);	// Create waveform trace for this timestamp
-#endif
-        
-	VL_PRINTF ("[%" VL_PRI64 "d] clk: %x rst: %x r_a: %x\n", // _%08x_%08x\n",
-          main_time,
-          logisim->LOGISIM_CLOCK_TREE_0,
-          logisim->R,
-          logisim->R_OUT
+    	cpu->eval();
+    #if VM_TRACE
+    	if (tfp) tfp->dump (main_time);
+    #endif
+            
+        if (cpu->CLK) {
+            VL_PRINTF ("[%" VL_PRI64 "d] clk: %x r: %x addr: %04x data: %x state: %x mode: %x op: %x\n",
+                main_time,
+                cpu->CLK,
+                cpu->R,
+                cpu->addr_bus,
+                cpu->data_bus,
+                cpu->curr_st,
+                cpu->op_amode,
+                cpu->op
+            );
+
+            if (cpu->curr_st == 0x20) {
+                VL_PRINTF("\n");
+            }
+        }
+/*    	VL_PRINTF ("[%" VL_PRI64 "d] clk: %x r: %x opc: %x amode: %x group: %x addr: %04x\n",
+            main_time,
+            cpu->CLK,
+            cpu->R,
+            cpu->opcode,
+            cpu->addr_mode,
+            cpu->group,
+            cpu->addr_bus
         );
-
-	// logisim->fastclk = !logisim->fastclk;
-	main_time++;		// Time passes...
+*/
+    	main_time++;
     }
 
-    logisim->final();
+    cpu->final();
 
 #if VM_TRACE
     if (tfp) tfp->close();
 #endif
 
 /*
-    if (!logisim->passed) {
+    if (!cpu->passed) {
 	VL_PRINTF ("A Test failed\n");
 	abort();
     } else {

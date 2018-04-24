@@ -1,59 +1,13 @@
-//==============================================================================
-//== Logisim goes FPGA automatic generated VHDL code                          ==
-//==                                                                          ==
-//==                                                                          ==
-//== Project   : 6502_k                                                       ==
-//== Component : Mem                                                          ==
-//==                                                                          ==
-//==============================================================================
-
 module MEMORY(
-  Address,
-  Clock,
-  DataIn,
-  OE,
-  Tick,
-  WE,
-  DataOut
+  input CLK,
+  input WE,
+  input[15:0] Address,
+  input[7:0] DataIn,
+  output reg[7:0] DataOut
 );
 
-input [15:0] Address;
-input Clock;
-input [7:0] DataIn;
-input OE;
-input Tick;
-input WE;
-output [7:0] DataOut;
-
-wire [15:0] Address;
-wire Clock;
-wire [7:0] DataIn;
-wire OE;
-wire Tick;
-wire WE;
-reg [7:0] DataOut;
-
-  //---------------------------------------------------------------------------
-  // Here all used signals are defined                                       --
-  //---------------------------------------------------------------------------
-  wire s_RAM_enable;
-  wire s_oe;
-  reg [7:0] s_ram_data_out;
-  wire s_we;
-  reg [15:0] s_Address_reg;
-  reg [7:0] s_DataInReg;
-  reg s_OEReg;
-  reg [1:0] s_TickDelayLine;
-  reg s_WEReg;
   reg [7:0] s_mem_contents[65535:0];
 
-  //---------------------------------------------------------------------------
-  // Here the control signals are defined                                    --
-  //---------------------------------------------------------------------------
-  assign s_RAM_enable = s_TickDelayLine[0];
-  assign s_oe = s_TickDelayLine[1] & s_OEReg;
-  assign s_we = s_TickDelayLine[0] & s_WEReg;
-  
   initial begin
       s_mem_contents[00] = {8'ha2};
       s_mem_contents[01] = {8'h07};
@@ -96,42 +50,39 @@ reg [7:0] DataOut;
       s_mem_contents[772] = {8'hff};
   end
 
-  //---------------------------------------------------------------------------
-  // Here the input registers are defined                                    --
-  //---------------------------------------------------------------------------
-  always @(posedge Clock) begin
-    if((Tick == 1'b 1)) begin
-      s_DataInReg <= DataIn;
-      s_Address_reg <= Address;
-      s_WEReg <= WE;
-      s_OEReg <= OE;
+  always @(posedge CLK) begin
+    if (WE) begin
+      s_mem_contents[Address] <= DataIn;
     end
+    DataOut <= s_mem_contents[Address];
   end
 
-  always @(posedge Clock) begin
-    s_TickDelayLine[0] <= Tick;
-    s_TickDelayLine[1] <= s_TickDelayLine[0];
+/*
+  reg [7:0] s_ram_data_out;
+  reg [15:0] s_Address_reg;
+  reg [7:0] s_DataInReg;
+  reg s_OEReg;
+  reg s_WEReg;
+
+  always @(posedge CLK) begin
+    s_DataInReg <= DataIn;
+    s_Address_reg <= Address;
+    s_WEReg <= WE;
+    s_OEReg <= OE;
   end
 
-  //---------------------------------------------------------------------------
-  // Here the actual memorie(s) is(are) defined                              --
-  //---------------------------------------------------------------------------
-  always @(posedge Clock) begin
-    if((s_RAM_enable == 1'b 1)) begin
-      if((s_we == 1'b 1)) begin
-        s_mem_contents[(s_Address_reg)] <= s_DataInReg;
-      end
-      s_ram_data_out <= s_mem_contents[(s_Address_reg)];
+  always @(posedge CLK) begin
+    if (s_WEReg) begin
+      s_mem_contents[s_Address_reg] <= s_DataInReg;
     end
+    s_ram_data_out <= s_mem_contents[s_Address_reg];
   end
 
-  //---------------------------------------------------------------------------
-  // Here the output register is defined                                     --
-  //---------------------------------------------------------------------------
-  always @(posedge Clock) begin
-    if((s_oe == 1'b 1)) begin
+  always @(posedge CLK) begin
+    if (s_OEReg) begin
       DataOut <= s_ram_data_out;
     end
   end
+*/
 
 endmodule
