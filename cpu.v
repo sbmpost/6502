@@ -7,57 +7,10 @@ module cpu(
   output addr_bus,
   output data_bus,
   output curr_st,
-  output increase,
+  output pc_inc,
   output op
   // output R_OUT
 );
-
-  reg[5:0] curr_st;
-  reg[7:0] curr_op;
-
-  wire[7:0] data_bus;
-  wire[15:0] addr_bus;
-
-  wire[7:0] op       = curr_st == st_new_op ? data_bus : curr_op;
-  wire[2:0] opcode   = op[7:5];
-  wire[2:0] op_amode = op[4:2];
-  wire[1:0] op_group = op[1:0];
-
-  wire increase =
-    curr_st == st_initial ||
-    curr_st == st_new_op || curr_st == st_load_reg ||
-    (curr_st == st_hi_byte && op_amode[bit_ab]);
-
-  pc pc_1(
-    .LO(8'b0),
-    .HI(8'b0),
-    .CI(1'b0),
-    .R(R),
-    .WR(1'b0),
-    .INC(increase),
-    .CLK(CLK),
-    .PC(addr_bus),
-    .CO()
-  );
-
-  MEMORY mem(
-    .CLK(CLK),
-    .WE(1'b0),
-    .Address(addr_bus),
-    .DataIn(0'b0),
-    .DataOut(data_bus)
-  );
-
-  wire alu_ci;
-
-  alu8 alu_1(
-    .A(8'b0),
-    .B(8'b0),
-    .CI(1'b0),
-    .OP(0'b0),
-    .CO(alu_ci),
-    .F()
-  );
 
   parameter bit_id = 2; // indexed (i)
   parameter bit_ab = 1; // absolute (a)
@@ -65,7 +18,7 @@ module cpu(
 
   //                       iax
   parameter zp_x_in   = 3'b000;
-  parameter immediate = 3'b010;
+  parameter imm       = 3'b010;
   parameter zp_y_in   = 3'b100;
   parameter zp        = 3'b001;
   parameter abs_y     = 3'b110;
@@ -82,8 +35,72 @@ module cpu(
   parameter st_carry_out  = 6'b010000;
   parameter st_load_reg   = 6'b100000;
 
-  wire[2:0] acc = immediate;
-  wire[2:0] imm = op_group == 2'b01 ? immediate : zp_x_in;
+  reg[5:0] curr_st;
+  reg[7:0] curr_op;
+  reg[7:0] lo_byte;
+
+  wire[7:0] data_bus;
+
+  wire[7:0] op       = curr_st == st_new_op ? data_bus : curr_op;
+  wire[2:0] opcode   = op[7:5];
+  wire[2:0] op_amode = op[4:2];
+  wire[1:0] op_group = op[1:0];
+
+  wire pc_inc =
+    curr_st == st_initial ||
+    curr_st == st_new_op ||
+    curr_st == st_load_reg ||
+    (curr_st == st_hi_byte && op_amode[bit_ab]);
+
+  wire[15:0] pc_out;
+
+  pc pc_1(
+    .LO(8'b0),
+    .HI(8'b0),
+    .CI(1'b0),
+    .R(R),
+    .WR(1'b0),
+    .INC(pc_inc),
+    .CLK(CLK),
+    .PC(pc_out),
+    .CO()
+  );
+
+  wire[2:0] immediate = op_group == 2'b01 ? imm : zp_x_in;
+
+  wire lo_addr_from_data_bus = op_amode == zp || op_amode == zp_y_in;
+  wire hi_addr_from_data_bus = op_amode[bit_ab] || op_amode == zp_y_in;
+
+  wire[7:0] lo_addr = lo_addr_from_data_bus ? data_bus : lo_byte;
+  wire[7:0] hi_addr = hi_addr_from_data_bus ? data_bus :
+    (curr_st == st_carry_out ? alu_out : 8'h00);
+
+  wire[15:0] addr_bus = (
+    (curr_st == st_lo_byte && lo_addr_from_data_bus) ||
+    curr_st == st_indirect ||
+    curr_st == st_hi_byte ||
+    curr_st == st_carry_out
+  ) ? {hi_addr, lo_addr} : pc_out;
+
+  MEMORY mem(
+    .CLK(CLK),
+    .WE(1'b0),
+    .Address(addr_bus),
+    .DataIn(0'b0),
+    .DataOut(data_bus)
+  );
+
+  wire alu_ci;
+  wire[7:0] alu_out;
+
+  alu8 alu_1(
+    .A(8'b0),
+    .B(8'b0),
+    .CI(1'b0),
+    .OP(0'b0),
+    .CO(alu_ci),
+    .F(alu_out)
+  );
 
   always @(posedge CLK or posedge R) begin
     if (R) begin
@@ -94,7 +111,7 @@ module cpu(
         st_initial: begin               curr_st <= st_new_op;
         end
         st_new_op: begin
-          if (op_amode == imm)          curr_st <= st_load_reg;
+          if (op_amode == immediate)    curr_st <= st_load_reg;
           else                          curr_st <= st_lo_byte;
         end
         st_lo_byte: begin
@@ -122,6 +139,7 @@ module cpu(
         curr_op <= data_bus;
       end
       st_lo_byte: begin
+        lo_byte <= data_bus;
       end
       st_indirect: begin
       end
