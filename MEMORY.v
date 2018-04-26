@@ -57,32 +57,4 @@ module MEMORY(
     DataOut <= s_mem_contents[Address];
   end
 
-/*
-  reg [7:0] s_ram_data_out;
-  reg [15:0] s_Address_reg;
-  reg [7:0] s_DataInReg;
-  reg s_OEReg;
-  reg s_WEReg;
-
-  always @(posedge CLK) begin
-    s_DataInReg <= DataIn;
-    s_Address_reg <= Address;
-    s_WEReg <= WE;
-    s_OEReg <= OE;
-  end
-
-  always @(posedge CLK) begin
-    if (s_WEReg) begin
-      s_mem_contents[s_Address_reg] <= s_DataInReg;
-    end
-    s_ram_data_out <= s_mem_contents[s_Address_reg];
-  end
-
-  always @(posedge CLK) begin
-    if (s_OEReg) begin
-      DataOut <= s_ram_data_out;
-    end
-  end
-*/
-
 endmodule
