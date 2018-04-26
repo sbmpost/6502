@@ -12,6 +12,23 @@ double sc_time_stamp () {	// Called by $time in Verilog
     return main_time;		// Note does conversion to real, to match SystemC
 }
 
+char * states[] = {"S00", "SOP", "SLO", "SIN", "SHI", "SCO", "SLR"};
+
+
+int indexOf(int state) {
+    int index = 0;
+    switch(state) {
+        case 1: index = 1; break;
+        case 2: index = 2; break;
+        case 4: index = 3; break;
+        case 8: index = 4; break;
+        case 16: index = 5; break;
+        case 32: index = 6; break;
+    }
+    return index;
+}
+
+
 int main(int argc, char **argv, char **env) {
     if (0 && argc && argv && env) {}	// Prevent unused variable warnings
     cpu = new Vcpu;
@@ -69,20 +86,32 @@ int main(int argc, char **argv, char **env) {
     #endif
             
         if (cpu->CLK) {
-            VL_PRINTF ("[%" VL_PRI64 "d] clk: %x r: %x addr: %04x data: %x state: %x mode: %x op: %x\n",
+/*
+            VL_PRINTF ("[%" VL_PRI64 "d] reg_a: %02x\n",
                 main_time,
-                cpu->CLK,
-                cpu->R,
+                cpu->reg_a
+            );
+
+*/
+///*      
+            VL_PRINTF ("[%" VL_PRI64 "d] addr: %04x data: %02x state: %s op: %02x alu_a: %02x lo: %02x alu: %02x reg_a: %02x\n",
+                main_time,
+//                cpu->R,
                 cpu->addr_bus,
                 cpu->data_bus,
-                cpu->curr_st,
-                cpu->op_amode,
-                cpu->op
+                states[indexOf(cpu->curr_st)],
+//                cpu->op_amode,
+                cpu->op,
+                cpu->alu_a,
+                cpu->lo_byte,
+                cpu->alu_out,
+                cpu->reg_a
             );
 
             if (cpu->curr_st == 0x20) {
                 VL_PRINTF("\n");
             }
+//*/      
         }
 /*    	VL_PRINTF ("[%" VL_PRI64 "d] clk: %x r: %x opc: %x amode: %x group: %x addr: %04x\n",
             main_time,
