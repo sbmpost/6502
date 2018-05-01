@@ -1,5 +1,6 @@
 .DS_Store
 .project
+.yosys_show_*
 6502_e
 6502_k
 6502_orig
@@ -12,3 +13,5 @@ archive
 a.out
 cpu.sublime-project
 cpu.sublime-workspace
+build
+Makefile.cpu
