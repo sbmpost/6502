@@ -1,7 +1,7 @@
 module cpu(
   input CLK,
-  input R,
-  output opcode,
+  input R,/*
+  output wire[2:0] opcode,
   output op_amode,
   output op_group,
   output addr_bus,
@@ -11,8 +11,8 @@ module cpu(
   output op,
   output alu_a,
   output lo_byte,
-  output alu_out,
-  output reg_a
+  output alu_out,*/
+  output reg[7:0] reg_a
 );
 
   parameter bit_id = 2; // indexed (i)
@@ -75,23 +75,40 @@ module cpu(
     .CO()
   );
 
+  wire[15:0] addr_bus;
   wire lo_addr_from_data_bus = op_amode == zp || op_amode == zp_y_in;
   wire hi_addr_from_data_bus = op_amode[bit_ab] || op_amode == zp_y_in;
-
   wire[7:0] hi_correction = data_bus + 1; // todo: should be reg?
-  wire[7:0] lo_addr = lo_addr_from_data_bus &&
-    curr_st == st_lo_byte ? data_bus : alu_out;
-  wire[7:0] hi_addr = hi_addr_from_data_bus &&
-    curr_st != st_lo_byte && curr_st != st_indirect ?
-    (curr_st == st_carry_out ? hi_correction : data_bus) : 8'h00;
 
-  wire[15:0] addr_bus =
-    (curr_st == st_lo_byte && lo_addr_from_data_bus) ||
-    curr_st == st_indirect ||
-    curr_st == st_hi_byte ||
-    curr_st == st_carry_out ?
-      (curr_st == st_hi_byte && hi_addr_from_data_bus && alu_cout ?
-        prev_addr : {hi_addr, lo_addr}) : pc_out;
+  // address bus
+  always @(*) begin
+    case (curr_st)
+      st_lo_byte: begin
+        if (lo_addr_from_data_bus)
+          addr_bus = { 8'h00, data_bus };
+        else
+          addr_bus = pc_out;
+      end
+      st_hi_byte: begin
+        if (hi_addr_from_data_bus)
+          if (alu_cout)
+            addr_bus = prev_addr;
+          else
+            addr_bus = { data_bus, alu_out };
+        else
+          addr_bus = { 8'h00, alu_out};
+      end
+      st_indirect: begin
+        addr_bus = { 8'h00, alu_out };
+      end
+      st_carry_out: begin
+        addr_bus = { hi_correction, alu_out };
+      end
+      default: begin
+        addr_bus = pc_out;
+      end
+    endcase
+  end
 
   MEMORY mem(
     .CLK(CLK),
@@ -108,15 +125,16 @@ module cpu(
   wire[7:0] alu_out; // todo: should be reg?
   wire[5:0] alu_op;
 
-  always @(curr_st) begin
+  // alu operation
+  always @(*) begin
     case (curr_st)
-      st_indirect: begin
-        alu_op = alu_op_lo_plus_index;
-      end
       st_hi_byte,
       st_carry_out: begin
         if (op_amode[bit_id]) alu_op = alu_op_lo_plus_index;
         else                  alu_op = alu_op_pass_lo_byte;
+      end
+      default: begin
+        alu_op = alu_op_lo_plus_index;
       end
     endcase
   end
@@ -165,6 +183,8 @@ module cpu(
         end
         st_load_reg: begin              curr_st <= st_new_op;
         end
+        default: begin
+        end
       endcase
   end
 
@@ -186,6 +206,8 @@ module cpu(
       end
       st_load_reg: begin
         reg_a <= data_bus;
+      end
+      default: begin
       end
     endcase
   end
