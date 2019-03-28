@@ -9,9 +9,7 @@ vhd2vl
 vhd2vl-2.5
 vlt_dump.vcd
 archive
-6502_k.txt
 a.out
 cpu.sublime-project
 cpu.sublime-workspace
 build
-Makefile.cpu

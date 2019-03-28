@@ -1,0 +1,166 @@
+I = X/Y
+R = A/I/1
+
+- A Fetch happens on state transition: S0 -> Clk/Fetch -> S1.
+- So at the end of S0, the address for fetch should be known. 
+
+RESET: PC = $0000
+
+S0: PC = $0001, OP = D = Fetch
+-------------------------------------------------------------------------------------------
+SOP: O = D, D = Fetch
+-------------------------------------------------------------------------------------------
+SLO: L = LO address = D, D = Fetch (uses PC or ADR with HI = 00)
+SIN: L = D, HI address = 00, LO address = L + 1 (indirect), D = Fetch 
+SHI: HI address = 00/D, LO address = L + I (index), D = Fetch
+SCO: HI address = D + carry out, D = Fetch, RES = R? (store)
+-------------------------------------------------------------------------------------------
+SLR: R/L = D = MEM[HI-LO address]  LD (Load/Transfer)
+SAL: RES? = L alu-op R             ALU 
+SW : MEM[HI-LO address]/A/I = ALU  WM/WA/WI (W)
+-------------------------------------------------------------------------------------------
+
+Instruction group: xxxxxxgg
+
+01 group (8 addr modes):
+
+-id.-ab.xy         => zp
+-id.-ab.-xy        => (zp,x)
+id.-ab.-xy         => (zp),y
+-id.ab.-xy         => imm
+// [-id.]ab.aci[.-xy] => ci
+(zpy+ab).aci       => ci
+
+10 group (6 addr modes):
+
+-id.-ab.-xy        => imm
+-id.ab.-xy         => acc
+
+* no indirect addr modes (unused bits)
+* no ABS,y mode (txs, tsx instead)
+* acc mode (+ txa, tax, dex, nop)
+
+00 group (5 addr modes + other instructions)
+-------------------------------------------------------------------------------------------
+
+MHI LCO | HI       rX  rY  | ALU A      PRV ADR | SRC      
+-------------      ---------------      --------------
+ 0   0  | 0         0   0  |   1         0   0  | PC
+ 0   1  | ALU       0   1  |   Y         0   1  | HL
+ 1   0  | MEM       1   0  |   X         1   0  | PC
+ 1   1  | ALU       1   1  |   A         1   1  | PR
+
+ S   | wO | wL | wR | PRV  | ADR  | INC |  MHI  | LCO | rX  | rY  |  MLO  |       AOP       |
+--------------------------------------------------------------------------------------------|
+ S0  | -  | -  | 0  |  0   |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
+
+ SOP | 1  | -  | 0  |  0   |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
+ SLO | 0  | 1  | 0  |  0   |zp+zpy|  0  |   0   |  0  |  -  |  -  |zp+zpy |        -        |
+ SIN | 0  | 1  | 0  |  0   |  1   |  0  |   0   |  0  |  0  |  0  |   0   |       L+R       |
+ SHI | 0  | 0  | 0  | ci   |  1   |  a  |ab+zpy |  0  |  x  | -x  |   0   | id: L+R, -id: L |
+ SCO | 0  | -  | 0  |  0   |  1   |  0  |   -   |  1  |  x  | -x  |   0   | id: L+R, -id: L |
+ SLR | -  | -  | 1  |  0   |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
+
+ Curr | 543210 | ID | AB | XY | ACI | 543210 | Next         
+----------------------------------------------------
+ S0   | 000000 | -  | -  | -  |  -  | 000001 | SOP
+
+ SOP  | 000001 | 0  | 1  | 0  |  -  | 100000 | SLR
+ SOP  | 000001 | -  | -  | -  |  -  | 000010 | SLO
+ SLO  | 000010 | 1  | 0  | 0  |  -  | 000100 | SIN
+ SLO  | 000010 | 0  | 0  | 1  |  -  | 100000 | SLR
+ SLO  | 000010 | -  | -  | -  |  -  | 001000 | SHI
+ SIN  | 000100 | -  | -  | -  |  -  | 001000 | SHI
+ SHI  | 001000 | -  | 1  | -  |  1  | 010000 | SCO
+ SHI  | 001000 | 1  | 0  | 0  |  1  | 010000 | SCO
+ SHI  | 001000 | -  | -  | -  |  -  | 100000 | SLR
+ SCO  | 010000 | -  | -  | -  |  -  | 100000 | SLR
+ SLR  | 100000 | -  | -  | -  |  -  | 000001 | SOP
+
+SOP: bit 0 = -4.-3.-2.-1.-0 + 5
+SLO: bit 1 = 0.-imm
+SIN: bit 2 = 1.zpy
+SHI: bit 3 = 1.-zp.-zpy + 2
+SCO: bit 4 = 3.ci
+SLR: bit 5 = 0.imm + 1.zp + 3.-ci + 4
+-------------------------------------------------------------------------------------------
+
+a2 07       => LDX #07 (x=7)
+a0 08       => LDY #08 (y=8)
+b9 ff 00    => LDA $00ff,y (y=8)
+b9 08 01    => LDA $0108,y (y=8)
+bd f0 01    => LDA $01f0,x (x=7)
+b5 30       => LDA $30,x (x=7)
+b5 40       => LDA $40,x (x=7)
+b5 ff       => LDA $ff,x (x=7), should access $0006
+ad 10 01    => LDA $0110   
+a5 37       => LDA $37
+a9 18       => LDA #18
+b1 1e fc 02 => LDA ($1e),y (y=8, $1e=fc, $1f=02), should access $0304
+
+ instr   id ab xy 
+7  6  5  4  3  2  1  0
+----------------------
+1  0  1  0  0! 0  1  0 => a2 IMM
+1  0  1  0  0! 0  0  0 => a0 IMM
+1  0  1  1  1  1  0  1 => bd ABS,x
+1  0  1  1  1  0  0  1 => b9 ABS,y
+1  0  1  1  1  1  0  1 => bd ABS,x
+1  0  1  1  0  1  0  1 => b5 ZP,x
+1  0  1  1  0  1  0  1 => b5 ZP,x
+1  0  1  1  0  1  0  1 => b5 ZP,x
+1  0  1  0  1  1  0  1 => ad ABS
+1  0  1  0  0  1  0  1 => a5 ZP
+1  0  1  0  1  0  0  1 => a9 IMM
+1  0  1  1  0  0  0  1 => b1 (ZP),y
+
+id ab xy  done amode
+------------------
+0  0  0   n    (ZP,x)
+0  1  0   n    IMM
+1  0  0   n    (ZP),y
+0  0  1   y    ZP
+1  1  0   y    ABS,y
+0  1  1   y    ABS
+1  0  1   y    ZP,x
+1  1  1   y    ABS,x
+-------------------------------------------------------------------------------------------
+
+TODOs:
+
+* Load x/y with 7/8
+* Update fsm to include zpy state
+* Finish zpy implementation
+* IMM and (ZP),y (2/3 days)
+* Fix (ZP),y should take into account ACI
+* Map 01, 10 instr groups to addr modes (1 day)
+/ Opcode to signals (instr decoder, ? days):
+- Implement instr group 01 and 10
+
+group independent, RR = {00: Y, 01: A, 10: X}
+100---RR = STY, STA, STX      : rR, wM
+101---RR = LDY, LDA, LDX      : rM, wR
+
+group 01:
+0xx---01 = ORA, AND, EOR, ADC : rM, rA, wA
+11x---01 = CMP, SBC           : rM, rA, wA (SBC)
+
+group 10:
+0xx---10 = ASL, ROL, LSR, ROR : rM, wM / wA
+11x---10 = DEC, INC           : rM, wM
+
+group 00:
+0xx---00 = ?, BIT, JMP, JMP()
+11R---00 = CPY, CPX           : rM, rR (R = {0: Y, 1: X})
+
+- Some instr read and write to mem, ASL for example (2/3 days)
+- P: Overflow/Equality/Carry <-> detect & status register (2/3 days)
+- Update FSM (AOP) for instr with addr modes (FSM too big?) (2/3 days) 
+- Estimated remaining time for instr with addr modes: 1-2 weeks
+- Idea: perhaps use ROM and/or microprogramming for the FSM
+
+- Flip ACI/ACO naming?
+- x -> xy in this doc?
+- specify wR logic & L+1
+- ci = (zpy+ab).aci, zpy+ab is also in table
+-------------------------------------------------------------------------------------------
