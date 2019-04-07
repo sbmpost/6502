@@ -1,26 +1,48 @@
-I = X/Y
-R = A/I/1
+Memory:
+--------------
+- A: 16 bit address bus pointing to a byte in MEM. A = HI|LO.
+- D: 8 bit data bus, the byte that A is currently pointing to.
 
-- A Fetch happens on state transition: S0 -> Clk/Fetch -> S1.
-- So at the end of S0, the address for fetch should be known. 
+Registers:
+--------------
+- PR: previous value of A
+- PC: 16 bit program counter
+- O: 8-bit, holds operation, internal
+- L: 8-bit, holds temporary data, internal 
+- X/Y: 8 bit, index registers
+- A: 8-bit, accumulator
 
-RESET: PC = $0000
+Abbreviations:
+--------------
+- I = X/Y
+- R = A/I/1
 
-S0: PC = $0001, OP = D = Fetch
--------------------------------------------------------------------------------------------
-SOP: O = D, D = Fetch
--------------------------------------------------------------------------------------------
-SLO: L = LO address = D, D = Fetch (uses PC or ADR with HI = 00)
-SIN: L = D, HI address = 00, LO address = L + 1 (indirect), D = Fetch 
-SHI: HI address = 00/D, LO address = L + I (index), D = Fetch
-SCO: HI address = D + carry out, D = Fetch, RES = R? (store)
--------------------------------------------------------------------------------------------
-SLR: R/L = D = MEM[HI-LO address]  LD (Load/Transfer)
-SAL: RES? = L alu-op R             ALU 
-SW : MEM[HI-LO address]/A/I = ALU  WM/WA/WI (W)
--------------------------------------------------------------------------------------------
+Steps needed to store bytes from memory into registers:
+-------------------------------------------------------
+- S0:                               A = $1234
+- S0->S1:        D = Fetch ($1234), A = $5678
+- S1->S2: X = D, D = Fetch ($5678), A = $9999
+- S2->S3: Y = D, D = Fetch ($9999), A = ...
 
-Instruction group: xxxxxxgg
+What happens in each state:
+-------------------------------------------------------
+
+  RESET: PC = $0000
+
+  S0: PC = $0001, OP = D = Fetch (A=PC)
+>>>
+  SOP: O = D, D = Fetch (A=PC, 1st byte after OP)
+  SLO: L = D, D = Fetch (A=PC, 2nd byte after OP, for zp+zpy: A=00|D)
+  SIN: L = D, D = Fetch (A=          00|L+1)
+  SHI:        D = Fetch (A=        D/00|L+I)
+  SCO:        D = Fetch (A=carry + D/00|L+I), RES = R? (store)
+>>>
+  SLR: R/L = D                         LD (Load/Transfer)
+  SAL: RES? = L alu-op R               ALU 
+  SW : MEM[HI-LO address]/A/I = ALU    WM/WA/WI (W)
+
+Instruction groups: xxxxxxgg
+----------------------------
 
 01 group (8 addr modes):
 
@@ -41,7 +63,6 @@ id.-ab.-xy         => (zp),y
 * acc mode (+ txa, tax, dex, nop)
 
 00 group (5 addr modes + other instructions)
--------------------------------------------------------------------------------------------
 
 MHI LCO | HI       rX  rY  | ALU A      PRV ADR | SRC      
 -------------      ---------------      --------------
@@ -114,16 +135,16 @@ b1 1e fc 02 => LDA ($1e),y (y=8, $1e=fc, $1f=02), should access $0304
 1  0  1  0  1  0  0  1 => a9 IMM
 1  0  1  1  0  0  0  1 => b1 (ZP),y
 
-id ab xy  done amode
+id ab xy  amode
 ------------------
-0  0  0   n    (ZP,x)
-0  1  0   n    IMM
-1  0  0   n    (ZP),y
-0  0  1   y    ZP
-1  1  0   y    ABS,y
-0  1  1   y    ABS
-1  0  1   y    ZP,x
-1  1  1   y    ABS,x
+0  0  0   (ZP,x)
+0  1  0   IMM
+1  0  0   (ZP),y
+0  0  1   ZP
+1  1  0   ABS,y
+0  1  1   ABS
+1  0  1   ZP,x
+1  1  1   ABS,x
 -------------------------------------------------------------------------------------------
 
 TODOs:
@@ -135,6 +156,7 @@ TODOs:
 * Fix (ZP),y should take into account ACI
 * Map 01, 10 instr groups to addr modes (1 day)
 / Opcode to signals (instr decoder, ? days):
+- Implement (ZP,x)
 - Implement instr group 01 and 10
 
 group independent, RR = {00: Y, 01: A, 10: X}
