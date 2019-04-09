@@ -1,13 +1,13 @@
 Memory:
 --------------
 - A: 16 bit address bus pointing to a byte in MEM. A = HI|LO.
-- D: 8 bit data bus, the byte that A is currently pointing to.
+- D: 8 bit data bus. It holds the byte that A is pointing to.
 
 Registers:
 --------------
-- PR: previous value of A
-- PC: 16 bit program counter
-- O: 8-bit, holds operation, internal
+- PR: 16 bit, prev value of A
+- PC: 16 bit, program counter
+- O: 8-bit, holds the operation, internal
 - L: 8-bit, holds temporary data, internal 
 - X/Y: 8 bit, index registers
 - A: 8-bit, accumulator
@@ -42,7 +42,7 @@ What happens in each state:
   SW : MEM[HI-LO address]/A/I = ALU    WM/WA/WI (W)
 
 Instruction groups: xxxxxxgg
-----------------------------
+-------------------------------------------------------
 
 01 group (8 addr modes):
 
@@ -63,6 +63,9 @@ id.-ab.-xy         => (zp),y
 * acc mode (+ txa, tax, dex, nop)
 
 00 group (5 addr modes + other instructions)
+
+Logic that implements a load and its addressing modes:
+-------------------------------------------------------
 
 MHI LCO | HI       rX  rY  | ALU A      PRV ADR | SRC      
 -------------      ---------------      --------------
@@ -156,7 +159,7 @@ TODOs:
 * Fix (ZP),y should take into account ACI
 * Map 01, 10 instr groups to addr modes (1 day)
 / Opcode to signals (instr decoder, ? days):
-- Implement (ZP,x)
+- Implement (ZP,x) addr mode
 - Implement instr group 01 and 10
 
 group independent, RR = {00: Y, 01: A, 10: X}
