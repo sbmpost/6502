@@ -1,45 +1,52 @@
 Memory:
 --------------
-- A: 16 bit address bus pointing to a byte in MEM. A = HI|LO.
-- D: 8 bit data bus. It holds the byte that A is pointing to.
+- HL: 16 bit address bus pointing to a byte in MEM.
+- D: 8 bit data bus. It holds the byte that HL is pointing to.
+- D can be seen as a register: the value changes on clock (CLK).
 
 Registers:
 --------------
-- PR: 16 bit, prev value of A
 - PC: 16 bit, program counter
+- PR: 16 bit, prev value of HL, internal
 - O: 8-bit, holds the operation, internal
 - L: 8-bit, holds temporary data, internal 
-- X/Y: 8 bit, index registers
+- X,Y: 8 bit, index registers
 - A: 8-bit, accumulator
 
 Abbreviations:
 --------------
-- I = X/Y
-- R = A/I/1
+- I = register X/Y
+- R = register A/I
+- Ri means R input
+- Ro means R output
 
 Steps needed to store bytes from memory into registers:
--------------------------------------------------------
-- S0:                               A = $1234
-- S0->S1:        D = Fetch ($1234), A = $5678
-- S1->S2: X = D, D = Fetch ($5678), A = $9999
-- S2->S3: Y = D, D = Fetch ($9999), A = ...
+---------------------------------------------------------
+- S0:                                       HL = $1234
+- S0--CLK-->S1:         Di = Fetch ($1234), HL = $5678
+- S1--CLK-->S2: X = Do, Di = Fetch ($5678), HL = $9999
+- S2--CLK-->S3: Y = Do, Di = Fetch ($9999), HL = ...
 
-What happens in each state:
--------------------------------------------------------
+What happens in each cpu state:
+---------------------------------------------------------
 
   RESET: PC = $0000
+  S0: PC = $0001, OP = Di = Fetch (HL=PC)
 
-  S0: PC = $0001, OP = D = Fetch (A=PC)
->>>
-  SOP: O = D, D = Fetch (A=PC, 1st byte after OP)
-  SLO: L = D, D = Fetch (A=PC, 2nd byte after OP, for zp+zpy: A=00|D)
-  SIN: L = D, D = Fetch (A=          00|L+1)
-  SHI:        D = Fetch (A=        D/00|L+I)
-  SCO:        D = Fetch (A=carry + D/00|L+I), RES = R? (store)
->>>
-  SLR: R/L = D                         LD (Load/Transfer)
-  SAL: RES? = L alu-op R               ALU 
-  SW : MEM[HI-LO address]/A/I = ALU    WM/WA/WI (W)
+>>> state S0 only runs once after a RESET <<<
+
+  SOP: Oi = Do, Di = Fetch (HL=PC, 1st byte after OP)
+  SLO: Li = Do, Di = Fetch (HL=PC, zp+zpy: HL=00|Do)
+  SIN: Li = Do, Di = Fetch (HL=           00|Lo+1)
+  SHI:          Di = Fetch (HL=        Do/00|Lo+I)
+  SCO:          Di = Fetch (HL=carry + Do/00|Lo+I), RES = R? (store)
+
+>>> memory address HL has been calculated <<<
+
+  SLR: Ri/Li = Do                                  LD (Load/Transfer)
+
+TODO (state alu)   SAL: RES? = Lo alu-op Ro        ALU 
+TODO (state write) SW : MEM[HL]/Ri = ALUo          WM/WR (W)
 
 Instruction groups: xxxxxxgg
 -------------------------------------------------------
@@ -64,26 +71,46 @@ id.-ab.-xy         => (zp),y
 
 00 group (5 addr modes + other instructions)
 
+* same as 10 group but without acc mode
+
 Logic that implements a load and its addressing modes:
 -------------------------------------------------------
 
-MHI LCO | HI       rX  rY  | ALU A      PRV ADR | SRC      
--------------      ---------------      --------------
- 0   0  | 0         0   0  |   1         0   0  | PC
- 0   1  | ALU       0   1  |   Y         0   1  | HL
- 1   0  | MEM       1   0  |   X         1   0  | PC
- 1   1  | ALU       1   1  |   A         1   1  | PR
+#cpu muxes:
 
- S   | wO | wL | wR | PRV  | ADR  | INC |  MHI  | LCO | rX  | rY  |  MLO  |       AOP       |
---------------------------------------------------------------------------------------------|
- S0  | -  | -  | 0  |  0   |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
+rX  rY  | ALU A      PRV ADR | SRC       MHI LCO | HI        MLO | LO         wO | OP  
+---------------      --------------      --------------      ----------      ---------
+ 0   0  |   1         0   0  | PC         0   0  | 0          0  | ALUo       1  | D
+ 0   1  |   Y         0   1  | HL         0   1  | D+1        1  | D          0  | O
+ 1   0  |   X         1   0  | PC         1   0  | D
+ 1   1  |   A         1   1  | PR         1   1  | D+1
 
- SOP | 1  | -  | 0  |  0   |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
- SLO | 0  | 1  | 0  |  0   |zp+zpy|  0  |   0   |  0  |  -  |  -  |zp+zpy |        -        |
- SIN | 0  | 1  | 0  |  0   |  1   |  0  |   0   |  0  |  0  |  0  |   0   |       L+R       |
- SHI | 0  | 0  | 0  | ci   |  1   |  a  |ab+zpy |  0  |  x  | -x  |   0   | id: L+R, -id: L |
- SCO | 0  | -  | 0  |  0   |  1   |  0  |   -   |  1  |  x  | -x  |   0   | id: L+R, -id: L |
- SLR | -  | -  | 1  |  0   |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
+#fsm:
+
+ S   | wO | wL | wR | PRV | ADR  | INC |  MHI  | LCO | rX  | rY  |  MLO  |       AOP       |
+-------------------------------------------------------------------------------------------|
+ S0  | -  | -  | 0  |  0  |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
+
+ SOP | 1  | -  | 0  |  0  |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
+ SLO | 0  | 1  | 0? |  0  |zp+zpy|  0  |   0   |  0  |  -  |  -  |zp+zpy |        -        |
+ SIN | 0  | 1  | 0  |  0  |  1   |  0  |   0   |  0  |  0  |  0  |   0   |      L+R/1      |
+ SHI | 0  | 0  | 0  |  ci |  1   |  a  |ab+zpy |  0  |  xy | -xy |   0   |id: L+R/1, -id: L|
+ SCO | 0  | -  | 0  |  0  |  1   |  0  |   -   |  1  |  xy | -xy |   0   |id: L+R/1, -id: L|
+ SLR | -  | -  | 1  |  0  |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
+
+TODO:
+ S   |  wX  |  wY  |  wA  | 
+---------------------------
+ S0  |
+ 
+ SOP |
+ SLO |zpy.Gg|zpy.gg|zpy.gG (why?) 
+ SIN |
+ SHI |
+ SCO |
+ SLR | LD.Gg| LD.gg| LD.gG
+
+#fsm next:
 
  Curr | 543210 | ID | AB | XY | ACI | 543210 | Next         
 ----------------------------------------------------
@@ -107,6 +134,12 @@ SIN: bit 2 = 1.zpy
 SHI: bit 3 = 1.-zp.-zpy + 2
 SCO: bit 4 = 3.ci
 SLR: bit 5 = 0.imm + 1.zp + 3.-ci + 4
+
+#fsm next signal (TODO):
+ 
+ - see instruction groups above
+ - ACC, LD, ALU, W:
+
 -------------------------------------------------------------------------------------------
 
 a2 07       => LDX #07 (x=7)
@@ -160,11 +193,55 @@ TODOs:
 * Map 01, 10 instr groups to addr modes (1 day)
 / Opcode to signals (instr decoder, ? days):
 - Implement (ZP,x) addr mode
+- Implement store instructions
 - Implement instr group 01 and 10
 
-group independent, RR = {00: Y, 01: A, 10: X}
-100---RR = STY, STA, STX      : rR, wM
-101---RR = LDY, LDA, LDX      : rM, wR
+0x0 = 0000  0x8 = 1000
+0x1 = 0001  0x9 = 1001
+0x2 = 0010  0xA = 1010
+0x3 = 0011  0xB = 1011
+0x4 = 0100  0xC = 1100
+0x5 = 0101  0xD = 1101
+0x6 = 0110  0xE = 1110
+0x7 = 0111  0xF = 1111 
+
+load/store are spread across groups with
+      gg = {00: Y, 01: A, 10: X}
+100aaagg = STY, STA, STX      : rR, wM
+101aaagg = LDY, LDA, LDX      : rM, wR
+
+load/store exceptions:
+------------------------------------
+
+10-01000 not a load/store
+10-10000 not a load/store
+10-11000 not a load/store
+
+abs,x we have, but what about ldx abs,x?
+
+for RR = 00, we only have 5 addr modes.
+The remaining 3 combinations are used to
+encode the following instructions:
+
+10010000 = BCC
+10110000 = BCS
+100-1000 = DEY,TYA
+101-1000 = CLV,TAY
+------------------------------------
+
+10-11110 not a load/store: no ABS,x 
+
+for RR = 10, we have 8 addr modes, but...
+
+10000010 nothing
+10100010 LDX IMM 
+10010110 STX ZP,!Y 
+10110110 LDX ZP,!Y 
+
+
+100-1010 = TXA,TXS
+101-1010 = TAX,TSX
+------------------------------------
 
 group 01:
 0xx---01 = ORA, AND, EOR, ADC : rM, rA, wA
@@ -185,7 +262,7 @@ group 00:
 - Idea: perhaps use ROM and/or microprogramming for the FSM
 
 - Flip ACI/ACO naming?
-- x -> xy in this doc?
+* x -> xy in this doc?
 - specify wR logic & L+1
 - ci = (zpy+ab).aci, zpy+ab is also in table
 -------------------------------------------------------------------------------------------

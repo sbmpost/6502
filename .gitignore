@@ -1,6 +1,7 @@
 .DS_Store
 .project
 .yosys_show_*
+.idea
 6502_e
 6502_k
 6502_orig
