@@ -12,6 +12,7 @@ Registers:
 - PR: 16 bit, prev value of HL, internal
 - O: 8-bit, holds the operation, internal
 - L: 8-bit, holds temporary data, internal
+- P: 8-bit, alu status register, internal
 - X,Y: 8 bit, index registers
 - A: 8-bit, accumulator
 
@@ -21,28 +22,42 @@ Abbreviations:
 - R = register A/I
 
 What happens in each cpu state:
------------------------------------------------------------------------------
-  RESET: HL = PC = PR = $0000
-   CLK:         D = MEM[HL], PR = HL
+-------------------------------------------------------------------------------
+  RST:  HL = PC = PR = $0000
+  CLK:          D = MEM[HL], PR = HL
 
-  SOP:  HL = PC (1st byte after OP)   |   example: LDA (ZP),Y
-   CLK:  O = D, D = MEM[HL], PR = HL  |   O = LDA, D = ZP
+* S0?
+
+  SOP:  HL = PC (1st byte after OP)   |  Example: LDA (ZP),Y
+  CLK1:  O = D, D = MEM[HL], PR = HL  |   O = LDA, D = ZP
   SLO:  HL = PC, ZP: 00|D             |  HL = 00|ZP
-   CLK:  L = D, D = MEM[HL], PR = HL  |   L = ZP, D = MEM[ZP]
+  CLK2:  L = D, D = MEM[HL], PR = HL  |   L = ZP, D = MEM[ZP]
   SIN:  HL =         00|L+1           |  HL = 00|ZP+1
-   CLK:  L = D, D = MEM[HL], PR = HL  |   L = MEM[ZP], D = MEM[00|ZP+1]
+  CLK3:  L = D, D = MEM[HL], PR = HL  |   L = MEM[ZP], D = MEM[00|ZP+1]
   SHI:  HL =       D/00|L+I           |  HL = MEM[00|ZP+1]|MEM[ZP]+I
-   CLK:         D = MEM[PR], PR = HL  |   D = MEM[MEM[00|ZP+1]|MEM[ZP]+I]
+  CLK4:         D = MEM[PR], PR = HL  |   D = MEM[MEM[00|ZP+1]|MEM[ZP]+I]
   SCO:  HL = carry+D/00|L+I           |  HL = MEM[00|carry+ZP+1]|MEM[ZP]+I
-   CLK:         D = MEM[HL], PR = HL  |   D = MEM[MEM[00|carry+ZP+1]|MEM[ZP+I]]
-  SLR:  HL = PC (the next OP)         |
-   CLK:  A = D, D = MEM[HL], PR = HL  |   A = D
+  CLK5:         D = MEM[HL], PR = HL  |   D = MEM[MEM[00|carry+ZP+1]|MEM[ZP+I]]
+*  SLR:  HL = PC (the next OP)         |
+  CLK6:  R = D, D = MEM[HL], PR = HL  |   A = D
 
-  SAL:  RES? = Lo alu-op Ro    ALU           <- TODO
-  SW :  MEM[HL]/Ri = ALUo      WM/WR (W)     <- TODO
+*  SAL:  F = Lo alu-op Ro  ALU/WM/WR <- TODO
+  CLK7:  MEM[HL]/R = F
+
+TODO: SLR => SWR => write register 
+TODO: SAL => SWF => write alu result 
+
+          instruction type                       states to go through
+-------------------------------------------------------------------------------
+LD: LOAD/PULL (M -> R)                |  SOP, SLO, SIN, SHI, SCO, SWR
+ST: STORE/PUSH (R -> M)               |  SOP, SLO, SIN, SHI, SCO, SWF
+ACC: LOGIC/ARITH/CMP (A,M -> A,P)     |  SOP, SLO, SIN, SHI, SCO, SWR, SWF
+R2R: SHIFT/INCR/DECR/TRANSF (R -> R)  |  SOP, SWF
+M2M: SHIFT/INCR/DECR (M -> M)         |  SOP, SLO, SIN, SHI, SCO, SWR, SWF
+FLG: SET/CLEAR FLAG (P)               |  SOP, SWR
 
 Instruction groups: xxxxxxgg
------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 01 group (8 addr modes):
 
@@ -67,7 +82,7 @@ id.-ab.-xy         => (zp),y
 * same as 10 group but without acc mode
 
 Logic that implements a load and its addressing modes:
------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 #cpu muxes:
 
@@ -93,17 +108,8 @@ rX  rY  | ALU A    PRV ADR | SRC     MHI LCO | HI      MLO | LO      wO | OP
 
 TODO: specify AOP in a seperate table
 
-TODO: specify wX, wY and wA
-
  S   |  wX  |  wY  |  wA  |
 ---------------------------
- S0  |
-
- SOP |
- SLO |zpy.Gg|zpy.gg|zpy.gG (why?)
- SIN |
- SHI |
- SCO |
  SLR | LD.Gg| LD.gg| LD.gG
 
 #fsm next:
@@ -134,22 +140,23 @@ SLR: bit 5 = 0.imm + 1.zp + 3.-ci + 4
 #fsm next signal (TODO):
 
  - see instruction groups above
- - ACC, LD, ALU, W:
+ - ACC, LD, ALU, W: explain/change
 
------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
-a2 07       => LDX #07 (x=7)
-a0 08       => LDY #08 (y=8)
-b9 ff 00    => LDA $00ff,y (y=8)
-b9 08 01    => LDA $0108,y (y=8)
-bd f0 01    => LDA $01f0,x (x=7)
-b5 30       => LDA $30,x (x=7)
-b5 40       => LDA $40,x (x=7)
-b5 ff       => LDA $ff,x (x=7), should access $0006
-ad 10 01    => LDA $0110
-a5 37       => LDA $37
-a9 18       => LDA #18
-b1 1e fc 02 => LDA ($1e),y (y=8, $1e=fc, $1f=02), should access $0304
+a2 07             => LDX #07 (x=7)
+a0 08             => LDY #08 (y=8)
+b9 ff 00          => LDA $00ff,y (y=8)
+b9 08 01          => LDA $0108,y (y=8)
+bd f0 01          => LDA $01f0,x (x=7)
+b5 30             => LDA $30,x (x=7)
+b5 40             => LDA $40,x (x=7)
+b5 ff             => LDA $ff,x (x=7), should access $0006
+ad 10 01          => LDA $0110
+a5 37             => LDA $37
+a9 18             => LDA #18
+b1 1e 00 00 fc 02 => LDA ($1e),y (y=8, $1e=fc, $1f=02), should access $0304
+00 99 08 01       => STA $0108,y (y=8)
 
  instr   id ab xy
 7  6  5  4  3  2  1  0
@@ -177,7 +184,7 @@ id ab xy  amode
 0  1  1   ABS
 1  0  1   ZP,x
 1  1  1   ABS,x
------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 TODOs:
 
@@ -189,7 +196,7 @@ TODOs:
 * Map 01, 10 instr groups to addr modes (1 day)
 / Opcode to signals (instr decoder, ? days):
 - Implement (ZP,x) addr mode
-- Implement store instructions
+/ Implement store instructions
 - Implement instr group 01 and 10
 
 0x0 = 0000  0x8 = 1000
@@ -261,4 +268,4 @@ group 00:
 * x -> xy in this doc
 - specify wR logic & L+1
 - ci = (zpy+ab).aci, zpy+ab is also in table
------------------------------------------------------------------------------
+-------------------------------------------------------------------------------

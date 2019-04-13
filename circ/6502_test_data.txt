@@ -3,5 +3,5 @@ a2 7 a0 8 b9 ff 0 b9
 8 1 bd f0 1 b5 30 b5
 40 b5 ff ad 10 1 a5 37
 a9 18 b1 1e 0 0 fc 2
-23*0 dd 15*0 ee 191*0 aa 8*0 bb
-230*0 cc 268*0 ff
+0 99 8 1 19*0 dd 15*0 ee
+191*0 aa 8*0 bb 230*0 cc 268*0 ff
