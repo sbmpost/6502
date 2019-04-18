@@ -6,8 +6,8 @@ module MEMORY(
   output reg[7:0] DataOut
 );
 
-//  reg [7:0] s_mem_contents[65535:0];
-  reg [7:0] s_mem_contents[1023:0];
+  reg [7:0] s_mem_contents[65535:0];
+//  reg [7:0] s_mem_contents[1023:0];
 
   initial begin
       s_mem_contents[00] = {8'ha2};

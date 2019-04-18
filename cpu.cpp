@@ -45,6 +45,8 @@ int main(int argc, char **argv, char **env) {
 #endif
 
     while (main_time < 100 && !Verilated::gotFinish()) {
+        cpu->eval();
+
         if (main_time > 1 && (main_time % 2) == 0) {
             cpu->CLK = 0x00;
         }
@@ -80,7 +82,6 @@ int main(int argc, char **argv, char **env) {
     	}
 */
 
-    	cpu->eval();
     #if VM_TRACE
     	if (tfp) tfp->dump (main_time);
     #endif
@@ -94,7 +95,7 @@ int main(int argc, char **argv, char **env) {
 
 */
 ///*      
-            VL_PRINTF ("[%" VL_PRI64 "d] addr: %04x data: %02x state: %s op: %02x alu_a: %02x lo: %02x alu: %02x reg_a: %02x\n",
+            VL_PRINTF ("[%" VL_PRI64 "d] addr: %04x data: %02x state: %s op: %02x alu_a: %02x lo: %02x alu_out: %02x reg_a: %02x\n",
                 main_time,
 //                cpu->R,
                 cpu->addr_bus,

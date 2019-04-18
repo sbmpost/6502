@@ -1,7 +1,7 @@
 module cpu(
   input CLK,
-  input R,/*
-  output wire[2:0] opcode,
+  input R,
+  output opcode,
   output op_amode,
   output op_group,
   output addr_bus,
@@ -11,8 +11,8 @@ module cpu(
   output op,
   output alu_a,
   output lo_byte,
-  output alu_out,*/
-  output reg[7:0] reg_a
+  output alu_out,
+  output reg_a
 );
 
   parameter bit_id = 2; // indexed (i)
@@ -75,12 +75,11 @@ module cpu(
     .CO()
   );
 
-  wire[15:0] addr_bus;
   wire lo_addr_from_data_bus = op_amode == zp || op_amode == zp_y_in;
   wire hi_addr_from_data_bus = op_amode[bit_ab] || op_amode == zp_y_in;
   wire[7:0] hi_correction = data_bus + 1; // todo: should be reg?
 
-  // address bus
+  reg[15:0] addr_bus;
   always @(*) begin
     case (curr_st)
       st_lo_byte: begin
@@ -94,6 +93,7 @@ module cpu(
           if (alu_cout)
             addr_bus = prev_addr;
           else
+            // addr_bus = { 8'h88, alu_out };
             addr_bus = { data_bus, alu_out };
         else
           addr_bus = { 8'h00, alu_out};
@@ -123,9 +123,8 @@ module cpu(
 
   wire alu_cout;
   wire[7:0] alu_out; // todo: should be reg?
-  wire[5:0] alu_op;
 
-  // alu operation
+  reg[5:0] alu_op;
   always @(*) begin
     case (curr_st)
       st_hi_byte,
