@@ -23,10 +23,8 @@ Abbreviations:
 
 What happens in each cpu state:
 -------------------------------------------------------------------------------
-  RST:  HL = PC = PR = $0000
+  S0:   HL = PC = PR = $0000 (state = S0 after RESET)
   CLK:          D = MEM[HL], PR = HL
-
-* S0?
 
   SOP:  HL = PC (1st byte after OP)   |  Example: LDA (ZP),Y
   CLK1:  O = D, D = MEM[HL], PR = HL  |   O = LDA, D = ZP
@@ -46,6 +44,25 @@ What happens in each cpu state:
 
 TODO: SLR => SWR => write register 
 TODO: SAL => SWF => write alu result 
+TODO: drop LD, ALU, W signals from fsm_next_signal
+TODO: add MEM (or REG) signal to fsm_next_signal
+
+----
+
+0x0 = 0000  0x8 = 1000
+0x1 = 0001  0x9 = 1001
+0x2 = 0010  0xA = 1010
+0x3 = 0011  0xB = 1011
+0x4 = 0100  0xC = 1100
+0x5 = 0101  0xD = 1101
+0x6 = 0110  0xE = 1110
+0x7 = 0111  0xF = 1111
+
+- OPC mostly determines the operation of the ALU (AOP)
+- OPC slightly determines which states to go through
+- fsm_next depends mostly on addressing mode and only slightly on instruction type
+- fsm_next_signal depends on addressing mode and the instruction group
+- fsm_next_signal needs OPC to distinguish between register only and memory instructions
 
           instruction type                       states to go through
 -------------------------------------------------------------------------------
@@ -198,15 +215,6 @@ TODOs:
 - Implement (ZP,x) addr mode
 / Implement store instructions
 - Implement instr group 01 and 10
-
-0x0 = 0000  0x8 = 1000
-0x1 = 0001  0x9 = 1001
-0x2 = 0010  0xA = 1010
-0x3 = 0011  0xB = 1011
-0x4 = 0100  0xC = 1100
-0x5 = 0101  0xD = 1101
-0x6 = 0110  0xE = 1110
-0x7 = 0111  0xF = 1111
 
 load/store are spread across groups with
       gg = {00: Y, 01: A, 10: X}
