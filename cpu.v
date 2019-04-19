@@ -52,7 +52,7 @@ module cpu(
   wire[2:0] opcode   = op[7:5];
   wire[2:0] op_amode = op[4:2];
   wire[1:0] op_group = op[1:0];
-  // todo: ld, alu, wr signals
+  // todo: M2R, R2R, MA2A, BR, CP, SH, IDM signals
   // todo: wX, wY, wA signals
 
   wire pc_inc =
@@ -77,7 +77,6 @@ module cpu(
 
   wire lo_addr_from_data_bus = op_amode == zp || op_amode == zp_y_in;
   wire hi_addr_from_data_bus = op_amode[bit_ab] || op_amode == zp_y_in;
-  wire[7:0] hi_correction = data_bus + 1; // todo: should be reg?
 
   reg[15:0] addr_bus;
   always @(*) begin
@@ -90,11 +89,7 @@ module cpu(
       end
       st_hi_byte: begin
         if (hi_addr_from_data_bus)
-          if (alu_cout)
-            addr_bus = prev_addr;
-          else
-            // addr_bus = { 8'h88, alu_out };
-            addr_bus = { data_bus, alu_out };
+          addr_bus = { data_bus, alu_out };
         else
           addr_bus = { 8'h00, alu_out};
       end
@@ -102,7 +97,7 @@ module cpu(
         addr_bus = { 8'h00, alu_out };
       end
       st_carry_out: begin
-        addr_bus = { hi_correction, alu_out };
+        addr_bus = { alu_out, prev_addr[7:0] };
       end
       default: begin
         addr_bus = pc_out;
@@ -122,7 +117,7 @@ module cpu(
   parameter alu_op_lo_plus_index = 6'h19;
 
   wire alu_cout;
-  wire[7:0] alu_out; // todo: should be reg?
+  wire[7:0] alu_out;
 
   reg[5:0] alu_op;
   always @(*) begin
@@ -138,7 +133,9 @@ module cpu(
     endcase
   end
 
-  wire[7:0] alu_a = curr_st == st_indirect ?
+  wire[7:0] alu_a =
+    curr_st == st_indirect ||
+    curr_st == st_carry_out ?
     8'h01 : (op_amode[bit_xy] ? reg_x : reg_y);
 
   alu8 alu_1(
@@ -200,6 +197,7 @@ module cpu(
         lo_byte <= data_bus;
       end
       st_hi_byte: begin
+        lo_byte <= data_bus;
       end
       st_carry_out: begin
       end
