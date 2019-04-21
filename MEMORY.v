@@ -42,6 +42,10 @@ module MEMORY(
       s_mem_contents[29] = {8'h00};
       s_mem_contents[30] = {8'hfc};
       s_mem_contents[31] = {8'h02};
+      s_mem_contents[32] = {8'h00};
+      s_mem_contents[33] = {8'h99};
+      s_mem_contents[34] = {8'h08};
+      s_mem_contents[35] = {8'h01};
 
       s_mem_contents[55] = {8'hdd};
       s_mem_contents[71] = {8'hee};

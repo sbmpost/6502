@@ -12,7 +12,7 @@ double sc_time_stamp () {	// Called by $time in Verilog
     return main_time;		// Note does conversion to real, to match SystemC
 }
 
-char * states[] = {"S00", "SOP", "SLO", "SIN", "SHI", "SCO", "SLR"};
+char * states[] = {"S00", "SOP", "SLO", "SIN", "SHI", "SCO", "SWR"};
 
 
 int indexOf(int state) {
@@ -44,7 +44,7 @@ int main(int argc, char **argv, char **env) {
     tfp->open("vlt_dump.vcd");
 #endif
 
-    while (main_time < 100 && !Verilated::gotFinish()) {
+    while (main_time < 113 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (main_time > 1 && (main_time % 2) == 0) {
@@ -95,7 +95,7 @@ int main(int argc, char **argv, char **env) {
 
 */
 ///*      
-            VL_PRINTF ("[%" VL_PRI64 "d] addr: %04x data: %02x state: %s op: %02x alu_a: %02x lo: %02x alu_out: %02x reg_a: %02x\n",
+            VL_PRINTF ("[%" VL_PRI64 "d] addr: %04x data: %02x state: %s op: %02x alu_a: %02x lo: %02x alu_out: %02x reg_x: %02x reg_y: %02x reg_a: %02x\n",
                 main_time,
 //                cpu->R,
                 cpu->addr_bus,
@@ -106,6 +106,8 @@ int main(int argc, char **argv, char **env) {
                 cpu->alu_a,
                 cpu->lo_byte,
                 cpu->alu_out,
+                cpu->reg_x,
+                cpu->reg_y,
                 cpu->reg_a
             );
 

@@ -106,31 +106,31 @@ Logic that implements a load and its addressing modes:
 
 #fsm:
 
- S   | wO | wL | wR | PRV | ADR  | INC |  MHI  | LCO |  MLO  | ACI |
--------------------------------------------------------------------|
- S0  | -  | -  | 0  |  0  |  0   |  1  |   -   |  -  |   -   |  -  |
+ S   | wO | wL | PRV | ADR  | INC | MHI  | LCO | MLO  | ACI | wP | MP |
+----------------------------------------------------------------------|
+ S0  | -  | -  |  0  |  0   |  1  |  -   |  -  |  -   |  -  | ?  | ?  |
 
- SOP | 1  | -  | 0  |  0  |  0   |  1  |   -   |  -  |   -   |  -  |
- SLO | 0  | 1  | 0  |  0  |zp+zpy|  0  |   0   |  0  |zp+zpy |  -  |
- SIN | 0  | 1  | 0  |  0  |  1   |  0  |   0   |  0  |   0   |  1  |
- SHI | 0  | 1  | 0  |  0  |  1   |  a  |ab+zpy |  0  |   0   |  0  |
- SCO | 0  | -  | 0  |  1  |  0   |  0  |   -   |  1  |   0   |  1  |
- SWR | -  | -  | 1  |  0  |  0   |  1  |   -   |  -  |   -   | OPC |
+ SOP | 1  | -  |  0  |  0   |  1  |  -   |  -  |  -   |  -  | 0  | -  |
+ SLO | 0  | 1  |  0  |zp+zpy|  0  |  0   |  0  |zp+zpy|  -  | 0  | -  |
+ SIN | 0  | 1  |  0  |  1   |  0  |  0   |  0  |  0   |  1  | 0  | -  |
+ SHI | 0  | 1  |  0  |  1   |  a  |ab+zpy|  0  |  0   |  0  | 0  | 1  |
+ SCO | 0  | -  |  1  |  0   |  0  |  -   |  1  |  0   |  1  | 0  | -  |
+ SWR | -  | -  |  0  |  0   |  1  |  -   |  -  |  -   | OPC | 1  | 0  |
 
- S   |  rX  |  rY  |   AOP   |
------------------------------|
- S0  |  -   |  -   |    -    |
+ S   |  rX  |  rY  | AOP  |
+--------------------------|
+ S0  |  -   |  -   |  -   |
 
- SOP |  -   |  -   |    -    |
- SLO |  -   |  -   |    -    |
- SIN |  0   |  0   |   ADD   |
- SHI |id.xy |id.-xy|   ADD   |
- SCO |  0   |  0   |   ADD   |
- SWR |  -   |  -   |   OPC   |
+ SOP |  -   |  -   |  -   |
+ SLO |  -   |  -   |  -   |
+ SIN |  0   |  0   | PLUS |
+ SHI |id.xy |id.-xy| PLUS |
+ SCO |  0   |  0   | PLUS |
+ SWR |  -   |  -   | OPC  |
 
- S   |  wX   |  wY   |  wA   |
------------------------------|
- SWR | LD.Gg | LD.gg | LD.gG |
+ S   |  wX  |  wY  |  wA  |
+--------------------------|
+ SWR |LD.Gg |LD.gg |LD.gG |
 
 #fsm next:
 
@@ -161,7 +161,7 @@ SWR: bit 5 = 0.imm + 1.zp + 3.-ci + 4
 
 - depends on instruction groups above
 - ACC?, R2R, M2R, MA2A, BR, CP, SH, IDM
-- these depend on instruction LO/HI 
+- these depend on instruction LO/HI
 
 -------------------------------------------------------------------------------
 
@@ -217,8 +217,8 @@ TODOs:
 * Map 01, 10 instr groups to addr modes (1 day)
 * Opcode to signals (instr decoder, ? days):
 - Implement (ZP,x) addr mode
-* SLR => SWR => write register 
-- Add SWF (write alu result) 
+* SLR => SWR => write register
+- Add SWF (write alu result)
 - Implement store instructions
 - Implement instr group 01 and 10
 
