@@ -20,6 +20,12 @@ Abbreviations:
 --------------
 - I = register X/Y
 - R = register A/I
+- F = result of ALU
+- AOP = ALU operation
+- P_n = negative set
+- P_v = overflow set
+- P_z = zero set
+- P_c = carry set
 
 What happens in each cpu state:
 -------------------------------------------------------------------------------
@@ -33,20 +39,14 @@ What happens in each cpu state:
   SIN:  HL =         00|L+1           |  HL = 00|ZP+1
   CLK3:  L = D, D = MEM[HL], PR = HL  |   L = MEM[ZP], D = MEM[00|ZP+1]
   SHI:  HL =       D/00|L+I           |  HL = MEM[00|ZP+1]|MEM[ZP]+I
-  CLK4:         D = MEM[PR], PR = HL  |   D = MEM[MEM[00|ZP+1]|MEM[ZP]+I]
-  SCO:  HL = carry+D/00|L+I           |  HL = MEM[00|carry+ZP+1]|MEM[ZP]+I
-  CLK5:         D = MEM[HL], PR = HL  |   D = MEM[MEM[00|carry+ZP+1]|MEM[ZP+I]]
-*  SLR:  HL = PC (the next OP)         |
+  CLK4:  L = D, D = MEM[HL], PR = HL  |   L = MEM[00|ZP+1], PR[7:0] = MEM[ZP]+I
+  SCO:  HL = L/00+carry|PR[7:0]       |  HL = MEM[00|ZP+1]+carry|MEM[ZP]+I
+  CLK5:         D = MEM[HL], PR = HL  |   D = MEM[MEM[00|ZP+1]+carry|MEM[ZP]+I]
+  SWR:  HL = PC (the next OP)         |
   CLK6:  R = D, D = MEM[HL], PR = HL  |   A = D
 
-*  SAL:  F = Lo alu-op Ro  ALU/WM/WR <- TODO
+  SWF:  F = L AOP R
   CLK7:  MEM[HL]/R = F
-
-TODO: SLR => SWR => write register 
-TODO: SAL => SWF => write alu result 
-TODO: drop LD, ALU, W signals from fsm_next_signal
-TODO: add MEM (or REG) signal to fsm_next_signal
-
 ----
 
 0x0 = 0000  0x8 = 1000
@@ -57,12 +57,6 @@ TODO: add MEM (or REG) signal to fsm_next_signal
 0x5 = 0101  0xD = 1101
 0x6 = 0110  0xE = 1110
 0x7 = 0111  0xF = 1111
-
-- OPC mostly determines the operation of the ALU (AOP)
-- OPC slightly determines which states to go through
-- fsm_next depends mostly on addressing mode and only slightly on instruction type
-- fsm_next_signal depends on addressing mode and the instruction group
-- fsm_next_signal needs OPC to distinguish between register only and memory instructions
 
           instruction type                       states to go through
 -------------------------------------------------------------------------------
@@ -82,8 +76,8 @@ Instruction groups: xxxxxxgg
 -id.-ab.-xy        => (zp,x)
 id.-ab.-xy         => (zp),y
 -id.ab.-xy         => imm
-// [-id.]ab.aci[.-xy] => ci
-(zpy+ab).aci       => ci
+// [-id.]ab.P_c[.-xy] => ci
+(zpy+ab).P_c       => ci
 
 10 group (6 addr modes):
 
@@ -103,61 +97,71 @@ Logic that implements a load and its addressing modes:
 
 #cpu muxes:
 
-rX  rY  | ALU A    PRV ADR | SRC     MHI LCO | HI      MLO | LO      wO | OP
----------------    --------------    --------------    ----------    --------
- 0   0  |   1       0   0  | PC       0   0  | 0        0  | ALUo    1  | D
- 0   1  |   Y       0   1  | HL       0   1  | D+1      1  | D       0  | O
- 1   0  |   X       1   0  | PC       1   0  | D
- 1   1  |   A       1   1  | PR       1   1  | D+1
+ rX  rY | ALU A    PRV ADR | SRC        MHI LCO | HI      MLO | LO      wO | OP
+ --------------    -------------        --------------    ----------    -------
+ 0   0  |   0       0   0  | PC          0   0  | 0        0  | ALUo    1  | D
+ 0   1  |   Y       0   1  | HL          0   1  | ALUo     1  | D       0  | O
+ 1   0  |   X       1   0  | H|PR[7:0]   1   0  | D
+ 1   1  |   A       1   1  | PR          1   1  | ALUo
 
 #fsm:
 
- S   | wO | wL | wR | PRV | ADR  | INC |  MHI  | LCO | rX  | rY  |  MLO  |       AOP       |
--------------------------------------------------------------------------------------------|
- S0  | -  | -  | 0  |  0  |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
+ S   | wO | wL | wR | PRV | ADR  | INC |  MHI  | LCO |  MLO  | ACI |
+-------------------------------------------------------------------|
+ S0  | -  | -  | 0  |  0  |  0   |  1  |   -   |  -  |   -   |  -  |
 
- SOP | 1  | -  | 0  |  0  |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
- SLO | 0  | 1  | 0? |  0  |zp+zpy|  0  |   0   |  0  |  -  |  -  |zp+zpy |        -        |
- SIN | 0  | 1  | 0  |  0  |  1   |  0  |   0   |  0  |  0  |  0  |   0   |      L+R/1      |
- SHI | 0  | 0  | 0  |  ci |  1   |  a  |ab+zpy |  0  |  xy | -xy |   0   |id: L+R/1, -id: L|
- SCO | 0  | -  | 0  |  0  |  1   |  0  |   -   |  1  |  xy | -xy |   0   |id: L+R/1, -id: L|
- SLR | -  | -  | 1  |  0  |  0   |  1  |   -   |  -  |  -  |  -  |   -   |        -        |
+ SOP | 1  | -  | 0  |  0  |  0   |  1  |   -   |  -  |   -   |  -  |
+ SLO | 0  | 1  | 0  |  0  |zp+zpy|  0  |   0   |  0  |zp+zpy |  -  |
+ SIN | 0  | 1  | 0  |  0  |  1   |  0  |   0   |  0  |   0   |  1  |
+ SHI | 0  | 1  | 0  |  0  |  1   |  a  |ab+zpy |  0  |   0   |  0  |
+ SCO | 0  | -  | 0  |  1  |  0   |  0  |   -   |  1  |   0   |  1  |
+ SWR | -  | -  | 1  |  0  |  0   |  1  |   -   |  -  |   -   | OPC |
 
-TODO: specify AOP in a seperate table
+ S   |  rX  |  rY  |   AOP   |
+-----------------------------|
+ S0  |  -   |  -   |    -    |
 
- S   |  wX  |  wY  |  wA  |
----------------------------
- SLR | LD.Gg| LD.gg| LD.gG
+ SOP |  -   |  -   |    -    |
+ SLO |  -   |  -   |    -    |
+ SIN |  0   |  0   |   ADD   |
+ SHI |id.xy |id.-xy|   ADD   |
+ SCO |  0   |  0   |   ADD   |
+ SWR |  -   |  -   |   OPC   |
+
+ S   |  wX   |  wY   |  wA   |
+-----------------------------|
+ SWR | LD.Gg | LD.gg | LD.gG |
 
 #fsm next:
 
- Curr | 543210 | ID | AB | XY | ACI | 543210 | Next
+ Curr | 543210 | ID | AB | XY | P_c | 543210 | Next
 ----------------------------------------------------
  S0   | 000000 | -  | -  | -  |  -  | 000001 | SOP
 
- SOP  | 000001 | 0  | 1  | 0  |  -  | 100000 | SLR
+ SOP  | 000001 | 0  | 1  | 0  |  -  | 100000 | SWR
  SOP  | 000001 | -  | -  | -  |  -  | 000010 | SLO
  SLO  | 000010 | 1  | 0  | 0  |  -  | 000100 | SIN
- SLO  | 000010 | 0  | 0  | 1  |  -  | 100000 | SLR
+ SLO  | 000010 | 0  | 0  | 1  |  -  | 100000 | SWR
  SLO  | 000010 | -  | -  | -  |  -  | 001000 | SHI
  SIN  | 000100 | -  | -  | -  |  -  | 001000 | SHI
  SHI  | 001000 | -  | 1  | -  |  1  | 010000 | SCO
  SHI  | 001000 | 1  | 0  | 0  |  1  | 010000 | SCO
- SHI  | 001000 | -  | -  | -  |  -  | 100000 | SLR
- SCO  | 010000 | -  | -  | -  |  -  | 100000 | SLR
- SLR  | 100000 | -  | -  | -  |  -  | 000001 | SOP
+ SHI  | 001000 | -  | -  | -  |  -  | 100000 | SWR
+ SCO  | 010000 | -  | -  | -  |  -  | 100000 | SWR
+ SWR  | 100000 | -  | -  | -  |  -  | 000001 | SOP
 
 SOP: bit 0 = -4.-3.-2.-1.-0 + 5
 SLO: bit 1 = 0.-imm
 SIN: bit 2 = 1.zpy
 SHI: bit 3 = 1.-zp.-zpy + 2
 SCO: bit 4 = 3.ci
-SLR: bit 5 = 0.imm + 1.zp + 3.-ci + 4
+SWR: bit 5 = 0.imm + 1.zp + 3.-ci + 4
 
 #fsm next signal (TODO):
 
- - see instruction groups above
- - ACC, LD, ALU, W: explain/change
+- depends on instruction groups above
+- ACC?, R2R, M2R, MA2A, BR, CP, SH, IDM
+- these depend on instruction LO/HI 
 
 -------------------------------------------------------------------------------
 
@@ -211,48 +215,15 @@ TODOs:
 * IMM and (ZP),y (2/3 days)
 * Fix (ZP),y should take into account ACI
 * Map 01, 10 instr groups to addr modes (1 day)
-/ Opcode to signals (instr decoder, ? days):
+* Opcode to signals (instr decoder, ? days):
 - Implement (ZP,x) addr mode
-/ Implement store instructions
+* SLR => SWR => write register 
+- Add SWF (write alu result) 
+- Implement store instructions
 - Implement instr group 01 and 10
 
 load/store are spread across groups with
-      gg = {00: Y, 01: A, 10: X}
-100aaagg = STY, STA, STX      : rR, wM
-101aaagg = LDY, LDA, LDX      : rM, wR
-
-load/store exceptions:
-------------------------------------
-
-10-01000 not a load/store
-10-10000 not a load/store
-10-11000 not a load/store
-
-abs,x we have, but what about ldx abs,x?
-
-for RR = 00, we only have 5 addr modes.
-The remaining 3 combinations are used to
-encode the following instructions:
-
-10010000 = BCC
-10110000 = BCS
-100-1000 = DEY,TYA
-101-1000 = CLV,TAY
-------------------------------------
-
-10-11110 not a load/store: no ABS,x
-
-for RR = 10, we have 8 addr modes, but...
-
-10000010 nothing
-10100010 LDX IMM
-10010110 STX ZP,!Y
-10110110 LDX ZP,!Y
-
-
-100-1010 = TXA,TXS
-101-1010 = TAX,TSX
-------------------------------------
+gg = {00: Y, 01: A, 10: X}
 
 group 01:
 0xx---01 = ORA, AND, EOR, ADC : rM, rA, wA
@@ -272,8 +243,8 @@ group 00:
 - Estimated remaining time for instr with addr modes: 1-2 weeks
 - Idea: perhaps use ROM and/or microprogramming for the FSM
 
-- Flip ACI/ACO naming
+* Flip ACI/ACO naming
 * x -> xy in this doc
-- specify wR logic & L+1
-- ci = (zpy+ab).aci, zpy+ab is also in table
+- fewer bits for AOP?
+- ci = (zpy+ab).P_c, zpy+ab is also in table
 -------------------------------------------------------------------------------
