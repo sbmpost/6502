@@ -1,0 +1,80 @@
+clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o cpu.o ../cpu.cpp
+clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o verilated.o /usr/local/Cellar/verilator/4.010/share/verilator/include/verilated.cpp
+/usr/bin/perl /usr/local/Cellar/verilator/4.010/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vcpu.cpp > Vcpu__ALLcls.cpp
+/usr/bin/perl /usr/local/Cellar/verilator/4.010/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vcpu__Syms.cpp > Vcpu__ALLsup.cpp
+clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o Vcpu__ALLcls.o Vcpu__ALLcls.cpp
+clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o Vcpu__ALLsup.o Vcpu__ALLsup.cpp
+      Archiving Vcpu__ALL.a ...
+ar r Vcpu__ALL.a Vcpu__ALLcls.o Vcpu__ALLsup.o
+ranlib Vcpu__ALL.a
+clang++    cpu.o verilated.o Vcpu__ALL.a    -o Vcpu -lm -lstdc++ 
+[3] addr: 0000 data: 00 state: S00 op: 00 alu_a: 00 lo: 00 alu_out: 00 reg_x: 00 reg_y: 00 reg_a: 00
+[5] addr: 0001 data: a2 state: SOP op: a2 alu_a: 00 lo: 00 alu_out: 00 reg_x: 00 reg_y: 00 reg_a: 00
+[7] addr: 0002 data: 07 state: SWR op: a2 alu_a: 00 lo: 00 alu_out: 00 reg_x: 00 reg_y: 00 reg_a: 00
+
+[9] addr: 0003 data: a0 state: SOP op: a0 alu_a: 00 lo: 00 alu_out: 00 reg_x: 07 reg_y: 00 reg_a: 00
+[11] addr: 0004 data: 08 state: SWR op: a0 alu_a: 00 lo: 00 alu_out: 00 reg_x: 07 reg_y: 00 reg_a: 00
+
+[13] addr: 0005 data: b9 state: SOP op: b9 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: 00
+[15] addr: 0006 data: ff state: SLO op: b9 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: 00
+[17] addr: 0007 data: 00 state: SHI op: b9 alu_a: 08 lo: ff alu_out: 07 reg_x: 07 reg_y: 08 reg_a: 00
+[19] addr: 0107 data: b9 state: SCO op: b9 alu_a: 00 lo: 00 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 00
+[21] addr: 0007 data: aa state: SWR op: b9 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: 00
+
+[23] addr: 0008 data: b9 state: SOP op: b9 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: aa
+[25] addr: 0009 data: 08 state: SLO op: b9 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: aa
+[27] addr: 0110 data: 01 state: SHI op: b9 alu_a: 08 lo: 08 alu_out: 10 reg_x: 07 reg_y: 08 reg_a: aa
+[29] addr: 000a data: bb state: SWR op: b9 alu_a: 08 lo: 01 alu_out: 09 reg_x: 07 reg_y: 08 reg_a: aa
+
+[31] addr: 000b data: bd state: SOP op: bd alu_a: 07 lo: 01 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: bb
+[33] addr: 000c data: f0 state: SLO op: bd alu_a: 07 lo: 01 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: bb
+[35] addr: 01f7 data: 01 state: SHI op: bd alu_a: 07 lo: f0 alu_out: f7 reg_x: 07 reg_y: 08 reg_a: bb
+[37] addr: 000d data: cc state: SWR op: bd alu_a: 07 lo: 01 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: bb
+
+[39] addr: 000e data: b5 state: SOP op: b5 alu_a: 07 lo: 01 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: cc
+[41] addr: 000f data: 30 state: SLO op: b5 alu_a: 07 lo: 01 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: cc
+[43] addr: 0037 data: b5 state: SHI op: b5 alu_a: 07 lo: 30 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: cc
+[45] addr: 000f data: dd state: SWR op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: cc
+
+[47] addr: 0010 data: b5 state: SOP op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: dd
+[49] addr: 0011 data: 40 state: SLO op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: dd
+[51] addr: 0047 data: b5 state: SHI op: b5 alu_a: 07 lo: 40 alu_out: 47 reg_x: 07 reg_y: 08 reg_a: dd
+[53] addr: 0011 data: ee state: SWR op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: dd
+
+[55] addr: 0012 data: b5 state: SOP op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: ee
+[57] addr: 0013 data: ff state: SLO op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: ee
+[59] addr: 0006 data: ad state: SHI op: b5 alu_a: 07 lo: ff alu_out: 06 reg_x: 07 reg_y: 08 reg_a: ee
+[61] addr: 0013 data: 00 state: SWR op: b5 alu_a: 07 lo: ad alu_out: b4 reg_x: 07 reg_y: 08 reg_a: ee
+
+[63] addr: 0014 data: ad state: SOP op: ad alu_a: 00 lo: ad alu_out: ad reg_x: 07 reg_y: 08 reg_a: 00
+[65] addr: 0015 data: 10 state: SLO op: ad alu_a: 00 lo: ad alu_out: ad reg_x: 07 reg_y: 08 reg_a: 00
+[67] addr: 0110 data: 01 state: SHI op: ad alu_a: 00 lo: 10 alu_out: 10 reg_x: 07 reg_y: 08 reg_a: 00
+[69] addr: 0016 data: bb state: SWR op: ad alu_a: 00 lo: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 00
+
+[71] addr: 0017 data: a5 state: SOP op: a5 alu_a: 00 lo: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: bb
+[73] addr: 0037 data: 37 state: SLO op: a5 alu_a: 00 lo: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: bb
+[75] addr: 0018 data: dd state: SWR op: a5 alu_a: 00 lo: 37 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: bb
+
+[77] addr: 0019 data: a9 state: SOP op: a9 alu_a: 00 lo: 37 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: dd
+[79] addr: 001a data: 18 state: SWR op: a9 alu_a: 00 lo: 37 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: dd
+
+[81] addr: 001b data: b1 state: SOP op: b1 alu_a: 08 lo: 37 alu_out: 3f reg_x: 07 reg_y: 08 reg_a: 18
+[83] addr: 001e data: 1e state: SLO op: b1 alu_a: 08 lo: 37 alu_out: 3f reg_x: 07 reg_y: 08 reg_a: 18
+[85] addr: 001f data: fc state: SIN op: b1 alu_a: 00 lo: 1e alu_out: 1f reg_x: 07 reg_y: 08 reg_a: 18
+[87] addr: 0204 data: 02 state: SHI op: b1 alu_a: 08 lo: fc alu_out: 04 reg_x: 07 reg_y: 08 reg_a: 18
+[89] addr: 0304 data: 00 state: SCO op: b1 alu_a: 00 lo: 02 alu_out: 03 reg_x: 07 reg_y: 08 reg_a: 18
+[91] addr: 001c data: ff state: SWR op: b1 alu_a: 08 lo: 02 alu_out: 0a reg_x: 07 reg_y: 08 reg_a: 18
+
+[93] addr: 001d data: 00 state: SOP op: 00 alu_a: 00 lo: 02 alu_out: 02 reg_x: 07 reg_y: 08 reg_a: ff
+[95] addr: 001e data: 00 state: SWR op: 00 alu_a: 00 lo: 02 alu_out: 02 reg_x: 07 reg_y: 08 reg_a: ff
+
+[97] addr: 001f data: fc state: SOP op: fc alu_a: 07 lo: 02 alu_out: 09 reg_x: 07 reg_y: 08 reg_a: ff
+[99] addr: 0020 data: 02 state: SLO op: fc alu_a: 07 lo: 02 alu_out: 09 reg_x: 07 reg_y: 08 reg_a: ff
+[101] addr: 0009 data: 00 state: SHI op: fc alu_a: 07 lo: 02 alu_out: 09 reg_x: 07 reg_y: 08 reg_a: ff
+[103] addr: 0021 data: 01 state: SWR op: fc alu_a: 07 lo: 00 alu_out: 07 reg_x: 07 reg_y: 08 reg_a: ff
+
+[105] addr: 0022 data: 99 state: SOP op: 99 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: ff
+[107] addr: 0023 data: 08 state: SLO op: 99 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: ff
+[109] addr: 0110 data: 01 state: SHI op: 99 alu_a: 08 lo: 08 alu_out: 10 reg_x: 07 reg_y: 08 reg_a: ff
+[111] addr: 0024 data: bb state: SWR op: 99 alu_a: 08 lo: 01 alu_out: 09 reg_x: 07 reg_y: 08 reg_a: ff
+
