@@ -1,3 +1,5 @@
+// copyright by sbmpost
+
 module cpu(
   input CLK,
   input R,
@@ -47,6 +49,11 @@ module cpu(
   parameter st_carry_out  = 6'b010000; // 0x10
   parameter st_write_reg  = 6'b100000; // 0x20
 
+  // nr of addressing modes
+  parameter group8 = 2'b01;
+  parameter group6 = 2'b10;
+  parameter group5 = 2'b00;
+
   reg[5:0] curr_st;
   reg[7:0] curr_op;
   reg[7:0] lo_byte;
@@ -64,8 +71,106 @@ module cpu(
   wire[1:0] op_group = op[1:0];
   wire[3:0] op_lo    = op[3:0];
   wire[3:0] op_hi    = op[7:4];
-  // todo: M2R, R2R, MA2A, BR, CP, SH, IDM signals
-  // todo: wX, wY, wA signals
+
+  // -----------------instruction decoding (consider using ROM instead)-----------------
+  // 0x0 = 0000  0x8 = 1000
+  // 0x1 = 0001  0x9 = 1001
+  // 0x2 = 0010  0xA = 1010
+  // 0x3 = 0011  0xB = 1011
+  // 0x4 = 0100  0xC = 1100
+  // 0x5 = 0101  0xD = 1101
+  // 0x6 = 0110  0xE = 1110
+  // 0x7 = 0111  0xF = 1111
+
+  wire hi_0_or_1_or_2_or_3 = op_hi[3:2] == 2'b00;
+  wire hi_4_or_5_or_6_or_7 = op_hi[3:2] == 2'b01;
+  wire hi_8_or_9_or_A_or_B = op_hi[3:2] == 2'b10;
+  wire hi_C_or_D_or_E_or_F = op_hi[3:2] == 2'b11;
+
+  wire hi_0_or_1 = hi_0_or_1_or_2_or_3 && op_hi[1] == 1'b0;
+  wire hi_2_or_3 = hi_0_or_1_or_2_or_3 && op_hi[1] == 1'b1;
+  wire hi_4_or_5 = hi_4_or_5_or_6_or_7 && op_hi[1] == 1'b0;
+  wire hi_4_or_6 = hi_4_or_5_or_6_or_7 && op_hi[0] == 1'b0;
+  wire hi_6_or_7 = hi_4_or_5_or_6_or_7 && op_hi[1] == 1'b1;
+  wire hi_8_or_9 = hi_8_or_9_or_A_or_B && op_hi[1] == 1'b0;
+  wire hi_A_or_B = hi_8_or_9_or_A_or_B && op_hi[1] == 1'b1;
+  wire hi_8_or_A = hi_8_or_9_or_A_or_B && op_hi[0] == 1'b0;
+  wire hi_9_or_B = hi_8_or_9_or_A_or_B && op_hi[0] == 1'b1;
+  wire hi_9_or_A = hi_8_or_9_or_A_or_B && op_hi[0] ^ op_hi[1];
+  wire hi_C_or_D = hi_C_or_D_or_E_or_F && op_hi[1] == 1'b0;
+  wire hi_E_or_F = hi_C_or_D_or_E_or_F && op_hi[1] == 1'b1;
+
+  wire lo_0 = op_lo == 4'h0;
+  wire lo_8 = op_lo == 4'h8;
+  wire lo_A = op_lo == 4'hA;
+  wire lo_C = op_lo == 4'hC;
+
+  wire hi_2 = op_hi == 4'h2;
+  wire hi_8 = op_hi == 4'h8;
+  wire hi_C = op_hi == 4'hC;
+  wire hi_E = op_hi == 4'hE;
+
+  wire lo_1_or_5_or_9_or_D = op_lo[1:0] == 2'b01;
+  wire lo_0_or_4_or_8_or_C = op_lo[1:0] == 2'b00;
+  wire lo_2_or_6_or_A_or_E = op_lo[1:0] == 2'b10;
+  wire lo_0_or_4_or_C = lo_0_or_4_or_8_or_C && ~lo_8;
+  wire lo_4_or_C = lo_0_or_4_or_C && ~lo_0;
+  wire lo_6_or_E = op_lo[2:0] == 3'b110;
+  wire lo_8_or_A = lo_8 || lo_A;
+
+  wire instr_ora     = hi_0_or_1 && lo_1_or_5_or_9_or_D;           // 1
+  wire instr_and     = hi_2_or_3 && lo_1_or_5_or_9_or_D;           // 1
+  wire instr_eor     = hi_4_or_5 && lo_1_or_5_or_9_or_D;           // 1
+  wire instr_adc     = hi_6_or_7 && lo_1_or_5_or_9_or_D;           // 1
+  wire instr_sbc     = hi_E_or_F && lo_1_or_5_or_9_or_D;           // 1
+  wire instr_load    = hi_A_or_B && ~lo_8_or_A && ~instr_branch;   // 1
+  wire instr_store   = hi_8_or_9 && ~lo_8_or_A && ~instr_branch;   // 1
+  wire instr_transxa = hi_8_or_A && lo_A;                          // 2
+  wire instr_transxs = hi_9_or_B && lo_A;                          // 2
+  wire instr_transya = hi_9_or_A && lo_8;                          // 2
+  wire instr_incx    = hi_E && lo_8;                               // 1
+  wire instr_incy    = hi_C && lo_8;                               // 1
+  wire instr_decx    = hi_C && lo_A;                               // 1
+  wire instr_decy    = hi_8 && lo_8;                               // 1
+  wire instr_shleft  = hi_0_or_1_or_2_or_3 && lo_2_or_6_or_A_or_E; // 4
+  wire instr_shright = hi_4_or_5_or_6_or_7 && lo_2_or_6_or_A_or_E; // 4
+  wire instr_cmp     = hi_C_or_D && lo_1_or_5_or_9_or_D;           // 1
+  wire instr_cpx     = hi_E && lo_0_or_4_or_C;                     // 1
+  wire instr_cpy     = hi_C && lo_0_or_4_or_C;                     // 1
+  wire instr_bit     = hi_2 && lo_4_or_C;                          // 1
+  wire instr_nop     = hi_E && lo_A;                               // 1
+
+  // Change program counter
+  wire instr_jmp     = hi_4_or_6 && lo_C;                          // 1
+  wire instr_branch  = op_hi[0] == 1'b1 && lo_0;                   // 8
+
+  // Set/Clear bits in reg_p
+  wire instr_setflag = op_hi[0] == 1'b1 && lo_8;                   // 7
+
+  // M2M (group6)
+  wire instr_incmem  = hi_E_or_F && lo_6_or_E;                     // 1
+  wire instr_decmem  = hi_C_or_D && lo_6_or_E;                     // 1
+                                                                   // tot: 48
+  // M2M/A2A (group6, accumulator mode indicates A2A)
+  wire instr_shift   = instr_shleft || instr_shright;
+
+  // R2R
+  wire instr_incxy   = instr_incx || instr_incy;
+  wire instr_decxy   = instr_decx || instr_decy;
+  wire instr_trans   = instr_transxa || instr_transxs || instr_transya;
+
+  // MA2A (group8)
+  wire instr_logic   = instr_ora || instr_and || instr_eor;
+  wire instr_arith   = instr_adc || instr_sbc;
+
+  // MR2P (cmp: group8, cpx/cpy/bit: group5)
+  wire instr_compare = instr_cmp || instr_cpx || instr_cpy || instr_bit;
+
+  // M2R (lda: group8, ldy/sty: group5, ldx/stx: group6)
+  wire instr_memreg  = instr_load || instr_store;
+
+  // REMAINING: BRK, JSR, RTI, RTS, PHA, PHP, PLA, PLP             // tot: 8
+  // -----------------------------------------------------------------------------------
 
   wire pc_inc =
     curr_st == st_initial ||
@@ -149,7 +254,8 @@ module cpu(
     .F(alu_out)
   );
 
-  wire[2:0] immediate = op_group == 2'b01 ? imm : zp_x_in;
+  wire[2:0] immediate = op_group == group8 ? imm : zp_x_in;
+  wire accumulator = op_group == group6 && op_amode == imm;
   wire p_carry = curr_st == st_hi_byte ? alu_cout : reg_p[bit_carry];
 
   always @(posedge CLK or posedge R) begin
@@ -204,14 +310,12 @@ module cpu(
       end
       st_write_reg: begin
         reg_p <= {3'b000, alu_cout };
-        if ((op_hi == 4'h0a || op_hi == 4'h0b) &&
-            (op_lo != 4'h08 && op_lo != 4'h0a) &&
-             op[4:0] != 5'b10000) begin
-          if (op_group == 2'b10)
+        if (instr_load) begin
+          if (op_group == group6)
             reg_x <= data_bus;
-          else if (op_group == 2'b00)
+          else if (op_group == group5)
             reg_y <= data_bus;
-          else if (op_group == 2'b01)
+          else if (op_group == group8)
             reg_a <= data_bus;
         end
       end
