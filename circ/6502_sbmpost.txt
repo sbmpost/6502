@@ -45,8 +45,8 @@ What happens in each cpu state:
   SWR:  HL = PC (the next OP)         |
   CLK6:  R = D, D = MEM[HL], PR = HL  |   A = D
 
-  SWF:  F = L AOP R
-  CLK7:  MEM[HL]/R = F
+  SWF:  HL = PC, F = L AOP R
+  CLK7:  MEM[PR]/R = F
 ----
 
 0x0 = 0000  0x8 = 1000
@@ -145,7 +145,7 @@ Logic that implements a load and its addressing modes:
  SLO  | 000010 | -  | -  | -  |  -  | 001000 | SHI
  SIN  | 000100 | -  | -  | -  |  -  | 001000 | SHI
  SHI  | 001000 | -  | 1  | -  |  1  | 010000 | SCO
- SHI  | 001000 | 1  | 0  | 0  |  1  | 010000 | SCO
+ SHI  | 001000 | 1? | 0  | 0  |  1  | 010000 | SCO
  SHI  | 001000 | -  | -  | -  |  -  | 100000 | SWR
  SCO  | 010000 | -  | -  | -  |  -  | 100000 | SWR
  SWR  | 100000 | -  | -  | -  |  -  | 000001 | SOP
@@ -178,6 +178,8 @@ a5 37             => LDA $37
 a9 18             => LDA #18
 b1 1e 00 00 fc 02 => LDA ($1e),y (y=8, $1e=fc, $1f=02), should access $0304
 00 99 08 01       => STA $0108,y (y=8)
+a9 19             => LDA #19
+b9 ff 00          => LDA $0108,y (y=8)
 
  instr   id ab xy
 7  6  5  4  3  2  1  0

@@ -7,12 +7,14 @@ module cpu(
   output op_amode,
   output op_group,
   output addr_bus,
-  output data_bus,
+  output data_out,
+  output data_in,
+  output data_write,
   output curr_st,
   output pc_inc,
   output op,
   output alu_a,
-  output lo_byte,
+  output reg_l,
   output alu_out,
   output reg_x,
   output reg_y,
@@ -41,31 +43,32 @@ module cpu(
   parameter ab_x    = 3'b111;
 
   // cpu states
-  parameter st_initial    = 6'b000000;
-  parameter st_new_op     = 6'b000001; // 0x01
-  parameter st_lo_byte    = 6'b000010; // 0x02
-  parameter st_indirect   = 6'b000100; // 0x04
-  parameter st_hi_byte    = 6'b001000; // 0x08
-  parameter st_carry_out  = 6'b010000; // 0x10
-  parameter st_write_reg  = 6'b100000; // 0x20
+  parameter st_initial    = 7'b0000000;
+  parameter st_new_op     = 7'b0000001; // 0x01
+  parameter st_lo_byte    = 7'b0000010; // 0x02
+  parameter st_indirect   = 7'b0000100; // 0x04
+  parameter st_hi_byte    = 7'b0001000; // 0x08
+  parameter st_carry_out  = 7'b0010000; // 0x10
+  parameter st_write_reg  = 7'b0100000; // 0x20
+  parameter st_write_alu  = 7'b1000000; // 0x40
 
   // nr of addressing modes
   parameter group8 = 2'b01;
   parameter group6 = 2'b10;
   parameter group5 = 2'b00;
 
-  reg[5:0] curr_st;
+  reg[6:0] curr_st;
   reg[7:0] curr_op;
-  reg[7:0] lo_byte;
+  reg[7:0] reg_l;
   reg[7:0] reg_x;
   reg[7:0] reg_y;
   reg[7:0] reg_a;
   reg[3:0] reg_p;
   reg[15:0] prev_addr;
 
-  wire[7:0] data_bus;
+  wire[7:0] data_out;
 
-  wire[7:0] op       = curr_st == st_new_op ? data_bus : curr_op;
+  wire[7:0] op       = curr_st == st_new_op ? data_out : curr_op;
   wire[2:0] opcode   = op[7:5];
   wire[2:0] op_amode = op[4:2];
   wire[1:0] op_group = op[1:0];
@@ -176,6 +179,7 @@ module cpu(
     curr_st == st_initial ||
     curr_st == st_new_op ||
     curr_st == st_write_reg ||
+//curr_st == st_write_alu ||
     (curr_st == st_hi_byte && op_amode[bit_ab]);
 
   wire[15:0] pc_out;
@@ -192,21 +196,21 @@ module cpu(
     .CO()
   );
 
-  wire lo_addr_from_data_bus = op_amode == zp || op_amode == zp_y_in;
-  wire hi_addr_from_data_bus = op_amode[bit_ab] || op_amode == zp_y_in;
+  wire lo_addr_from_data_out = op_amode == zp || op_amode == zp_y_in;
+  wire hi_addr_from_data_out = op_amode[bit_ab] || op_amode == zp_y_in;
 
   reg[15:0] addr_bus;
   always @(*) begin
     case (curr_st)
       st_lo_byte: begin
-        if (lo_addr_from_data_bus)
-          addr_bus = { 8'h00, data_bus };
+        if (lo_addr_from_data_out)
+          addr_bus = { 8'h00, data_out };
         else
           addr_bus = pc_out;
       end
       st_hi_byte: begin
-        if (hi_addr_from_data_bus)
-          addr_bus = { data_bus, alu_out };
+        if (hi_addr_from_data_out)
+          addr_bus = { data_out, alu_out };
         else
           addr_bus = { 8'h00, alu_out};
       end
@@ -216,6 +220,9 @@ module cpu(
       st_carry_out: begin
         addr_bus = { alu_out, prev_addr[7:0] };
       end
+      st_write_alu: begin
+        addr_bus = { prev_addr };
+      end
       default: begin
         addr_bus = pc_out;
       end
@@ -224,10 +231,10 @@ module cpu(
 
   MEMORY mem(
     .CLK(CLK),
-    .WE(1'b0),
+    .WE(data_write),
     .Address(addr_bus),
-    .DataIn(0'b0),
-    .DataOut(data_bus)
+    .DataIn(data_in),
+    .DataOut(data_out)
   );
 
   wire alu_cout;
@@ -247,7 +254,7 @@ module cpu(
 
   alu8 alu_1(
     .A(alu_a),
-    .B(lo_byte),
+    .B(reg_l),
     .CI(alu_cin),
     .OP(alu_op),
     .CO(alu_cout),
@@ -258,6 +265,14 @@ module cpu(
   wire accumulator = op_group == group6 && op_amode == imm;
   wire p_carry = curr_st == st_hi_byte ? alu_cout : reg_p[bit_carry];
 
+  reg[6:0] st_write;
+  always @(*) begin
+    if (instr_load)
+      st_write = st_write_reg;
+    else if (instr_store)
+      st_write = st_write_alu;
+  end
+
   always @(posedge CLK or posedge R) begin
     if (R) begin
       curr_st <= st_initial;
@@ -267,57 +282,96 @@ module cpu(
         st_initial: begin               curr_st <= st_new_op;
         end
         st_new_op: begin
-          if (op_amode == immediate)    curr_st <= st_write_reg;
+          if (op_amode == immediate)    curr_st <= st_write;
           else                          curr_st <= st_lo_byte;
         end
         st_lo_byte: begin
           if (op_amode == zp_y_in)      curr_st <= st_indirect;
-          else if (op_amode == zp)      curr_st <= st_write_reg;
+          else if (op_amode == zp)      curr_st <= st_write;
           else                          curr_st <= st_hi_byte;
         end
         st_indirect: begin              curr_st <= st_hi_byte;
         end
         st_hi_byte: begin
-          if (hi_addr_from_data_bus && p_carry)
+          if (hi_addr_from_data_out && p_carry)
                                         curr_st <= st_carry_out;
-          else                          curr_st <= st_write_reg;
+          else                          curr_st <= st_write;
         end
-        st_carry_out: begin             curr_st <= st_write_reg;
+        st_carry_out: begin             curr_st <= st_write;
         end
-        st_write_reg: begin             curr_st <= st_new_op;
+        st_write_reg: begin
+          if (instr_load)
+                                        curr_st <= st_new_op;
+          else
+                                        curr_st <= st_new_op;
+        end
+        st_write_alu: begin
+          if (instr_store)
+                                        curr_st <= st_write_reg;
+          else
+                                        curr_st <= st_new_op;
         end
         default: begin
         end
       endcase
   end
 
+  reg[7:0] store_reg;
+  always @(*) begin
+    if (instr_store) begin
+      if (op_group == group6)
+        store_reg = reg_x;
+      else if (op_group == group5)
+        store_reg = reg_y;
+      else if (op_group == group8)
+        store_reg = reg_a;
+    end
+  end
+
+  reg[7:0] data_in;
+  reg data_write;
+  always @(*) begin
+    case (curr_st)
+      st_write_alu: begin
+        data_in = store_reg;
+        if (instr_store)
+          data_write = 1'b1;
+      end
+      default: begin
+        data_write = 0'b0;
+      end
+    endcase
+  end
+
   always @(posedge CLK) begin
     prev_addr <= addr_bus;
     case (curr_st)
       st_new_op: begin
-        curr_op <= data_bus;
+        curr_op <= data_out;
       end
       st_lo_byte: begin
-        lo_byte <= data_bus;
+        reg_l <= data_out;
       end
       st_indirect: begin
-        lo_byte <= data_bus;
+        reg_l <= data_out;
       end
       st_hi_byte: begin
-        lo_byte <= data_bus;
+        reg_l <= data_out;
       end
       st_carry_out: begin
       end
       st_write_reg: begin
-        reg_p <= {3'b000, alu_cout };
         if (instr_load) begin
           if (op_group == group6)
-            reg_x <= data_bus;
+            reg_x <= data_out;
           else if (op_group == group5)
-            reg_y <= data_bus;
+            reg_y <= data_out;
           else if (op_group == group8)
-            reg_a <= data_bus;
+            reg_a <= data_out;
         end
+      end
+      st_write_alu: begin
+        reg_p <= { 3'b000, alu_cout };
       end
       default: begin
       end
