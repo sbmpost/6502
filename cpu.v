@@ -13,6 +13,7 @@ module cpu(
   output curr_st,
   output pc_inc,
   output op,
+  output alu_op,
   output alu_a,
   output reg_l,
   output alu_out,
@@ -49,7 +50,7 @@ module cpu(
   parameter st_indirect   = 7'b0000100; // 0x04
   parameter st_hi_byte    = 7'b0001000; // 0x08
   parameter st_carry_out  = 7'b0010000; // 0x10
-  parameter st_write_reg  = 7'b0100000; // 0x20
+  parameter st_load_reg   = 7'b0100000; // 0x20
   parameter st_write_alu  = 7'b1000000; // 0x40
 
   // nr of addressing modes
@@ -178,8 +179,7 @@ module cpu(
   wire pc_inc =
     curr_st == st_initial ||
     curr_st == st_new_op ||
-    curr_st == st_write_reg ||
-//curr_st == st_write_alu ||
+    curr_st == st_load_reg ||
     (curr_st == st_hi_byte && op_amode[bit_ab]);
 
   wire[15:0] pc_out;
@@ -241,16 +241,38 @@ module cpu(
   wire[7:0] alu_out;
 
   parameter alu_op_lo_plus_index = 6'h19;
-  reg[5:0] alu_op = alu_op_lo_plus_index;
+  parameter alu_op_identity_of_a = 6'h00;
+  wire[5:0] alu_op = curr_st == st_write_alu && instr_store ?
+    alu_op_identity_of_a : alu_op_lo_plus_index;
 
-  wire[7:0] alu_a =
-    curr_st == st_indirect ||
-    curr_st == st_carry_out ||
-    ~op_amode[bit_id] ? 8'h00 : (op_amode[bit_xy] ? reg_x : reg_y);
+  reg[7:0] alu_a;
+  always @(*) begin
+    case (curr_st)
+      st_hi_byte: begin
+        if (op_amode[bit_id]) begin
+          if (op_amode[bit_xy])
+            alu_a = reg_x;
+          else
+            alu_a = reg_y;
+        end
+      end
+      st_write_alu: begin
+        if (instr_store) begin
+          if (op_group == group6)
+            alu_a = reg_x;
+          else if (op_group == group5)
+            alu_a = reg_y;
+          else if (op_group == group8)
+            alu_a = reg_a;
+        end
+      end
+      default: begin
+        alu_a = 8'h00;
+      end
+    endcase
+  end
 
-  wire alu_cin =
-    curr_st == st_indirect ||
-    curr_st == st_carry_out;
+  wire alu_cin = curr_st == st_indirect || curr_st == st_carry_out;
 
   alu8 alu_1(
     .A(alu_a),
@@ -265,12 +287,12 @@ module cpu(
   wire accumulator = op_group == group6 && op_amode == imm;
   wire p_carry = curr_st == st_hi_byte ? alu_cout : reg_p[bit_carry];
 
-  reg[6:0] st_write;
+  reg[6:0] st_load_or_write;
   always @(*) begin
     if (instr_load)
-      st_write = st_write_reg;
+      st_load_or_write = st_load_reg;
     else if (instr_store)
-      st_write = st_write_alu;
+      st_load_or_write = st_write_alu;
   end
 
   always @(posedge CLK or posedge R) begin
@@ -282,12 +304,12 @@ module cpu(
         st_initial: begin               curr_st <= st_new_op;
         end
         st_new_op: begin
-          if (op_amode == immediate)    curr_st <= st_write;
+          if (op_amode == immediate)    curr_st <= st_load_or_write;
           else                          curr_st <= st_lo_byte;
         end
         st_lo_byte: begin
           if (op_amode == zp_y_in)      curr_st <= st_indirect;
-          else if (op_amode == zp)      curr_st <= st_write;
+          else if (op_amode == zp)      curr_st <= st_load_or_write;
           else                          curr_st <= st_hi_byte;
         end
         st_indirect: begin              curr_st <= st_hi_byte;
@@ -295,11 +317,11 @@ module cpu(
         st_hi_byte: begin
           if (hi_addr_from_data_out && p_carry)
                                         curr_st <= st_carry_out;
-          else                          curr_st <= st_write;
+          else                          curr_st <= st_load_or_write;
         end
-        st_carry_out: begin             curr_st <= st_write;
+        st_carry_out: begin             curr_st <= st_load_or_write;
         end
-        st_write_reg: begin
+        st_load_reg: begin
           if (instr_load)
                                         curr_st <= st_new_op;
           else
@@ -307,7 +329,7 @@ module cpu(
         end
         st_write_alu: begin
           if (instr_store)
-                                        curr_st <= st_write_reg;
+                                        curr_st <= st_load_reg;
           else
                                         curr_st <= st_new_op;
         end
@@ -316,24 +338,12 @@ module cpu(
       endcase
   end
 
-  reg[7:0] store_reg;
-  always @(*) begin
-    if (instr_store) begin
-      if (op_group == group6)
-        store_reg = reg_x;
-      else if (op_group == group5)
-        store_reg = reg_y;
-      else if (op_group == group8)
-        store_reg = reg_a;
-    end
-  end
-
   reg[7:0] data_in;
   reg data_write;
   always @(*) begin
     case (curr_st)
       st_write_alu: begin
-        data_in = store_reg;
+        data_in = alu_out;
         if (instr_store)
           data_write = 1'b1;
       end
@@ -360,7 +370,7 @@ module cpu(
       end
       st_carry_out: begin
       end
-      st_write_reg: begin
+      st_load_reg: begin
         if (instr_load) begin
           if (op_group == group6)
             reg_x <= data_out;

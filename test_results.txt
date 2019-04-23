@@ -8,73 +8,104 @@ clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -
 ar r Vcpu__ALL.a Vcpu__ALLcls.o Vcpu__ALLsup.o
 ranlib Vcpu__ALL.a
 clang++    cpu.o verilated.o Vcpu__ALL.a    -o Vcpu -lm -lstdc++ 
-[3] addr: 0000 data: 00 state: S00 op: 00 alu_a: 00 lo: 00 alu_out: 00 reg_x: 00 reg_y: 00 reg_a: 00
-[5] addr: 0001 data: a2 state: SOP op: a2 alu_a: 00 lo: 00 alu_out: 00 reg_x: 00 reg_y: 00 reg_a: 00
-[7] addr: 0002 data: 07 state: SWR op: a2 alu_a: 00 lo: 00 alu_out: 00 reg_x: 00 reg_y: 00 reg_a: 00
+[3] addr: 0000 out: 00 in: 00 write: 00 state: S00 op: 00 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 00 reg_y: 00 reg_a: 00
+[5] addr: 0001 out: a2 in: 00 write: 00 state: SOP op: a2 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 00 reg_y: 00 reg_a: 00
+[7] addr: 0002 out: 07 in: 00 write: 00 state: SLR op: a2 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 00 reg_y: 00 reg_a: 00
 
-[9] addr: 0003 data: a0 state: SOP op: a0 alu_a: 00 lo: 00 alu_out: 00 reg_x: 07 reg_y: 00 reg_a: 00
-[11] addr: 0004 data: 08 state: SWR op: a0 alu_a: 00 lo: 00 alu_out: 00 reg_x: 07 reg_y: 00 reg_a: 00
+[9] addr: 0003 out: a0 in: 00 write: 00 state: SOP op: a0 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 00 reg_a: 00
+[11] addr: 0004 out: 08 in: 00 write: 00 state: SLR op: a0 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 00 reg_a: 00
 
-[13] addr: 0005 data: b9 state: SOP op: b9 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: 00
-[15] addr: 0006 data: ff state: SLO op: b9 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: 00
-[17] addr: 0007 data: 00 state: SHI op: b9 alu_a: 08 lo: ff alu_out: 07 reg_x: 07 reg_y: 08 reg_a: 00
-[19] addr: 0107 data: b9 state: SCO op: b9 alu_a: 00 lo: 00 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 00
-[21] addr: 0007 data: aa state: SWR op: b9 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: 00
+[13] addr: 0005 out: b9 in: 00 write: 00 state: SOP op: b9 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: 00
+[15] addr: 0006 out: ff in: 00 write: 00 state: SLO op: b9 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: 00
+[17] addr: 0007 out: 00 in: 00 write: 00 state: SHI op: b9 alu_op: 19 alu_a: 08 reg_l: ff alu_out: 07 reg_x: 07 reg_y: 08 reg_a: 00
+[19] addr: 0107 out: b9 in: 00 write: 00 state: SCO op: b9 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 00
+[21] addr: 0007 out: aa in: 00 write: 00 state: SLR op: b9 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: 00
 
-[23] addr: 0008 data: b9 state: SOP op: b9 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: aa
-[25] addr: 0009 data: 08 state: SLO op: b9 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: aa
-[27] addr: 0110 data: 01 state: SHI op: b9 alu_a: 08 lo: 08 alu_out: 10 reg_x: 07 reg_y: 08 reg_a: aa
-[29] addr: 000a data: bb state: SWR op: b9 alu_a: 08 lo: 01 alu_out: 09 reg_x: 07 reg_y: 08 reg_a: aa
+[23] addr: 0008 out: b9 in: 00 write: 00 state: SOP op: b9 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: aa
+[25] addr: 0009 out: 08 in: 00 write: 00 state: SLO op: b9 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: aa
+[27] addr: 0110 out: 01 in: 00 write: 00 state: SHI op: b9 alu_op: 19 alu_a: 08 reg_l: 08 alu_out: 10 reg_x: 07 reg_y: 08 reg_a: aa
+[29] addr: 000a out: bb in: 00 write: 00 state: SLR op: b9 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: aa
 
-[31] addr: 000b data: bd state: SOP op: bd alu_a: 07 lo: 01 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: bb
-[33] addr: 000c data: f0 state: SLO op: bd alu_a: 07 lo: 01 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: bb
-[35] addr: 01f7 data: 01 state: SHI op: bd alu_a: 07 lo: f0 alu_out: f7 reg_x: 07 reg_y: 08 reg_a: bb
-[37] addr: 000d data: cc state: SWR op: bd alu_a: 07 lo: 01 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: bb
+[31] addr: 000b out: bd in: 00 write: 00 state: SOP op: bd alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: bb
+[33] addr: 000c out: f0 in: 00 write: 00 state: SLO op: bd alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: bb
+[35] addr: 01f7 out: 01 in: 00 write: 00 state: SHI op: bd alu_op: 19 alu_a: 07 reg_l: f0 alu_out: f7 reg_x: 07 reg_y: 08 reg_a: bb
+[37] addr: 000d out: cc in: 00 write: 00 state: SLR op: bd alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: bb
 
-[39] addr: 000e data: b5 state: SOP op: b5 alu_a: 07 lo: 01 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: cc
-[41] addr: 000f data: 30 state: SLO op: b5 alu_a: 07 lo: 01 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: cc
-[43] addr: 0037 data: b5 state: SHI op: b5 alu_a: 07 lo: 30 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: cc
-[45] addr: 000f data: dd state: SWR op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: cc
+[39] addr: 000e out: b5 in: 00 write: 00 state: SOP op: b5 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: cc
+[41] addr: 000f out: 30 in: 00 write: 00 state: SLO op: b5 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: cc
+[43] addr: 0037 out: b5 in: 00 write: 00 state: SHI op: b5 alu_op: 19 alu_a: 07 reg_l: 30 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: cc
+[45] addr: 000f out: dd in: 00 write: 00 state: SLR op: b5 alu_op: 19 alu_a: 00 reg_l: b5 alu_out: b5 reg_x: 07 reg_y: 08 reg_a: cc
 
-[47] addr: 0010 data: b5 state: SOP op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: dd
-[49] addr: 0011 data: 40 state: SLO op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: dd
-[51] addr: 0047 data: b5 state: SHI op: b5 alu_a: 07 lo: 40 alu_out: 47 reg_x: 07 reg_y: 08 reg_a: dd
-[53] addr: 0011 data: ee state: SWR op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: dd
+[47] addr: 0010 out: b5 in: 00 write: 00 state: SOP op: b5 alu_op: 19 alu_a: 00 reg_l: b5 alu_out: b5 reg_x: 07 reg_y: 08 reg_a: dd
+[49] addr: 0011 out: 40 in: 00 write: 00 state: SLO op: b5 alu_op: 19 alu_a: 00 reg_l: b5 alu_out: b5 reg_x: 07 reg_y: 08 reg_a: dd
+[51] addr: 0047 out: b5 in: 00 write: 00 state: SHI op: b5 alu_op: 19 alu_a: 07 reg_l: 40 alu_out: 47 reg_x: 07 reg_y: 08 reg_a: dd
+[53] addr: 0011 out: ee in: 00 write: 00 state: SLR op: b5 alu_op: 19 alu_a: 00 reg_l: b5 alu_out: b5 reg_x: 07 reg_y: 08 reg_a: dd
 
-[55] addr: 0012 data: b5 state: SOP op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: ee
-[57] addr: 0013 data: ff state: SLO op: b5 alu_a: 07 lo: b5 alu_out: bc reg_x: 07 reg_y: 08 reg_a: ee
-[59] addr: 0006 data: ad state: SHI op: b5 alu_a: 07 lo: ff alu_out: 06 reg_x: 07 reg_y: 08 reg_a: ee
-[61] addr: 0013 data: 00 state: SWR op: b5 alu_a: 07 lo: ad alu_out: b4 reg_x: 07 reg_y: 08 reg_a: ee
+[55] addr: 0012 out: b5 in: 00 write: 00 state: SOP op: b5 alu_op: 19 alu_a: 00 reg_l: b5 alu_out: b5 reg_x: 07 reg_y: 08 reg_a: ee
+[57] addr: 0013 out: ff in: 00 write: 00 state: SLO op: b5 alu_op: 19 alu_a: 00 reg_l: b5 alu_out: b5 reg_x: 07 reg_y: 08 reg_a: ee
+[59] addr: 0006 out: ad in: 00 write: 00 state: SHI op: b5 alu_op: 19 alu_a: 07 reg_l: ff alu_out: 06 reg_x: 07 reg_y: 08 reg_a: ee
+[61] addr: 0013 out: 00 in: 00 write: 00 state: SLR op: b5 alu_op: 19 alu_a: 00 reg_l: ad alu_out: ad reg_x: 07 reg_y: 08 reg_a: ee
 
-[63] addr: 0014 data: ad state: SOP op: ad alu_a: 00 lo: ad alu_out: ad reg_x: 07 reg_y: 08 reg_a: 00
-[65] addr: 0015 data: 10 state: SLO op: ad alu_a: 00 lo: ad alu_out: ad reg_x: 07 reg_y: 08 reg_a: 00
-[67] addr: 0110 data: 01 state: SHI op: ad alu_a: 00 lo: 10 alu_out: 10 reg_x: 07 reg_y: 08 reg_a: 00
-[69] addr: 0016 data: bb state: SWR op: ad alu_a: 00 lo: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 00
+[63] addr: 0014 out: ad in: 00 write: 00 state: SOP op: ad alu_op: 19 alu_a: 00 reg_l: ad alu_out: ad reg_x: 07 reg_y: 08 reg_a: 00
+[65] addr: 0015 out: 10 in: 00 write: 00 state: SLO op: ad alu_op: 19 alu_a: 00 reg_l: ad alu_out: ad reg_x: 07 reg_y: 08 reg_a: 00
+[67] addr: 0110 out: 01 in: 00 write: 00 state: SHI op: ad alu_op: 19 alu_a: 00 reg_l: 10 alu_out: 10 reg_x: 07 reg_y: 08 reg_a: 00
+[69] addr: 0016 out: bb in: 00 write: 00 state: SLR op: ad alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 00
 
-[71] addr: 0017 data: a5 state: SOP op: a5 alu_a: 00 lo: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: bb
-[73] addr: 0037 data: 37 state: SLO op: a5 alu_a: 00 lo: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: bb
-[75] addr: 0018 data: dd state: SWR op: a5 alu_a: 00 lo: 37 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: bb
+[71] addr: 0017 out: a5 in: 00 write: 00 state: SOP op: a5 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: bb
+[73] addr: 0037 out: 37 in: 00 write: 00 state: SLO op: a5 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: bb
+[75] addr: 0018 out: dd in: 00 write: 00 state: SLR op: a5 alu_op: 19 alu_a: 00 reg_l: 37 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: bb
 
-[77] addr: 0019 data: a9 state: SOP op: a9 alu_a: 00 lo: 37 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: dd
-[79] addr: 001a data: 18 state: SWR op: a9 alu_a: 00 lo: 37 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: dd
+[77] addr: 0019 out: a9 in: 00 write: 00 state: SOP op: a9 alu_op: 19 alu_a: 00 reg_l: 37 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: dd
+[79] addr: 001a out: 18 in: 00 write: 00 state: SLR op: a9 alu_op: 19 alu_a: 00 reg_l: 37 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: dd
 
-[81] addr: 001b data: b1 state: SOP op: b1 alu_a: 08 lo: 37 alu_out: 3f reg_x: 07 reg_y: 08 reg_a: 18
-[83] addr: 001e data: 1e state: SLO op: b1 alu_a: 08 lo: 37 alu_out: 3f reg_x: 07 reg_y: 08 reg_a: 18
-[85] addr: 001f data: fc state: SIN op: b1 alu_a: 00 lo: 1e alu_out: 1f reg_x: 07 reg_y: 08 reg_a: 18
-[87] addr: 0204 data: 02 state: SHI op: b1 alu_a: 08 lo: fc alu_out: 04 reg_x: 07 reg_y: 08 reg_a: 18
-[89] addr: 0304 data: 00 state: SCO op: b1 alu_a: 00 lo: 02 alu_out: 03 reg_x: 07 reg_y: 08 reg_a: 18
-[91] addr: 001c data: ff state: SWR op: b1 alu_a: 08 lo: 02 alu_out: 0a reg_x: 07 reg_y: 08 reg_a: 18
+[81] addr: 001b out: b1 in: 00 write: 00 state: SOP op: b1 alu_op: 19 alu_a: 00 reg_l: 37 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: 18
+[83] addr: 001e out: 1e in: 00 write: 00 state: SLO op: b1 alu_op: 19 alu_a: 00 reg_l: 37 alu_out: 37 reg_x: 07 reg_y: 08 reg_a: 18
+[85] addr: 001f out: fc in: 00 write: 00 state: SIN op: b1 alu_op: 19 alu_a: 00 reg_l: 1e alu_out: 1f reg_x: 07 reg_y: 08 reg_a: 18
+[87] addr: 0204 out: 02 in: 00 write: 00 state: SHI op: b1 alu_op: 19 alu_a: 08 reg_l: fc alu_out: 04 reg_x: 07 reg_y: 08 reg_a: 18
+[89] addr: 0304 out: 00 in: 00 write: 00 state: SCO op: b1 alu_op: 19 alu_a: 00 reg_l: 02 alu_out: 03 reg_x: 07 reg_y: 08 reg_a: 18
+[91] addr: 001c out: ff in: 00 write: 00 state: SLR op: b1 alu_op: 19 alu_a: 00 reg_l: 02 alu_out: 02 reg_x: 07 reg_y: 08 reg_a: 18
 
-[93] addr: 001d data: 00 state: SOP op: 00 alu_a: 00 lo: 02 alu_out: 02 reg_x: 07 reg_y: 08 reg_a: ff
-[95] addr: 001e data: 00 state: SWR op: 00 alu_a: 00 lo: 02 alu_out: 02 reg_x: 07 reg_y: 08 reg_a: ff
+[93] addr: 001d out: 00 in: 00 write: 00 state: SOP op: 00 alu_op: 19 alu_a: 00 reg_l: 02 alu_out: 02 reg_x: 07 reg_y: 08 reg_a: ff
+[95] addr: 001e out: 00 in: 00 write: 00 state: SLR op: 00 alu_op: 19 alu_a: 00 reg_l: 02 alu_out: 02 reg_x: 07 reg_y: 08 reg_a: ff
 
-[97] addr: 001f data: fc state: SOP op: fc alu_a: 07 lo: 02 alu_out: 09 reg_x: 07 reg_y: 08 reg_a: ff
-[99] addr: 0020 data: 02 state: SLO op: fc alu_a: 07 lo: 02 alu_out: 09 reg_x: 07 reg_y: 08 reg_a: ff
-[101] addr: 0009 data: 00 state: SHI op: fc alu_a: 07 lo: 02 alu_out: 09 reg_x: 07 reg_y: 08 reg_a: ff
-[103] addr: 0021 data: 01 state: SWR op: fc alu_a: 07 lo: 00 alu_out: 07 reg_x: 07 reg_y: 08 reg_a: ff
+[97] addr: 001f out: fc in: 00 write: 00 state: SOP op: fc alu_op: 19 alu_a: 00 reg_l: 02 alu_out: 02 reg_x: 07 reg_y: 08 reg_a: ff
+[99] addr: 0020 out: 02 in: 00 write: 00 state: SLO op: fc alu_op: 19 alu_a: 00 reg_l: 02 alu_out: 02 reg_x: 07 reg_y: 08 reg_a: ff
+[101] addr: 0009 out: 00 in: 00 write: 00 state: SHI op: fc alu_op: 19 alu_a: 07 reg_l: 02 alu_out: 09 reg_x: 07 reg_y: 08 reg_a: ff
+[103] addr: 0021 out: 01 in: 00 write: 00 state: SLR op: fc alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: ff
 
-[105] addr: 0022 data: 99 state: SOP op: 99 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: ff
-[107] addr: 0023 data: 08 state: SLO op: 99 alu_a: 08 lo: 00 alu_out: 08 reg_x: 07 reg_y: 08 reg_a: ff
-[109] addr: 0110 data: 01 state: SHI op: 99 alu_a: 08 lo: 08 alu_out: 10 reg_x: 07 reg_y: 08 reg_a: ff
-[111] addr: 0024 data: bb state: SWR op: 99 alu_a: 08 lo: 01 alu_out: 09 reg_x: 07 reg_y: 08 reg_a: ff
+[105] addr: 0022 out: 99 in: 00 write: 00 state: SOP op: 99 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: ff
+[107] addr: 0023 out: 08 in: 00 write: 00 state: SLO op: 99 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: ff
+[109] addr: 0110 out: 01 in: 00 write: 00 state: SHI op: 99 alu_op: 19 alu_a: 08 reg_l: 08 alu_out: 10 reg_x: 07 reg_y: 08 reg_a: ff
+[111] addr: 0110 out: bb in: ff write: 01 state: SWF op: 99 alu_op: 00 alu_a: ff reg_l: 01 alu_out: ff reg_x: 07 reg_y: 08 reg_a: ff
+[113] addr: 0024 out: bb in: ff write: 00 state: SLR op: 99 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: ff
+
+[115] addr: 0025 out: a9 in: ff write: 00 state: SOP op: a9 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: ff
+[117] addr: 0026 out: 19 in: ff write: 00 state: SLR op: a9 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: ff
+
+[119] addr: 0027 out: b9 in: ff write: 00 state: SOP op: b9 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 19
+[121] addr: 0028 out: 08 in: ff write: 00 state: SLO op: b9 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 19
+[123] addr: 0110 out: 01 in: ff write: 00 state: SHI op: b9 alu_op: 19 alu_a: 08 reg_l: 08 alu_out: 10 reg_x: 07 reg_y: 08 reg_a: 19
+[125] addr: 0029 out: ff in: ff write: 00 state: SLR op: b9 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 19
+
+[127] addr: 002a out: a9 in: ff write: 00 state: SOP op: a9 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: ff
+[129] addr: 002b out: 20 in: ff write: 00 state: SLR op: a9 alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: ff
+
+[131] addr: 002c out: 9d in: ff write: 00 state: SOP op: 9d alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 20
+[133] addr: 002d out: ff in: ff write: 00 state: SLO op: 9d alu_op: 19 alu_a: 00 reg_l: 01 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 20
+[135] addr: 0006 out: 00 in: ff write: 00 state: SHI op: 9d alu_op: 19 alu_a: 07 reg_l: ff alu_out: 06 reg_x: 07 reg_y: 08 reg_a: 20
+[137] addr: 0106 out: 00 in: ff write: 00 state: SCO op: 9d alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 20
+[139] addr: 0106 out: 00 in: 20 write: 01 state: SWF op: 9d alu_op: 00 alu_a: 20 reg_l: 00 alu_out: 20 reg_x: 07 reg_y: 08 reg_a: 20
+[141] addr: 002e out: 00 in: 20 write: 00 state: SLR op: 9d alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: 20
+
+[143] addr: 002f out: a9 in: 20 write: 00 state: SOP op: a9 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: 20
+[145] addr: 0030 out: 21 in: 20 write: 00 state: SLR op: a9 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: 20
+
+[147] addr: 0031 out: bd in: 20 write: 00 state: SOP op: bd alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: 21
+[149] addr: 0032 out: ff in: 20 write: 00 state: SLO op: bd alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: 21
+[151] addr: 0006 out: 00 in: 20 write: 00 state: SHI op: bd alu_op: 19 alu_a: 07 reg_l: ff alu_out: 06 reg_x: 07 reg_y: 08 reg_a: 21
+[153] addr: 0106 out: 00 in: 20 write: 00 state: SCO op: bd alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 01 reg_x: 07 reg_y: 08 reg_a: 21
+[155] addr: 0033 out: 20 in: 20 write: 00 state: SLR op: bd alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: 21
+
+[157] addr: 0034 out: 00 in: 20 write: 00 state: SOP op: 00 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: 20
+[159] addr: 0035 out: 00 in: 20 write: 00 state: SLR op: 00 alu_op: 19 alu_a: 00 reg_l: 00 alu_out: 00 reg_x: 07 reg_y: 08 reg_a: 20
 

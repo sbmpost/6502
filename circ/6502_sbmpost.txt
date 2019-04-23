@@ -42,7 +42,7 @@ What happens in each cpu state:
   CLK4:  L = D, D = MEM[HL], PR = HL  |   L = MEM[00|ZP+1], PR[7:0] = MEM[ZP]+I
   SCO:  HL = L/00+carry|PR[7:0]       |  HL = MEM[00|ZP+1]+carry|MEM[ZP]+I
   CLK5:         D = MEM[HL], PR = HL  |   D = MEM[MEM[00|ZP+1]+carry|MEM[ZP]+I]
-  SWR:  HL = PC (the next OP)         |
+  SLR:  HL = PC (the next OP)         |
   CLK6:  R = D, D = MEM[HL], PR = HL  |   A = D
 
   SWF:  HL = PC, F = L AOP R
@@ -60,12 +60,12 @@ What happens in each cpu state:
 
           instruction type                       states to go through
 -------------------------------------------------------------------------------
-LD: LOAD/PULL (M -> R)                |  SOP, SLO, SIN, SHI, SCO, SWR
-ST: STORE/PUSH (R -> M)               |  SOP, SLO, SIN, SHI, SCO, SWF
-ACC: LOGIC/ARITH/CMP (A,M -> A,P)     |  SOP, SLO, SIN, SHI, SCO, SWR, SWF
+LD: LOAD/PULL (M -> R)                |  SOP, SLO, SIN, SHI, SCO, SLR
+ST: STORE/PUSH (R -> M)               |  SOP, SLO, SIN, SHI, SCO, SWF, SLR
+ACC: LOGIC/ARITH/CMP (A,M -> A,P)     |  SOP, SLO, SIN, SHI, SCO, SLR, SWF
 R2R: SHIFT/INCR/DECR/TRANSF (R -> R)  |  SOP, SWF
-M2M: SHIFT/INCR/DECR (M -> M)         |  SOP, SLO, SIN, SHI, SCO, SWR, SWF
-FLG: SET/CLEAR FLAG (P)               |  SOP, SWR
+M2M: SHIFT/INCR/DECR (M -> M)         |  SOP, SLO, SIN, SHI, SCO, SLR, SWF
+FLG: SET/CLEAR FLAG (P)               |  SOP, SLR
 
 Instruction groups: xxxxxxgg
 -------------------------------------------------------------------------------
@@ -115,7 +115,7 @@ Logic that implements a load and its addressing modes:
  SIN | 0  | 1  |  0  |  1   |  0  |  0   |  0  |  0   |  1  | 0  | -  |
  SHI | 0  | 1  |  0  |  1   |  a  |ab+zpy|  0  |  0   |  0  | 0  | 1  |
  SCO | 0  | -  |  1  |  0   |  0  |  -   |  1  |  0   |  1  | 0  | -  |
- SWR | -  | -  |  0  |  0   |  1  |  -   |  -  |  -   | OPC | 1  | 0  |
+ SLR | -  | -  |  0  |  0   |  1  |  -   |  -  |  -   | OPC | 1  | 0  |
 
  S   |  rX  |  rY  | AOP  |
 --------------------------|
@@ -126,11 +126,11 @@ Logic that implements a load and its addressing modes:
  SIN |  0   |  0   | PLUS |
  SHI |id.xy |id.-xy| PLUS |
  SCO |  0   |  0   | PLUS |
- SWR |  -   |  -   | OPC  |
+ SLR |  -   |  -   | OPC  |
 
  S   |  wX  |  wY  |  wA  |
 --------------------------|
- SWR |LD.Gg |LD.gg |LD.gG |
+ SLR |LD.Gg |LD.gg |LD.gG |
 
 #fsm next:
 
@@ -138,24 +138,24 @@ Logic that implements a load and its addressing modes:
 ----------------------------------------------------
  S0   | 000000 | -  | -  | -  |  -  | 000001 | SOP
 
- SOP  | 000001 | 0  | 1  | 0  |  -  | 100000 | SWR
+ SOP  | 000001 | 0  | 1  | 0  |  -  | 100000 | SLR
  SOP  | 000001 | -  | -  | -  |  -  | 000010 | SLO
  SLO  | 000010 | 1  | 0  | 0  |  -  | 000100 | SIN
- SLO  | 000010 | 0  | 0  | 1  |  -  | 100000 | SWR
+ SLO  | 000010 | 0  | 0  | 1  |  -  | 100000 | SLR
  SLO  | 000010 | -  | -  | -  |  -  | 001000 | SHI
  SIN  | 000100 | -  | -  | -  |  -  | 001000 | SHI
  SHI  | 001000 | -  | 1  | -  |  1  | 010000 | SCO
  SHI  | 001000 | 1? | 0  | 0  |  1  | 010000 | SCO
- SHI  | 001000 | -  | -  | -  |  -  | 100000 | SWR
- SCO  | 010000 | -  | -  | -  |  -  | 100000 | SWR
- SWR  | 100000 | -  | -  | -  |  -  | 000001 | SOP
+ SHI  | 001000 | -  | -  | -  |  -  | 100000 | SLR
+ SCO  | 010000 | -  | -  | -  |  -  | 100000 | SLR
+ SLR  | 100000 | -  | -  | -  |  -  | 000001 | SOP
 
 SOP: bit 0 = -4.-3.-2.-1.-0 + 5
 SLO: bit 1 = 0.-imm
 SIN: bit 2 = 1.zpy
 SHI: bit 3 = 1.-zp.-zpy + 2
 SCO: bit 4 = 3.ci
-SWR: bit 5 = 0.imm + 1.zp + 3.-ci + 4
+SLR: bit 5 = 0.imm + 1.zp + 3.-ci + 4
 
 #fsm next signal (TODO):
 
@@ -179,7 +179,11 @@ a9 18             => LDA #18
 b1 1e 00 00 fc 02 => LDA ($1e),y (y=8, $1e=fc, $1f=02), should access $0304
 00 99 08 01       => STA $0108,y (y=8)
 a9 19             => LDA #19
-b9 ff 00          => LDA $0108,y (y=8)
+b9 08 01          => LDA $0108,y (y=8)
+a9 20             => LDA #20
+9d ff 00          => STA $00ff,x (x=7) $0106
+a9 21             => LDA #21
+bd ff 00          => LDA $00ff,x (x=7) $0106
 
  instr   id ab xy
 7  6  5  4  3  2  1  0
@@ -219,7 +223,6 @@ TODOs:
 * Map 01, 10 instr groups to addr modes (1 day)
 * Opcode to signals (instr decoder, ? days):
 - Implement (ZP,x) addr mode
-* SLR => SWR => write register
 - Add SWF (write alu result)
 - Implement store instructions
 - Implement instr group 01 and 10

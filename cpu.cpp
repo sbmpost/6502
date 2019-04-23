@@ -12,8 +12,7 @@ double sc_time_stamp () {	// Called by $time in Verilog
     return main_time;		// Note does conversion to real, to match SystemC
 }
 
-char * states[] = {"S00", "SOP", "SLO", "SIN", "SHI", "SCO", "SWR", "SWF"};
-
+char * states[] = {"S00", "SOP", "SLO", "SIN", "SHI", "SCO", "SLR", "SWF"};
 
 int indexOf(int state) {
     int index = 0;
@@ -28,7 +27,6 @@ int indexOf(int state) {
     }
     return index;
 }
-
 
 int main(int argc, char **argv, char **env) {
     if (0 && argc && argv && env) {}	// Prevent unused variable warnings
@@ -45,7 +43,7 @@ int main(int argc, char **argv, char **env) {
     tfp->open("vlt_dump.vcd");
 #endif
 
-    while (main_time < 127 && !Verilated::gotFinish()) {
+    while (main_time < 161 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (main_time > 1 && (main_time % 2) == 0) {
@@ -87,65 +85,28 @@ int main(int argc, char **argv, char **env) {
     	if (tfp) tfp->dump (main_time);
     #endif
         if (cpu->CLK) {
-/*
-            VL_PRINTF ("[%" VL_PRI64 "d] reg_a: %02x\n",
+            VL_PRINTF ("[%" VL_PRI64 "d] addr: %04x out: %02x in: %02x write: %02x state: %s op: %02x alu_op: %02x alu_a: %02x reg_l: %02x alu_out: %02x reg_x: %02x reg_y: %02x reg_a: %02x\n",
                 main_time,
-                cpu->reg_a
-            );
-
-*/
-///*
-            if (main_time > 110) {
-                VL_PRINTF ("[%" VL_PRI64 "d] addr: %04x data_out: %02x data_in: %02x data_write: %02x state: %s op: %02x alu_a: %02x lo: %02x alu_out: %02x reg_x: %02x reg_y: %02x reg_a: %02x\n",
-                main_time,
-//                cpu->R,
                 cpu->addr_bus,
                 cpu->data_out,
                 cpu->data_in,
                 cpu->data_write,
                 states[indexOf(cpu->curr_st)],
-//                cpu->op_amode,
                 cpu->op,
+                cpu->alu_op,
                 cpu->alu_a,
                 cpu->reg_l,
                 cpu->alu_out,
                 cpu->reg_x,
                 cpu->reg_y,
                 cpu->reg_a
-                );
-            } else {
-                VL_PRINTF ("[%" VL_PRI64 "d] addr: %04x data: %02x state: %s op: %02x alu_a: %02x lo: %02x alu_out: %02x reg_x: %02x reg_y: %02x reg_a: %02x\n",
-                main_time,
-//                cpu->R,
-                cpu->addr_bus,
-                cpu->data_out,
-                states[indexOf(cpu->curr_st)],
-//                cpu->op_amode,
-                cpu->op,
-                cpu->alu_a,
-                cpu->reg_l,
-                cpu->alu_out,
-                cpu->reg_x,
-                cpu->reg_y,
-                cpu->reg_a
-                );
-            }
+            );
 
-            if (cpu->curr_st == 0x20 || cpu->curr_st == 0x40) {
+            if (cpu->curr_st == 0x20) {
                 VL_PRINTF("\n");
             }
-//*/
         }
-/*    	VL_PRINTF ("[%" VL_PRI64 "d] clk: %x r: %x opc: %x amode: %x group: %x addr: %04x\n",
-            main_time,
-            cpu->CLK,
-            cpu->R,
-            cpu->opcode,
-            cpu->addr_mode,
-            cpu->group,
-            cpu->addr_bus
-        );
-*/
+
     	main_time++;
     }
 
@@ -154,15 +115,6 @@ int main(int argc, char **argv, char **env) {
 #if VM_TRACE
     if (tfp) tfp->close();
 #endif
-
-/*
-    if (!cpu->passed) {
-	VL_PRINTF ("A Test failed\n");
-	abort();
-    } else {
-	VL_PRINTF ("All Tests passed\n");
-    }
-*/
 
     exit(0L);
 }
