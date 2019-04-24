@@ -6,13 +6,40 @@
 
 Vcpu *cpu;
 
-vluint64_t main_time = 0;	// Current simulation time (64-bit unsigned)
+// vluint64_t main_time = 0;	// Current simulation time (64-bit unsigned)
+unsigned main_time = 0;
 
 double sc_time_stamp () {	// Called by $time in Verilog
     return main_time;		// Note does conversion to real, to match SystemC
 }
 
-char * states[] = {"S00", "SOP", "SLO", "SIN", "SHI", "SCO", "SLR", "SWF"};
+char * states[] = {"S00", "SOP", "SLO", "SIN", "SHI", "SCO", "SWD", "SLR"};
+
+char * instructions[] = {
+    "LDX #07",
+    "LDY #08",
+    "LDA $00ff,y",
+    "LDA $0108,y",
+    "LDA $01f0,x",
+    "LDA $30,x",
+    "LDA $40,x",
+    "LDA $ff,x",
+    "LDA $0110",
+    "LDA $37",
+    "LDA #18",
+    "LDA ($1e),y",
+    "STA $0108,y",
+    "LDA #19",
+    "LDA $0108,y",
+    "LDA #20",
+    "STA $00ff,x",
+    "LDA #21",
+    "LDA $00ff,x",
+    "INX",
+    "INY",
+    "DEX",
+    "DEY"
+};
 
 int indexOf(int state) {
     int index = 0;
@@ -43,7 +70,8 @@ int main(int argc, char **argv, char **env) {
     tfp->open("vlt_dump.vcd");
 #endif
 
-    while (main_time < 161 && !Verilated::gotFinish()) {
+    int instruction = 0;
+    while (main_time < 175 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (main_time > 1 && (main_time % 2) == 0) {
@@ -85,7 +113,13 @@ int main(int argc, char **argv, char **env) {
     	if (tfp) tfp->dump (main_time);
     #endif
         if (cpu->CLK) {
-            VL_PRINTF ("[%" VL_PRI64 "d] addr: %04x out: %02x in: %02x write: %02x state: %s op: %02x alu_op: %02x alu_a: %02x reg_l: %02x alu_out: %02x reg_x: %02x reg_y: %02x reg_a: %02x\n",
+            if (cpu->curr_st == 0x01 && cpu->op != 0x00 && cpu->op != 0xfc &&
+                instruction < sizeof(instructions)/sizeof(char *))
+                VL_PRINTF("%s\n", instructions[instruction++]);
+
+            // " VL_PRI64 "
+            VL_PRINTF ("[%02d] addr: %04x out: %02x in: %02x wr: %02x st: %s op: %02x a_op: %02x a_ci: %02x "
+                "a_a: %02x r_l: %02x a_out: %02x r_p: %02x r_x: %02x r_y: %02x r_a: %02x\n",
                 main_time,
                 cpu->addr_bus,
                 cpu->data_out,
@@ -94,15 +128,17 @@ int main(int argc, char **argv, char **env) {
                 states[indexOf(cpu->curr_st)],
                 cpu->op,
                 cpu->alu_op,
+                cpu->alu_cin,
                 cpu->alu_a,
                 cpu->reg_l,
                 cpu->alu_out,
+                cpu->reg_p,
                 cpu->reg_x,
                 cpu->reg_y,
                 cpu->reg_a
             );
 
-            if (cpu->curr_st == 0x20) {
+            if (cpu->curr_st == 0x40) {
                 VL_PRINTF("\n");
             }
         }

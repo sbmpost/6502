@@ -7,6 +7,6 @@ module pg(
 );
 
   assign G = (A & B & S[3]) | (A & ~B & S[2]);
-  assign P = A | (B & S[1]) | B & S[0];
+  assign P = A | (~B & S[1]) | B & S[0];
 
 endmodule

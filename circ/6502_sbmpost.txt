@@ -45,7 +45,7 @@ What happens in each cpu state:
   SLR:  HL = PC (the next OP)         |
   CLK6:  R = D, D = MEM[HL], PR = HL  |   A = D
 
-  SWF:  HL = PC, F = L AOP R
+  SWD:  HL = PC, F = L AOP R
   CLK7:  MEM[PR]/R = F
 ----
 
@@ -61,10 +61,10 @@ What happens in each cpu state:
           instruction type                       states to go through
 -------------------------------------------------------------------------------
 LD: LOAD/PULL (M -> R)                |  SOP, SLO, SIN, SHI, SCO, SLR
-ST: STORE/PUSH (R -> M)               |  SOP, SLO, SIN, SHI, SCO, SWF, SLR
-ACC: LOGIC/ARITH/CMP (A,M -> A,P)     |  SOP, SLO, SIN, SHI, SCO, SLR, SWF
-R2R: SHIFT/INCR/DECR/TRANSF (R -> R)  |  SOP, SWF
-M2M: SHIFT/INCR/DECR (M -> M)         |  SOP, SLO, SIN, SHI, SCO, SLR, SWF
+ST: STORE/PUSH (R -> M)               |  SOP, SLO, SIN, SHI, SCO/SWD, SLR
+ACC: LOGIC/ARITH/CMP (A,M -> A,P)     |  SOP, SLO, SIN, SHI, SCO, SLR, SWD
+R2R: SHIFT/INCR/DECR/TRANSF (R -> R)  |  SOP, SWD
+M2M: SHIFT/INCR/DECR (M -> M)         |  SOP, SLO, SIN, SHI, SCO, SLR, SWD
 FLG: SET/CLEAR FLAG (P)               |  SOP, SLR
 
 Instruction groups: xxxxxxgg
@@ -223,7 +223,7 @@ TODOs:
 * Map 01, 10 instr groups to addr modes (1 day)
 * Opcode to signals (instr decoder, ? days):
 - Implement (ZP,x) addr mode
-- Add SWF (write alu result)
+* Add SWD (write data)
 - Implement store instructions
 - Implement instr group 01 and 10
 
