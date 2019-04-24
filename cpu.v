@@ -61,7 +61,7 @@ module cpu(
   parameter group5 = 2'b00;
 
   reg[6:0] curr_st;
-  reg[7:0] curr_op;
+  reg[7:0] reg_o;
   reg[7:0] reg_l;
   reg[7:0] reg_x;
   reg[7:0] reg_y;
@@ -71,7 +71,7 @@ module cpu(
 
   wire[7:0] data_out;
 
-  wire[7:0] op       = curr_st == st_new_op ? data_out : curr_op;
+  wire[7:0] op       = curr_st == st_new_op ? data_out : reg_o;
   wire[2:0] opcode   = op[7:5];
   wire[2:0] op_amode = op[4:2];
   wire[1:0] op_group = op[1:0];
@@ -378,7 +378,7 @@ module cpu(
     prev_addr <= addr_bus;
     case (curr_st)
       st_new_op: begin
-        curr_op <= data_out;
+        reg_o <= data_out;
       end
       st_lo_byte: begin
         reg_l <= data_out;

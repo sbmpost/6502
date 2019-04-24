@@ -1,10 +1,10 @@
 6502 implementation documentation (sbmpost)
 
-Memory (MEM):
+Memory:
 --------------
-- HL: 16 bit address bus pointing to a byte in MEM.
+- HL: 16 bit address bus pointing to a byte in memory.
 - D: 8 bit data bus. It holds the byte that HL is pointing to.
-- D can be seen as a register: the value changes on clock CLK.
+- D can be seen as a register: the value changes on clock.
 
 Registers:
 --------------
@@ -21,6 +21,8 @@ Abbreviations:
 - I = register X/Y
 - R = register A/I
 - F = result of ALU
+- M = memory
+- CLK = Clock
 - AOP = ALU operation
 - P_n = negative set
 - P_v = overflow set
@@ -30,23 +32,23 @@ Abbreviations:
 What happens in each cpu state:
 -------------------------------------------------------------------------------
   S0:   HL = PC = PR = $0000 (state = S0 after RESET)
-  CLK:          D = MEM[HL], PR = HL
+  CLK:          D = M[HL], PR = HL
 
-  SOP:  HL = PC (1st byte after OP)   |  Example: LDA (ZP),Y
-  CLK1:  O = D, D = MEM[HL], PR = HL  |   O = LDA, D = ZP
-  SLO:  HL = PC, ZP: 00|D             |  HL = 00|ZP
-  CLK2:  L = D, D = MEM[HL], PR = HL  |   L = ZP, D = MEM[ZP]
-  SIN:  HL =         00|L+1           |  HL = 00|ZP+1
-  CLK3:  L = D, D = MEM[HL], PR = HL  |   L = MEM[ZP], D = MEM[00|ZP+1]
-  SHI:  HL =       D/00|L+I           |  HL = MEM[00|ZP+1]|MEM[ZP]+I
-  CLK4:  L = D, D = MEM[HL], PR = HL  |   L = MEM[00|ZP+1], PR[7:0] = MEM[ZP]+I
-  SCO:  HL = L/00+carry|PR[7:0]       |  HL = MEM[00|ZP+1]+carry|MEM[ZP]+I
-  CLK5:         D = MEM[HL], PR = HL  |   D = MEM[MEM[00|ZP+1]+carry|MEM[ZP]+I]
-  SLR:  HL = PC (the next OP)         |
-  CLK6:  R = D, D = MEM[HL], PR = HL  |   A = D
+  SOP:  HL = PC (1st byte after OP)     |  Example: LDA (ZP),Y
+  CLK1:  O = D, D = M[HL], PR = HL      |   O = LDA, D = ZP
+  SLO:  HL = PC, ZP: 00|D               |  HL = 00|ZP
+  CLK2:  L = D, D = M[HL], PR = HL      |   L = ZP, D = M[ZP]
+  SIN:  HL =         00|L+1             |  HL = 00|ZP+1
+  CLK3:  L = D, D = M[HL], PR = HL      |   L = M[ZP], D = M[00|ZP+1]
+  SHI:  HL =       D/00|L+I             |  HL = M[00|ZP+1]|M[ZP]+I
+  CLK4:  L = D, D = M[HL], PR = HL      |   L = M[00|ZP+1], PR[7:0] = M[ZP]+I
+  SCO:  HL = L/00+carry|PR[7:0]         |  HL = M[00|ZP+1]+carry|M[ZP]+I
+  CLK5:  M[HL] = R, D = M[HL], PR = HL  |   D = M[M[00|ZP+1]+carry|M[ZP]+I]
+  SWD:  HL = PC, F = L AOP R            |  > only when writing data <
+  CLK6:  M[PR]/R = F/R                  |  > only when writing data <
+  SLR:  HL = PC (the next OP)           |
+  CLK7:  R = D, D = M[HL], PR = HL      |   A = D
 
-  SWD:  HL = PC, F = L AOP R
-  CLK7:  MEM[PR]/R = F
 ----
 
 0x0 = 0000  0x8 = 1000
@@ -224,7 +226,7 @@ TODOs:
 * Opcode to signals (instr decoder, ? days):
 - Implement (ZP,x) addr mode
 * Add SWD (write data)
-- Implement store instructions
+* Implement store instructions
 - Implement instr group 01 and 10
 
 load/store are spread across groups with
