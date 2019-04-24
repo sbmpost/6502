@@ -270,7 +270,6 @@ module cpu(
 
   reg[7:0] alu_a;
   reg[7:0] data_in;
-  reg data_write;
   always @(*) begin
     case (curr_st)
       st_hi_byte: begin
@@ -284,8 +283,8 @@ module cpu(
       st_carry_out,
       st_write_data: begin
         if (instr_store) begin
+          alu_a = 8'h00;
           data_write = 1'b1;
-alu_a = 8'h00;
           if (op_group == group6)
             data_in = reg_x;
           else if (op_group == group5)
@@ -293,14 +292,6 @@ alu_a = 8'h00;
           else if (op_group == group8)
             data_in = reg_a;
         end
-//        if (instr_store) begin
-//          if (op_group == group6)
-//            alu_a = reg_x;
-//          else if (op_group == group5)
-//            alu_a = reg_y;
-//          else if (op_group == group8)
-//            alu_a = reg_a;
- //       end
         else if (instr_incx || instr_decx)
           alu_a = reg_x;
         else if (instr_incy || instr_decy)
@@ -309,8 +300,8 @@ alu_a = 8'h00;
           alu_a = 8'h00;
       end
       default: begin
-data_write = 1'b0;
         alu_a = 8'h00;
+        data_write = 1'b0;
       end
     endcase
   end
