@@ -83,14 +83,10 @@ module MEMORY(
       s_mem_contents[48] = {8'hbd};
       s_mem_contents[49] = {8'hff};
       s_mem_contents[50] = {8'h00};
-      // INX
-      s_mem_contents[51] = {8'he8};
-      // INY
-      s_mem_contents[52] = {8'hc8};
-      // DEX
-      s_mem_contents[53] = {8'hca};
-      // DEY
-      s_mem_contents[54] = {8'h88};
+      // JMP $0305
+      s_mem_contents[51] = {8'h4c};
+      s_mem_contents[52] = {8'h05};
+      s_mem_contents[53] = {8'h03};
 
       // data
       s_mem_contents[55] = {8'hdd};
@@ -99,6 +95,15 @@ module MEMORY(
       s_mem_contents[272] = {8'hbb};
       s_mem_contents[503] = {8'hcc};
       s_mem_contents[772] = {8'hff};
+
+      // INX
+      s_mem_contents[773] = {8'he8};
+      // INY
+      s_mem_contents[774] = {8'hc8};
+      // DEX
+      s_mem_contents[775] = {8'hca};
+      // DEY
+      s_mem_contents[776] = {8'h88};
   end
 
   always @(posedge CLK) begin

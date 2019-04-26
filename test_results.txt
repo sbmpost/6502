@@ -2,8 +2,8 @@ clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -
 clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o verilated.o /usr/local/Cellar/verilator/4.010/share/verilator/include/verilated.cpp
 /usr/bin/perl /usr/local/Cellar/verilator/4.010/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vcpu.cpp > Vcpu__ALLcls.cpp
 /usr/bin/perl /usr/local/Cellar/verilator/4.010/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vcpu__Syms.cpp > Vcpu__ALLsup.cpp
-clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o Vcpu__ALLsup.o Vcpu__ALLsup.cpp
 clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o Vcpu__ALLcls.o Vcpu__ALLcls.cpp
+clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o Vcpu__ALLsup.o Vcpu__ALLsup.cpp
       Archiving Vcpu__ALL.a ...
 ar r Vcpu__ALL.a Vcpu__ALLcls.o Vcpu__ALLsup.o
 ranlib Vcpu__ALL.a
@@ -124,17 +124,22 @@ LDA $00ff,x
 [151] addr:0106 out:00 in:21 wr:00 st:SCO op:bd a_op:19 a_ci:01 a_a:00 r_l:00 a_out:01 r_p:00 r_x:07 r_y:08 r_a:21
 [153] addr:0033 out:20 in:21 wr:00 st:SLR op:bd a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:21
 
+JMP $0305
+[155] addr:0034 out:4c in:08 wr:00 st:SOP op:4c a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:20
+[157] addr:0035 out:05 in:08 wr:00 st:SLO op:4c a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:20
+[159] addr:0305 out:03 in:08 wr:00 st:SHI op:4c a_op:19 a_ci:00 a_a:00 r_l:05 a_out:05 r_p:00 r_x:07 r_y:08 r_a:20
 INX
-[155] addr:0034 out:e8 in:08 wr:00 st:SOP op:e8 a_op:10 a_ci:00 a_a:07 r_l:00 a_out:07 r_p:00 r_x:07 r_y:08 r_a:20
-[157] addr:0034 out:c8 in:08 wr:00 st:SWD op:e8 a_op:10 a_ci:01 a_a:07 r_l:00 a_out:08 r_p:00 r_x:07 r_y:08 r_a:20
+[161] addr:0305 out:e8 in:08 wr:00 st:SOP op:e8 a_op:10 a_ci:00 a_a:07 r_l:03 a_out:07 r_p:00 r_x:07 r_y:08 r_a:20
+[163] addr:0306 out:e8 in:08 wr:00 st:SWD op:e8 a_op:10 a_ci:01 a_a:07 r_l:03 a_out:08 r_p:00 r_x:07 r_y:08 r_a:20
 INY
-[159] addr:0035 out:c8 in:08 wr:00 st:SOP op:c8 a_op:10 a_ci:00 a_a:08 r_l:00 a_out:08 r_p:00 r_x:08 r_y:08 r_a:20
-[161] addr:0035 out:ca in:08 wr:00 st:SWD op:c8 a_op:10 a_ci:01 a_a:08 r_l:00 a_out:09 r_p:00 r_x:08 r_y:08 r_a:20
+[165] addr:0306 out:c8 in:08 wr:00 st:SOP op:c8 a_op:10 a_ci:00 a_a:08 r_l:03 a_out:08 r_p:00 r_x:08 r_y:08 r_a:20
+[167] addr:0307 out:c8 in:08 wr:00 st:SWD op:c8 a_op:10 a_ci:01 a_a:08 r_l:03 a_out:09 r_p:00 r_x:08 r_y:08 r_a:20
 DEX
-[163] addr:0036 out:ca in:08 wr:00 st:SOP op:ca a_op:1f a_ci:00 a_a:08 r_l:00 a_out:07 r_p:00 r_x:08 r_y:09 r_a:20
-[165] addr:0036 out:88 in:08 wr:00 st:SWD op:ca a_op:1f a_ci:00 a_a:08 r_l:00 a_out:07 r_p:00 r_x:08 r_y:09 r_a:20
+[169] addr:0307 out:ca in:08 wr:00 st:SOP op:ca a_op:1f a_ci:00 a_a:08 r_l:03 a_out:07 r_p:00 r_x:08 r_y:09 r_a:20
+[171] addr:0308 out:ca in:08 wr:00 st:SWD op:ca a_op:1f a_ci:00 a_a:08 r_l:03 a_out:07 r_p:00 r_x:08 r_y:09 r_a:20
 DEY
-[167] addr:0037 out:88 in:09 wr:00 st:SOP op:88 a_op:1f a_ci:00 a_a:09 r_l:00 a_out:08 r_p:01 r_x:07 r_y:09 r_a:20
-[169] addr:0037 out:dd in:09 wr:00 st:SWD op:88 a_op:1f a_ci:00 a_a:09 r_l:00 a_out:08 r_p:01 r_x:07 r_y:09 r_a:20
-[171] addr:0038 out:dd in:20 wr:00 st:SOP op:dd a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:01 r_x:07 r_y:08 r_a:20
-[173] addr:0039 out:00 in:20 wr:00 st:SLO op:dd a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:01 r_x:07 r_y:08 r_a:20
+[173] addr:0308 out:88 in:09 wr:00 st:SOP op:88 a_op:1f a_ci:00 a_a:09 r_l:03 a_out:08 r_p:01 r_x:07 r_y:09 r_a:20
+[175] addr:0309 out:88 in:09 wr:00 st:SWD op:88 a_op:1f a_ci:00 a_a:09 r_l:03 a_out:08 r_p:01 r_x:07 r_y:09 r_a:20
+[177] addr:0309 out:00 in:08 wr:00 st:SOP op:00 a_op:19 a_ci:00 a_a:00 r_l:03 a_out:03 r_p:01 r_x:07 r_y:08 r_a:20
+[179] addr:030a out:00 in:08 wr:00 st:SLR op:00 a_op:19 a_ci:00 a_a:00 r_l:03 a_out:03 r_p:01 r_x:07 r_y:08 r_a:20
+

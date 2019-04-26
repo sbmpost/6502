@@ -35,6 +35,7 @@ char * instructions[] = {
     "STA $00ff,x",
     "LDA #21",
     "LDA $00ff,x",
+    "JMP $0305",
     "INX",
     "INY",
     "DEX",
@@ -71,7 +72,7 @@ int main(int argc, char **argv, char **env) {
 #endif
 
     int instruction = 0;
-    while (main_time < 175 && !Verilated::gotFinish()) {
+    while (main_time < 181 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (main_time > 1 && (main_time % 2) == 0) {

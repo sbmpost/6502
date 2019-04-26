@@ -12,6 +12,8 @@ module cpu(
   output data_write,
   output curr_st,
   output pc_inc,
+  output pc_out,
+  output pc_write,
   output op,
   output alu_op,
   output alu_cin,
@@ -185,14 +187,17 @@ module cpu(
     curr_st == st_load_reg ||
     curr_st == st_hi_byte && op_amode[bit_ab];
 
+  wire pc_write =
+    curr_st == st_hi_byte && instr_jmp;
+
   wire[15:0] pc_out;
 
   pc pc_1(
-    .LO(8'b0),
-    .HI(8'b0),
+    .LO(alu_out),
+    .HI(data_out),
     .CI(1'b0),
     .R(R),
-    .WR(1'b0),
+    .WR(pc_write),
     .INC(pc_inc),
     .CLK(CLK),
     .PC(pc_out),
@@ -224,7 +229,10 @@ module cpu(
         addr_bus = { alu_out, prev_addr[7:0] };
       end
       st_write_data: begin
-        addr_bus = { prev_addr };
+        if (instr_store)
+          addr_bus = prev_addr;
+        else
+          addr_bus = pc_out;
       end
       default: begin
         addr_bus = pc_out;
@@ -327,6 +335,7 @@ module cpu(
         st_hi_byte: begin
           if (hi_addr_from_data_out && p_carry)
                                         curr_st <= st_carry_out;
+          else if (instr_jmp)           curr_st <= st_new_op;
           else                          curr_st <= st_load_or_write;
         end
         st_carry_out: begin
