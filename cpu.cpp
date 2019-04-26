@@ -118,8 +118,8 @@ int main(int argc, char **argv, char **env) {
                 VL_PRINTF("%s\n", instructions[instruction++]);
 
             // " VL_PRI64 "
-            VL_PRINTF ("[%02d] addr: %04x out: %02x in: %02x wr: %02x st: %s op: %02x a_op: %02x a_ci: %02x "
-                "a_a: %02x r_l: %02x a_out: %02x r_p: %02x r_x: %02x r_y: %02x r_a: %02x\n",
+            VL_PRINTF ("[%02d] addr:%04x out:%02x in:%02x wr:%02x st:%s op:%02x a_op:%02x a_ci:%02x "
+                "a_a:%02x r_l:%02x a_out:%02x r_p:%02x r_x:%02x r_y:%02x r_a:%02x\n",
                 main_time,
                 cpu->addr_bus,
                 cpu->data_out,

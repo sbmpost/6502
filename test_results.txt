@@ -8,133 +8,133 @@ clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -
 ar r Vcpu__ALL.a Vcpu__ALLcls.o Vcpu__ALLsup.o
 ranlib Vcpu__ALL.a
 clang++    cpu.o verilated.o Vcpu__ALL.a    -o Vcpu -lm -lstdc++ 
-[03] addr: 0000 out: 00 in: 00 wr: 00 st: S00 op: 00 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 00 r_y: 00 r_a: 00
+[03] addr:0000 out:00 in:00 wr:00 st:S00 op:00 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:00 r_y:00 r_a:00
 LDX #07
-[05] addr: 0001 out: a2 in: 00 wr: 00 st: SOP op: a2 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 00 r_y: 00 r_a: 00
-[07] addr: 0002 out: 07 in: 00 wr: 00 st: SLR op: a2 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 00 r_y: 00 r_a: 00
+[05] addr:0001 out:a2 in:00 wr:00 st:SOP op:a2 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:00 r_y:00 r_a:00
+[07] addr:0002 out:07 in:00 wr:00 st:SLR op:a2 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:00 r_y:00 r_a:00
 
 LDY #08
-[09] addr: 0003 out: a0 in: 00 wr: 00 st: SOP op: a0 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 00 r_a: 00
-[11] addr: 0004 out: 08 in: 00 wr: 00 st: SLR op: a0 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 00 r_a: 00
+[09] addr:0003 out:a0 in:00 wr:00 st:SOP op:a0 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:00 r_a:00
+[11] addr:0004 out:08 in:00 wr:00 st:SLR op:a0 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:00 r_a:00
 
 LDA $00ff,y
-[13] addr: 0005 out: b9 in: 00 wr: 00 st: SOP op: b9 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: 00
-[15] addr: 0006 out: ff in: 00 wr: 00 st: SLO op: b9 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: 00
-[17] addr: 0007 out: 00 in: 00 wr: 00 st: SHI op: b9 a_op: 19 a_ci: 00 a_a: 08 r_l: ff a_out: 07 r_p: 00 r_x: 07 r_y: 08 r_a: 00
-[19] addr: 0107 out: b9 in: 00 wr: 00 st: SCO op: b9 a_op: 19 a_ci: 01 a_a: 00 r_l: 00 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: 00
-[21] addr: 0007 out: aa in: 00 wr: 00 st: SLR op: b9 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: 00
+[13] addr:0005 out:b9 in:00 wr:00 st:SOP op:b9 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:00
+[15] addr:0006 out:ff in:00 wr:00 st:SLO op:b9 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:00
+[17] addr:0007 out:00 in:00 wr:00 st:SHI op:b9 a_op:19 a_ci:00 a_a:08 r_l:ff a_out:07 r_p:00 r_x:07 r_y:08 r_a:00
+[19] addr:0107 out:b9 in:00 wr:00 st:SCO op:b9 a_op:19 a_ci:01 a_a:00 r_l:00 a_out:01 r_p:00 r_x:07 r_y:08 r_a:00
+[21] addr:0007 out:aa in:00 wr:00 st:SLR op:b9 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:00
 
 LDA $0108,y
-[23] addr: 0008 out: b9 in: 00 wr: 00 st: SOP op: b9 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: aa
-[25] addr: 0009 out: 08 in: 00 wr: 00 st: SLO op: b9 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: aa
-[27] addr: 0110 out: 01 in: 00 wr: 00 st: SHI op: b9 a_op: 19 a_ci: 00 a_a: 08 r_l: 08 a_out: 10 r_p: 00 r_x: 07 r_y: 08 r_a: aa
-[29] addr: 000a out: bb in: 00 wr: 00 st: SLR op: b9 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: aa
+[23] addr:0008 out:b9 in:aa wr:00 st:SOP op:b9 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:aa
+[25] addr:0009 out:08 in:aa wr:00 st:SLO op:b9 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:aa
+[27] addr:0110 out:01 in:aa wr:00 st:SHI op:b9 a_op:19 a_ci:00 a_a:08 r_l:08 a_out:10 r_p:00 r_x:07 r_y:08 r_a:aa
+[29] addr:000a out:bb in:aa wr:00 st:SLR op:b9 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:aa
 
 LDA $01f0,x
-[31] addr: 000b out: bd in: 00 wr: 00 st: SOP op: bd a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: bb
-[33] addr: 000c out: f0 in: 00 wr: 00 st: SLO op: bd a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: bb
-[35] addr: 01f7 out: 01 in: 00 wr: 00 st: SHI op: bd a_op: 19 a_ci: 00 a_a: 07 r_l: f0 a_out: f7 r_p: 00 r_x: 07 r_y: 08 r_a: bb
-[37] addr: 000d out: cc in: 00 wr: 00 st: SLR op: bd a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: bb
+[31] addr:000b out:bd in:bb wr:00 st:SOP op:bd a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:bb
+[33] addr:000c out:f0 in:bb wr:00 st:SLO op:bd a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:bb
+[35] addr:01f7 out:01 in:bb wr:00 st:SHI op:bd a_op:19 a_ci:00 a_a:07 r_l:f0 a_out:f7 r_p:00 r_x:07 r_y:08 r_a:bb
+[37] addr:000d out:cc in:bb wr:00 st:SLR op:bd a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:bb
 
 LDA $30,x
-[39] addr: 000e out: b5 in: 00 wr: 00 st: SOP op: b5 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: cc
-[41] addr: 000f out: 30 in: 00 wr: 00 st: SLO op: b5 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: cc
-[43] addr: 0037 out: b5 in: 00 wr: 00 st: SHI op: b5 a_op: 19 a_ci: 00 a_a: 07 r_l: 30 a_out: 37 r_p: 00 r_x: 07 r_y: 08 r_a: cc
-[45] addr: 000f out: dd in: 00 wr: 00 st: SLR op: b5 a_op: 19 a_ci: 00 a_a: 00 r_l: b5 a_out: b5 r_p: 00 r_x: 07 r_y: 08 r_a: cc
+[39] addr:000e out:b5 in:cc wr:00 st:SOP op:b5 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:cc
+[41] addr:000f out:30 in:cc wr:00 st:SLO op:b5 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:cc
+[43] addr:0037 out:b5 in:cc wr:00 st:SHI op:b5 a_op:19 a_ci:00 a_a:07 r_l:30 a_out:37 r_p:00 r_x:07 r_y:08 r_a:cc
+[45] addr:000f out:dd in:cc wr:00 st:SLR op:b5 a_op:19 a_ci:00 a_a:00 r_l:b5 a_out:b5 r_p:00 r_x:07 r_y:08 r_a:cc
 
 LDA $40,x
-[47] addr: 0010 out: b5 in: 00 wr: 00 st: SOP op: b5 a_op: 19 a_ci: 00 a_a: 00 r_l: b5 a_out: b5 r_p: 00 r_x: 07 r_y: 08 r_a: dd
-[49] addr: 0011 out: 40 in: 00 wr: 00 st: SLO op: b5 a_op: 19 a_ci: 00 a_a: 00 r_l: b5 a_out: b5 r_p: 00 r_x: 07 r_y: 08 r_a: dd
-[51] addr: 0047 out: b5 in: 00 wr: 00 st: SHI op: b5 a_op: 19 a_ci: 00 a_a: 07 r_l: 40 a_out: 47 r_p: 00 r_x: 07 r_y: 08 r_a: dd
-[53] addr: 0011 out: ee in: 00 wr: 00 st: SLR op: b5 a_op: 19 a_ci: 00 a_a: 00 r_l: b5 a_out: b5 r_p: 00 r_x: 07 r_y: 08 r_a: dd
+[47] addr:0010 out:b5 in:dd wr:00 st:SOP op:b5 a_op:19 a_ci:00 a_a:00 r_l:b5 a_out:b5 r_p:00 r_x:07 r_y:08 r_a:dd
+[49] addr:0011 out:40 in:dd wr:00 st:SLO op:b5 a_op:19 a_ci:00 a_a:00 r_l:b5 a_out:b5 r_p:00 r_x:07 r_y:08 r_a:dd
+[51] addr:0047 out:b5 in:dd wr:00 st:SHI op:b5 a_op:19 a_ci:00 a_a:07 r_l:40 a_out:47 r_p:00 r_x:07 r_y:08 r_a:dd
+[53] addr:0011 out:ee in:dd wr:00 st:SLR op:b5 a_op:19 a_ci:00 a_a:00 r_l:b5 a_out:b5 r_p:00 r_x:07 r_y:08 r_a:dd
 
 LDA $ff,x
-[55] addr: 0012 out: b5 in: 00 wr: 00 st: SOP op: b5 a_op: 19 a_ci: 00 a_a: 00 r_l: b5 a_out: b5 r_p: 00 r_x: 07 r_y: 08 r_a: ee
-[57] addr: 0013 out: ff in: 00 wr: 00 st: SLO op: b5 a_op: 19 a_ci: 00 a_a: 00 r_l: b5 a_out: b5 r_p: 00 r_x: 07 r_y: 08 r_a: ee
-[59] addr: 0006 out: ad in: 00 wr: 00 st: SHI op: b5 a_op: 19 a_ci: 00 a_a: 07 r_l: ff a_out: 06 r_p: 00 r_x: 07 r_y: 08 r_a: ee
-[61] addr: 0013 out: 00 in: 00 wr: 00 st: SLR op: b5 a_op: 19 a_ci: 00 a_a: 00 r_l: ad a_out: ad r_p: 00 r_x: 07 r_y: 08 r_a: ee
+[55] addr:0012 out:b5 in:ee wr:00 st:SOP op:b5 a_op:19 a_ci:00 a_a:00 r_l:b5 a_out:b5 r_p:00 r_x:07 r_y:08 r_a:ee
+[57] addr:0013 out:ff in:ee wr:00 st:SLO op:b5 a_op:19 a_ci:00 a_a:00 r_l:b5 a_out:b5 r_p:00 r_x:07 r_y:08 r_a:ee
+[59] addr:0006 out:ad in:ee wr:00 st:SHI op:b5 a_op:19 a_ci:00 a_a:07 r_l:ff a_out:06 r_p:00 r_x:07 r_y:08 r_a:ee
+[61] addr:0013 out:00 in:ee wr:00 st:SLR op:b5 a_op:19 a_ci:00 a_a:00 r_l:ad a_out:ad r_p:00 r_x:07 r_y:08 r_a:ee
 
 LDA $0110
-[63] addr: 0014 out: ad in: 00 wr: 00 st: SOP op: ad a_op: 19 a_ci: 00 a_a: 00 r_l: ad a_out: ad r_p: 00 r_x: 07 r_y: 08 r_a: 00
-[65] addr: 0015 out: 10 in: 00 wr: 00 st: SLO op: ad a_op: 19 a_ci: 00 a_a: 00 r_l: ad a_out: ad r_p: 00 r_x: 07 r_y: 08 r_a: 00
-[67] addr: 0110 out: 01 in: 00 wr: 00 st: SHI op: ad a_op: 19 a_ci: 00 a_a: 00 r_l: 10 a_out: 10 r_p: 00 r_x: 07 r_y: 08 r_a: 00
-[69] addr: 0016 out: bb in: 00 wr: 00 st: SLR op: ad a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: 00
+[63] addr:0014 out:ad in:00 wr:00 st:SOP op:ad a_op:19 a_ci:00 a_a:00 r_l:ad a_out:ad r_p:00 r_x:07 r_y:08 r_a:00
+[65] addr:0015 out:10 in:00 wr:00 st:SLO op:ad a_op:19 a_ci:00 a_a:00 r_l:ad a_out:ad r_p:00 r_x:07 r_y:08 r_a:00
+[67] addr:0110 out:01 in:00 wr:00 st:SHI op:ad a_op:19 a_ci:00 a_a:00 r_l:10 a_out:10 r_p:00 r_x:07 r_y:08 r_a:00
+[69] addr:0016 out:bb in:00 wr:00 st:SLR op:ad a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:00
 
 LDA $37
-[71] addr: 0017 out: a5 in: 00 wr: 00 st: SOP op: a5 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: bb
-[73] addr: 0037 out: 37 in: 00 wr: 00 st: SLO op: a5 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: bb
-[75] addr: 0018 out: dd in: 00 wr: 00 st: SLR op: a5 a_op: 19 a_ci: 00 a_a: 00 r_l: 37 a_out: 37 r_p: 00 r_x: 07 r_y: 08 r_a: bb
+[71] addr:0017 out:a5 in:bb wr:00 st:SOP op:a5 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:bb
+[73] addr:0037 out:37 in:bb wr:00 st:SLO op:a5 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:bb
+[75] addr:0018 out:dd in:bb wr:00 st:SLR op:a5 a_op:19 a_ci:00 a_a:00 r_l:37 a_out:37 r_p:00 r_x:07 r_y:08 r_a:bb
 
 LDA #18
-[77] addr: 0019 out: a9 in: 00 wr: 00 st: SOP op: a9 a_op: 19 a_ci: 00 a_a: 00 r_l: 37 a_out: 37 r_p: 00 r_x: 07 r_y: 08 r_a: dd
-[79] addr: 001a out: 18 in: 00 wr: 00 st: SLR op: a9 a_op: 19 a_ci: 00 a_a: 00 r_l: 37 a_out: 37 r_p: 00 r_x: 07 r_y: 08 r_a: dd
+[77] addr:0019 out:a9 in:dd wr:00 st:SOP op:a9 a_op:19 a_ci:00 a_a:00 r_l:37 a_out:37 r_p:00 r_x:07 r_y:08 r_a:dd
+[79] addr:001a out:18 in:dd wr:00 st:SLR op:a9 a_op:19 a_ci:00 a_a:00 r_l:37 a_out:37 r_p:00 r_x:07 r_y:08 r_a:dd
 
 LDA ($1e),y
-[81] addr: 001b out: b1 in: 00 wr: 00 st: SOP op: b1 a_op: 19 a_ci: 00 a_a: 00 r_l: 37 a_out: 37 r_p: 00 r_x: 07 r_y: 08 r_a: 18
-[83] addr: 001e out: 1e in: 00 wr: 00 st: SLO op: b1 a_op: 19 a_ci: 00 a_a: 00 r_l: 37 a_out: 37 r_p: 00 r_x: 07 r_y: 08 r_a: 18
-[85] addr: 001f out: fc in: 00 wr: 00 st: SIN op: b1 a_op: 19 a_ci: 01 a_a: 00 r_l: 1e a_out: 1f r_p: 00 r_x: 07 r_y: 08 r_a: 18
-[87] addr: 0204 out: 02 in: 00 wr: 00 st: SHI op: b1 a_op: 19 a_ci: 00 a_a: 08 r_l: fc a_out: 04 r_p: 00 r_x: 07 r_y: 08 r_a: 18
-[89] addr: 0304 out: 00 in: 00 wr: 00 st: SCO op: b1 a_op: 19 a_ci: 01 a_a: 00 r_l: 02 a_out: 03 r_p: 00 r_x: 07 r_y: 08 r_a: 18
-[91] addr: 001c out: ff in: 00 wr: 00 st: SLR op: b1 a_op: 19 a_ci: 00 a_a: 00 r_l: 02 a_out: 02 r_p: 00 r_x: 07 r_y: 08 r_a: 18
+[81] addr:001b out:b1 in:18 wr:00 st:SOP op:b1 a_op:19 a_ci:00 a_a:00 r_l:37 a_out:37 r_p:00 r_x:07 r_y:08 r_a:18
+[83] addr:001e out:1e in:18 wr:00 st:SLO op:b1 a_op:19 a_ci:00 a_a:00 r_l:37 a_out:37 r_p:00 r_x:07 r_y:08 r_a:18
+[85] addr:001f out:fc in:18 wr:00 st:SIN op:b1 a_op:19 a_ci:01 a_a:00 r_l:1e a_out:1f r_p:00 r_x:07 r_y:08 r_a:18
+[87] addr:0204 out:02 in:18 wr:00 st:SHI op:b1 a_op:19 a_ci:00 a_a:08 r_l:fc a_out:04 r_p:00 r_x:07 r_y:08 r_a:18
+[89] addr:0304 out:00 in:18 wr:00 st:SCO op:b1 a_op:19 a_ci:01 a_a:00 r_l:02 a_out:03 r_p:00 r_x:07 r_y:08 r_a:18
+[91] addr:001c out:ff in:18 wr:00 st:SLR op:b1 a_op:19 a_ci:00 a_a:00 r_l:02 a_out:02 r_p:00 r_x:07 r_y:08 r_a:18
 
-[93] addr: 001d out: 00 in: 00 wr: 00 st: SOP op: 00 a_op: 19 a_ci: 00 a_a: 00 r_l: 02 a_out: 02 r_p: 00 r_x: 07 r_y: 08 r_a: ff
-[95] addr: 001e out: 00 in: 00 wr: 00 st: SLR op: 00 a_op: 19 a_ci: 00 a_a: 00 r_l: 02 a_out: 02 r_p: 00 r_x: 07 r_y: 08 r_a: ff
+[93] addr:001d out:00 in:08 wr:00 st:SOP op:00 a_op:19 a_ci:00 a_a:00 r_l:02 a_out:02 r_p:00 r_x:07 r_y:08 r_a:ff
+[95] addr:001e out:00 in:08 wr:00 st:SLR op:00 a_op:19 a_ci:00 a_a:00 r_l:02 a_out:02 r_p:00 r_x:07 r_y:08 r_a:ff
 
-[97] addr: 001f out: fc in: 00 wr: 00 st: SOP op: fc a_op: 19 a_ci: 00 a_a: 00 r_l: 02 a_out: 02 r_p: 00 r_x: 07 r_y: 08 r_a: ff
-[99] addr: 0020 out: 02 in: 00 wr: 00 st: SLO op: fc a_op: 19 a_ci: 00 a_a: 00 r_l: 02 a_out: 02 r_p: 00 r_x: 07 r_y: 08 r_a: ff
-[101] addr: 0009 out: 00 in: 00 wr: 00 st: SHI op: fc a_op: 19 a_ci: 00 a_a: 07 r_l: 02 a_out: 09 r_p: 00 r_x: 07 r_y: 08 r_a: ff
-[103] addr: 0021 out: 01 in: 00 wr: 00 st: SLR op: fc a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: ff
+[97] addr:001f out:fc in:08 wr:00 st:SOP op:fc a_op:19 a_ci:00 a_a:00 r_l:02 a_out:02 r_p:00 r_x:07 r_y:08 r_a:ff
+[99] addr:0020 out:02 in:08 wr:00 st:SLO op:fc a_op:19 a_ci:00 a_a:00 r_l:02 a_out:02 r_p:00 r_x:07 r_y:08 r_a:ff
+[101] addr:0009 out:00 in:08 wr:00 st:SHI op:fc a_op:19 a_ci:00 a_a:07 r_l:02 a_out:09 r_p:00 r_x:07 r_y:08 r_a:ff
+[103] addr:0021 out:01 in:08 wr:00 st:SLR op:fc a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:ff
 
 STA $0108,y
-[105] addr: 0022 out: 99 in: 00 wr: 00 st: SOP op: 99 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: ff
-[107] addr: 0023 out: 08 in: 00 wr: 00 st: SLO op: 99 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: ff
-[109] addr: 0110 out: 01 in: 00 wr: 00 st: SHI op: 99 a_op: 19 a_ci: 00 a_a: 08 r_l: 08 a_out: 10 r_p: 00 r_x: 07 r_y: 08 r_a: ff
-[111] addr: 0110 out: bb in: ff wr: 01 st: SWD op: 99 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: ff
-[113] addr: 0024 out: bb in: ff wr: 00 st: SLR op: 99 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: ff
+[105] addr:0022 out:99 in:ff wr:00 st:SOP op:99 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:ff
+[107] addr:0023 out:08 in:ff wr:00 st:SLO op:99 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:ff
+[109] addr:0110 out:01 in:ff wr:00 st:SHI op:99 a_op:19 a_ci:00 a_a:08 r_l:08 a_out:10 r_p:00 r_x:07 r_y:08 r_a:ff
+[111] addr:0110 out:bb in:ff wr:01 st:SWD op:99 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:ff
+[113] addr:0024 out:bb in:ff wr:00 st:SLR op:99 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:ff
 
 LDA #19
-[115] addr: 0025 out: a9 in: ff wr: 00 st: SOP op: a9 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: ff
-[117] addr: 0026 out: 19 in: ff wr: 00 st: SLR op: a9 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: ff
+[115] addr:0025 out:a9 in:ff wr:00 st:SOP op:a9 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:ff
+[117] addr:0026 out:19 in:ff wr:00 st:SLR op:a9 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:ff
 
 LDA $0108,y
-[119] addr: 0027 out: b9 in: ff wr: 00 st: SOP op: b9 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: 19
-[121] addr: 0028 out: 08 in: ff wr: 00 st: SLO op: b9 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: 19
-[123] addr: 0110 out: 01 in: ff wr: 00 st: SHI op: b9 a_op: 19 a_ci: 00 a_a: 08 r_l: 08 a_out: 10 r_p: 00 r_x: 07 r_y: 08 r_a: 19
-[125] addr: 0029 out: ff in: ff wr: 00 st: SLR op: b9 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: 19
+[119] addr:0027 out:b9 in:19 wr:00 st:SOP op:b9 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:19
+[121] addr:0028 out:08 in:19 wr:00 st:SLO op:b9 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:19
+[123] addr:0110 out:01 in:19 wr:00 st:SHI op:b9 a_op:19 a_ci:00 a_a:08 r_l:08 a_out:10 r_p:00 r_x:07 r_y:08 r_a:19
+[125] addr:0029 out:ff in:19 wr:00 st:SLR op:b9 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:19
 
 LDA #20
-[127] addr: 002a out: a9 in: ff wr: 00 st: SOP op: a9 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: ff
-[129] addr: 002b out: 20 in: ff wr: 00 st: SLR op: a9 a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: ff
+[127] addr:002a out:a9 in:ff wr:00 st:SOP op:a9 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:ff
+[129] addr:002b out:20 in:ff wr:00 st:SLR op:a9 a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:ff
 
 STA $00ff,x
-[131] addr: 002c out: 9d in: ff wr: 00 st: SOP op: 9d a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: 20
-[133] addr: 002d out: ff in: ff wr: 00 st: SLO op: 9d a_op: 19 a_ci: 00 a_a: 00 r_l: 01 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: 20
-[135] addr: 0006 out: 00 in: ff wr: 00 st: SHI op: 9d a_op: 19 a_ci: 00 a_a: 07 r_l: ff a_out: 06 r_p: 00 r_x: 07 r_y: 08 r_a: 20
-[137] addr: 0106 out: 00 in: 20 wr: 01 st: SCO op: 9d a_op: 19 a_ci: 01 a_a: 00 r_l: 00 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: 20
-[139] addr: 002e out: 00 in: 20 wr: 00 st: SLR op: 9d a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: 20
+[131] addr:002c out:9d in:20 wr:00 st:SOP op:9d a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:20
+[133] addr:002d out:ff in:20 wr:00 st:SLO op:9d a_op:19 a_ci:00 a_a:00 r_l:01 a_out:01 r_p:00 r_x:07 r_y:08 r_a:20
+[135] addr:0006 out:00 in:20 wr:00 st:SHI op:9d a_op:19 a_ci:00 a_a:07 r_l:ff a_out:06 r_p:00 r_x:07 r_y:08 r_a:20
+[137] addr:0106 out:00 in:20 wr:01 st:SCO op:9d a_op:19 a_ci:01 a_a:00 r_l:00 a_out:01 r_p:00 r_x:07 r_y:08 r_a:20
+[139] addr:002e out:00 in:20 wr:00 st:SLR op:9d a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:20
 
 LDA #21
-[141] addr: 002f out: a9 in: 20 wr: 00 st: SOP op: a9 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: 20
-[143] addr: 0030 out: 21 in: 20 wr: 00 st: SLR op: a9 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: 20
+[141] addr:002f out:a9 in:20 wr:00 st:SOP op:a9 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:20
+[143] addr:0030 out:21 in:20 wr:00 st:SLR op:a9 a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:20
 
 LDA $00ff,x
-[145] addr: 0031 out: bd in: 20 wr: 00 st: SOP op: bd a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: 21
-[147] addr: 0032 out: ff in: 20 wr: 00 st: SLO op: bd a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: 21
-[149] addr: 0006 out: 00 in: 20 wr: 00 st: SHI op: bd a_op: 19 a_ci: 00 a_a: 07 r_l: ff a_out: 06 r_p: 00 r_x: 07 r_y: 08 r_a: 21
-[151] addr: 0106 out: 00 in: 20 wr: 00 st: SCO op: bd a_op: 19 a_ci: 01 a_a: 00 r_l: 00 a_out: 01 r_p: 00 r_x: 07 r_y: 08 r_a: 21
-[153] addr: 0033 out: 20 in: 20 wr: 00 st: SLR op: bd a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: 21
+[145] addr:0031 out:bd in:21 wr:00 st:SOP op:bd a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:21
+[147] addr:0032 out:ff in:21 wr:00 st:SLO op:bd a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:21
+[149] addr:0006 out:00 in:21 wr:00 st:SHI op:bd a_op:19 a_ci:00 a_a:07 r_l:ff a_out:06 r_p:00 r_x:07 r_y:08 r_a:21
+[151] addr:0106 out:00 in:21 wr:00 st:SCO op:bd a_op:19 a_ci:01 a_a:00 r_l:00 a_out:01 r_p:00 r_x:07 r_y:08 r_a:21
+[153] addr:0033 out:20 in:21 wr:00 st:SLR op:bd a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:00 r_x:07 r_y:08 r_a:21
 
 INX
-[155] addr: 0034 out: e8 in: 20 wr: 00 st: SOP op: e8 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 07 r_y: 08 r_a: 20
-[157] addr: 0034 out: c8 in: 20 wr: 00 st: SWD op: e8 a_op: 10 a_ci: 01 a_a: 07 r_l: 00 a_out: 08 r_p: 00 r_x: 07 r_y: 08 r_a: 20
+[155] addr:0034 out:e8 in:08 wr:00 st:SOP op:e8 a_op:10 a_ci:00 a_a:07 r_l:00 a_out:07 r_p:00 r_x:07 r_y:08 r_a:20
+[157] addr:0034 out:c8 in:08 wr:00 st:SWD op:e8 a_op:10 a_ci:01 a_a:07 r_l:00 a_out:08 r_p:00 r_x:07 r_y:08 r_a:20
 INY
-[159] addr: 0035 out: c8 in: 20 wr: 00 st: SOP op: c8 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 08 r_y: 08 r_a: 20
-[161] addr: 0035 out: ca in: 20 wr: 00 st: SWD op: c8 a_op: 10 a_ci: 01 a_a: 08 r_l: 00 a_out: 09 r_p: 00 r_x: 08 r_y: 08 r_a: 20
+[159] addr:0035 out:c8 in:08 wr:00 st:SOP op:c8 a_op:10 a_ci:00 a_a:08 r_l:00 a_out:08 r_p:00 r_x:08 r_y:08 r_a:20
+[161] addr:0035 out:ca in:08 wr:00 st:SWD op:c8 a_op:10 a_ci:01 a_a:08 r_l:00 a_out:09 r_p:00 r_x:08 r_y:08 r_a:20
 DEX
-[163] addr: 0036 out: ca in: 20 wr: 00 st: SOP op: ca a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 00 r_x: 08 r_y: 09 r_a: 20
-[165] addr: 0036 out: 88 in: 20 wr: 00 st: SWD op: ca a_op: 1f a_ci: 00 a_a: 08 r_l: 00 a_out: 07 r_p: 00 r_x: 08 r_y: 09 r_a: 20
+[163] addr:0036 out:ca in:08 wr:00 st:SOP op:ca a_op:1f a_ci:00 a_a:08 r_l:00 a_out:07 r_p:00 r_x:08 r_y:09 r_a:20
+[165] addr:0036 out:88 in:08 wr:00 st:SWD op:ca a_op:1f a_ci:00 a_a:08 r_l:00 a_out:07 r_p:00 r_x:08 r_y:09 r_a:20
 DEY
-[167] addr: 0037 out: 88 in: 20 wr: 00 st: SOP op: 88 a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 01 r_x: 07 r_y: 09 r_a: 20
-[169] addr: 0037 out: dd in: 20 wr: 00 st: SWD op: 88 a_op: 1f a_ci: 00 a_a: 09 r_l: 00 a_out: 08 r_p: 01 r_x: 07 r_y: 09 r_a: 20
-[171] addr: 0038 out: dd in: 20 wr: 00 st: SOP op: dd a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 01 r_x: 07 r_y: 08 r_a: 20
-[173] addr: 0039 out: 00 in: 20 wr: 00 st: SLO op: dd a_op: 19 a_ci: 00 a_a: 00 r_l: 00 a_out: 00 r_p: 01 r_x: 07 r_y: 08 r_a: 20
+[167] addr:0037 out:88 in:09 wr:00 st:SOP op:88 a_op:1f a_ci:00 a_a:09 r_l:00 a_out:08 r_p:01 r_x:07 r_y:09 r_a:20
+[169] addr:0037 out:dd in:09 wr:00 st:SWD op:88 a_op:1f a_ci:00 a_a:09 r_l:00 a_out:08 r_p:01 r_x:07 r_y:09 r_a:20
+[171] addr:0038 out:dd in:20 wr:00 st:SOP op:dd a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:01 r_x:07 r_y:08 r_a:20
+[173] addr:0039 out:00 in:20 wr:00 st:SLO op:dd a_op:19 a_ci:00 a_a:00 r_l:00 a_out:00 r_p:01 r_x:07 r_y:08 r_a:20

@@ -245,65 +245,35 @@ module cpu(
 
   // sr, mode, s3-s0
   parameter alu_op_lo_plus_index = 6'b011001;
-  // parameter alu_op_identity_of_a = 6'b010000;
   parameter alu_op_increm_a_by_1 = 6'b010000; // and set alu_cin
   parameter alu_op_decrem_a_by_1 = 6'b011111;
 
   reg[5:0] alu_op;
   always @(*) begin
-    case (curr_st)
-      st_write_data: begin
-        //if (instr_store)
-          // alu_op = alu_op_identity_of_a;
-        if (instr_incxy)
-          alu_op = alu_op_increm_a_by_1;
-        else if (instr_decxy)
-          alu_op = alu_op_decrem_a_by_1;
-        // else
-        // alu_op = alu_op_lo_plus_index;
-      end
-      default: begin
-        alu_op = alu_op_lo_plus_index;
-      end
-    endcase
+    if (instr_incxy)
+      alu_op = alu_op_increm_a_by_1;
+    else if (instr_decxy)
+      alu_op = alu_op_decrem_a_by_1;
+    else
+      alu_op = alu_op_lo_plus_index;
   end
 
   reg[7:0] alu_a;
-  reg[7:0] data_in;
   always @(*) begin
-    case (curr_st)
-      st_hi_byte: begin
-        if (op_amode[bit_id]) begin
-          if (op_amode[bit_xy])
-            alu_a = reg_x;
-          else
-            alu_a = reg_y;
-        end
-      end
-      st_carry_out,
-      st_write_data: begin
-        if (instr_store) begin
-          alu_a = 8'h00;
-          data_write = 1'b1;
-          if (op_group == group6)
-            data_in = reg_x;
-          else if (op_group == group5)
-            data_in = reg_y;
-          else if (op_group == group8)
-            data_in = reg_a;
-        end
-        else if (instr_incx || instr_decx)
+    if (instr_incx || instr_decx)
+      alu_a = reg_x;
+    else if (instr_incy || instr_decy)
+      alu_a = reg_y;
+    else if (curr_st == st_hi_byte) begin
+      if (op_amode[bit_id]) begin
+        if (op_amode[bit_xy])
           alu_a = reg_x;
-        else if (instr_incy || instr_decy)
-          alu_a = reg_y;
         else
-          alu_a = 8'h00;
+          alu_a = reg_y;
       end
-      default: begin
-        alu_a = 8'h00;
-        data_write = 1'b0;
-      end
-    endcase
+    end
+    else
+      alu_a = 8'h00;
   end
 
   wire alu_cin =
@@ -321,7 +291,7 @@ module cpu(
   );
 
   wire[2:0] immediate = op_group == group8 ? imm : zp_x_in;
-  wire accumulator = op_group == group6 && op_amode == imm;
+  // wire accumulator = op_group == group6 && op_amode == imm;
   wire p_carry = curr_st == st_hi_byte ? alu_cout : reg_p[bit_carry];
 
   reg[6:0] st_load_or_write;
@@ -372,6 +342,21 @@ module cpu(
         default: begin
         end
       endcase
+  end
+
+  wire data_write = instr_store && (
+    curr_st == st_carry_out ||
+    curr_st == st_write_data
+  );
+
+  reg[7:0] data_in;
+  always @(*) begin
+    if (op_group == group6)
+      data_in = reg_x;
+    else if (op_group == group5)
+      data_in = reg_y;
+    else if (op_group == group8)
+      data_in = reg_a;
   end
 
   always @(posedge CLK) begin
