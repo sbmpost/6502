@@ -1,12 +1,11 @@
 #include <verilated.h>
 #include "Vcpu.h"
 #if VM_TRACE
-# include <verilated_vcd_c.h>
+#include <verilated_vcd_c.h>
 #endif
 
 Vcpu *cpu;
 
-// vluint64_t main_time = 0;	// Current simulation time (64-bit unsigned)
 unsigned main_time = 0;
 
 double sc_time_stamp () {	// Called by $time in Verilog
@@ -26,8 +25,8 @@ char * instructions[] = {
     "LDA $ff,x",
     "LDA $0110",
     "LDA $37",
-    "LDA #18",
     "LDA ($1e),y",
+    "JMP $0021",
     "STA $0108,y",
     "LDA #19",
     "LDA $0108,y",
@@ -39,7 +38,8 @@ char * instructions[] = {
     "INX",
     "INY",
     "DEX",
-    "DEY"
+    "DEY",
+    "JMP ($02ff)"
 };
 
 int indexOf(int state) {
@@ -116,10 +116,10 @@ int main(int argc, char **argv, char **env) {
         if (cpu->CLK) {
             if (cpu->curr_st == 0x01 && cpu->op != 0x00 && cpu->op != 0xfc &&
                 instruction < sizeof(instructions)/sizeof(char *))
-                VL_PRINTF("%s\n", instructions[instruction++]);
+                VL_PRINTF("\n%s\n", instructions[instruction++]);
 
-            // " VL_PRI64 "
-            VL_PRINTF ("[%02d] addr:%04x out:%02x in:%02x wr:%02x st:%s op:%02x a_op:%02x a_ci:%02x "
+            VL_PRINTF ("%03d adr:%04x out:%02x in:%02x wr:%01x st:%s "
+                "pc_i:%01x pc_o:%04x pc_wr:%01x op:%02x a_op:%02x a_ci:%01x "
                 "a_a:%02x r_l:%02x a_out:%02x r_p:%02x r_x:%02x r_y:%02x r_a:%02x\n",
                 main_time,
                 cpu->addr_bus,
@@ -127,6 +127,9 @@ int main(int argc, char **argv, char **env) {
                 cpu->data_in,
                 cpu->data_write,
                 states[indexOf(cpu->curr_st)],
+                cpu->pc_inc,
+                cpu->pc_out,
+                cpu->pc_write,
                 cpu->op,
                 cpu->alu_op,
                 cpu->alu_cin,
@@ -138,10 +141,6 @@ int main(int argc, char **argv, char **env) {
                 cpu->reg_y,
                 cpu->reg_a
             );
-
-            if (cpu->curr_st == 0x40) {
-                VL_PRINTF("\n");
-            }
         }
 
     	main_time++;

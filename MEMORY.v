@@ -44,15 +44,16 @@ module MEMORY(
       // LDA $37
       s_mem_contents[22] = {8'ha5};
       s_mem_contents[23] = {8'h37};
-      // LDA #18
-      s_mem_contents[24] = {8'ha9};
-      s_mem_contents[25] = {8'h18};
       // LDA ($1e),y (y=8, $1e=fc, $1f=02), should access $0304
-      s_mem_contents[26] = {8'hb1};
-      s_mem_contents[27] = {8'h1e};
+      s_mem_contents[24] = {8'hb1};
+      s_mem_contents[25] = {8'h1e};
+
+      // JMP $0021
+      s_mem_contents[26] = {8'h4c};
+      s_mem_contents[27] = {8'h21};
+      s_mem_contents[28] = {8'h00};
 
       // data
-      s_mem_contents[28] = {8'h00};
       s_mem_contents[29] = {8'h00};
       s_mem_contents[30] = {8'hfc};
       s_mem_contents[31] = {8'h02};
@@ -94,7 +95,9 @@ module MEMORY(
       s_mem_contents[263] = {8'haa};
       s_mem_contents[272] = {8'hbb};
       s_mem_contents[503] = {8'hcc};
-      s_mem_contents[772] = {8'hff};
+      s_mem_contents[767] = {8'h0e}; // 767 <-> 02ff
+      s_mem_contents[768] = {8'h03}; // 768 <-> 0300
+      s_mem_contents[772] = {8'hff}; // 772 <-> 0304
 
       // INX
       s_mem_contents[773] = {8'he8};
@@ -104,6 +107,13 @@ module MEMORY(
       s_mem_contents[775] = {8'hca};
       // DEY
       s_mem_contents[776] = {8'h88};
+      // JMP ($02ff)
+      s_mem_contents[777] = {8'h6c};
+      s_mem_contents[778] = {8'hff};
+      s_mem_contents[779] = {8'h02};
+      s_mem_contents[780] = {8'h00};
+      s_mem_contents[781] = {8'h00};
+      s_mem_contents[782] = {8'h11};
   end
 
   always @(posedge CLK) begin

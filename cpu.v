@@ -98,7 +98,6 @@ module cpu(
   wire hi_0_or_1 = hi_0_or_1_or_2_or_3 && op_hi[1] == 1'b0;
   wire hi_2_or_3 = hi_0_or_1_or_2_or_3 && op_hi[1] == 1'b1;
   wire hi_4_or_5 = hi_4_or_5_or_6_or_7 && op_hi[1] == 1'b0;
-  wire hi_4_or_6 = hi_4_or_5_or_6_or_7 && op_hi[0] == 1'b0;
   wire hi_6_or_7 = hi_4_or_5_or_6_or_7 && op_hi[1] == 1'b1;
   wire hi_8_or_9 = hi_8_or_9_or_A_or_B && op_hi[1] == 1'b0;
   wire hi_A_or_B = hi_8_or_9_or_A_or_B && op_hi[1] == 1'b1;
@@ -114,6 +113,8 @@ module cpu(
   wire lo_C = op_lo == 4'hC;
 
   wire hi_2 = op_hi == 4'h2;
+  wire hi_4 = op_hi == 4'h4;
+  wire hi_6 = op_hi == 4'h6;
   wire hi_8 = op_hi == 4'h8;
   wire hi_C = op_hi == 4'hC;
   wire hi_E = op_hi == 4'hE;
@@ -149,7 +150,8 @@ module cpu(
   wire instr_nop     = hi_E && lo_A;                               // 1
 
   // Change program counter
-  wire instr_jmp     = hi_4_or_6 && lo_C;                          // 1
+  wire instr_jmpabs  = hi_4 && lo_C;                               // 1
+  wire instr_jmpind  = hi_6 && lo_C;
   wire instr_branch  = op_hi[0] == 1'b1 && lo_0;                   // 8
 
   // Set/Clear bits in reg_p
@@ -183,25 +185,23 @@ module cpu(
 
   wire pc_inc =
     curr_st == st_initial ||
-    curr_st == st_new_op ||
-    curr_st == st_load_reg ||
-    curr_st == st_hi_byte && op_amode[bit_ab];
+    curr_st == st_new_op && ~instr_r2r ||
+    curr_st == st_hi_byte && op_amode[bit_ab] ||
+    curr_st == st_write_data && ~instr_store ||
+    curr_st == st_load_reg;
 
   wire pc_write =
-    curr_st == st_hi_byte && instr_jmp;
+    curr_st == st_hi_byte && instr_jmpabs;
 
   wire[15:0] pc_out;
 
   pc pc_1(
-    .LO(alu_out),
-    .HI(data_out),
-    .CI(1'b0),
+    .D({data_out, alu_out}),
     .R(R),
-    .WR(pc_write),
+    .WE(pc_write),
     .INC(pc_inc),
     .CLK(CLK),
-    .PC(pc_out),
-    .CO()
+    .PC(pc_out)
   );
 
   wire lo_addr_from_data_out = op_amode == zp || op_amode == zp_y_in;
@@ -335,7 +335,7 @@ module cpu(
         st_hi_byte: begin
           if (hi_addr_from_data_out && p_carry)
                                         curr_st <= st_carry_out;
-          else if (instr_jmp)           curr_st <= st_new_op;
+          else if (instr_jmpabs)        curr_st <= st_new_op;
           else                          curr_st <= st_load_or_write;
         end
         st_carry_out: begin
