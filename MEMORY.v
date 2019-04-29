@@ -95,8 +95,8 @@ module MEMORY(
       s_mem_contents[263] = {8'haa};
       s_mem_contents[272] = {8'hbb};
       s_mem_contents[503] = {8'hcc};
-      s_mem_contents[767] = {8'h0e}; // 767 <-> 02ff
-      s_mem_contents[768] = {8'h03}; // 768 <-> 0300
+      s_mem_contents[512] = {8'h03};
+      s_mem_contents[767] = {8'h10}; // 767 <-> 02ff
       s_mem_contents[772] = {8'hff}; // 772 <-> 0304
 
       // INX
@@ -113,7 +113,10 @@ module MEMORY(
       s_mem_contents[779] = {8'h02};
       s_mem_contents[780] = {8'h00};
       s_mem_contents[781] = {8'h00};
-      s_mem_contents[782] = {8'h11};
+      s_mem_contents[782] = {8'h00};
+      s_mem_contents[783] = {8'h00};
+      // INX
+      s_mem_contents[784] = {8'he8};
   end
 
   always @(posedge CLK) begin

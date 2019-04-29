@@ -12,7 +12,7 @@ double sc_time_stamp () {	// Called by $time in Verilog
     return main_time;		// Note does conversion to real, to match SystemC
 }
 
-char * states[] = {"S00", "SOP", "SLO", "SIN", "SHI", "SCO", "SWD", "SLR"};
+char * states[] = {"S00", "SOP", "SLO", "SIN", "SHI", "SCO", "SWD", "SLR", "SJI"};
 
 char * instructions[] = {
     "LDX #07",
@@ -39,7 +39,8 @@ char * instructions[] = {
     "INY",
     "DEX",
     "DEY",
-    "JMP ($02ff)"
+    "JMP ($02ff)",
+    "INX"
 };
 
 int indexOf(int state) {
@@ -52,6 +53,7 @@ int indexOf(int state) {
         case 16: index = 5; break;
         case 32: index = 6; break;
         case 64: index = 7; break;
+        case 128: index = 8; break;
     }
     return index;
 }
@@ -72,7 +74,7 @@ int main(int argc, char **argv, char **env) {
 #endif
 
     int instruction = 0;
-    while (main_time < 181 && !Verilated::gotFinish()) {
+    while (main_time < 183 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (main_time > 1 && (main_time % 2) == 0) {
