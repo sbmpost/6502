@@ -115,8 +115,16 @@ module MEMORY(
       s_mem_contents[781] = {8'h00};
       s_mem_contents[782] = {8'h00};
       s_mem_contents[783] = {8'h00};
-      // INX
-      s_mem_contents[784] = {8'he8};
+      // TXA
+      s_mem_contents[784] = {8'h8a};
+      // TYA
+      s_mem_contents[785] = {8'h98};
+      // TAX
+      s_mem_contents[786] = {8'haa};
+      // INY
+      s_mem_contents[787] = {8'hc8};
+      // TAY
+      s_mem_contents[788] = {8'ha8};
   end
 
   always @(posedge CLK) begin

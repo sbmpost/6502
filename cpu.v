@@ -1,18 +1,4 @@
 // copyright by sbmpost
-/*
-  "mark_style": "squiggly underline",
-  "warning_color": "DDB700",
-  "error_color": "D02000",
-  "show_errors_on_save": false,
-  "tooltip_fontsize": "1rem",
-  "tooltip_theme": "Packages/SublimeLinter/tooltip-themes/Default/Default.tooltip-theme",
-  "tooltips": false,
-  "passive_warnings": false,
-  "use_current_shell_path": false,
-  "wrap_find": true,
-  "rc_search_limit": 3,
-  "shell_timeout": 10,
-*/
 
 module cpu(
   input CLK,
@@ -62,7 +48,7 @@ module cpu(
   parameter ab_x    = 3'b111;
 
   // cpu states
-  parameter st_initial    = 8'b00000000;
+  parameter st_initial    = 8'b00000000; // 0x00
   parameter st_new_op     = 8'b00000001; // 0x01
   parameter st_lo_byte    = 8'b00000010; // 0x02
   parameter st_indirect   = 8'b00000100; // 0x04
@@ -127,10 +113,14 @@ module cpu(
   wire lo_A = op_lo == 4'hA;
   wire lo_C = op_lo == 4'hC;
 
+  // in terms of or's above?
   wire hi_2 = op_hi == 4'h2;
   wire hi_4 = op_hi == 4'h4;
   wire hi_6 = op_hi == 4'h6;
   wire hi_8 = op_hi == 4'h8;
+  wire hi_9 = op_hi == 4'h9;
+  wire hi_A = op_hi == 4'hA;
+  wire hi_B = op_hi == 4'hB;
   wire hi_C = op_hi == 4'hC;
   wire hi_E = op_hi == 4'hE;
 
@@ -147,17 +137,22 @@ module cpu(
   wire instr_eor     = hi_4_or_5 && lo_1_or_5_or_9_or_D;           // 1
   wire instr_adc     = hi_6_or_7 && lo_1_or_5_or_9_or_D;           // 1
   wire instr_sbc     = hi_E_or_F && lo_1_or_5_or_9_or_D;           // 1
-  wire instr_load    = hi_A_or_B && ~lo_8_or_A && ~instr_branch;   // 1
-  wire instr_store   = hi_8_or_9 && ~lo_8_or_A && ~instr_branch;   // 1
-  wire instr_trxa    = hi_8_or_A && lo_A;                          // 2
-  wire instr_trxs    = hi_9_or_B && lo_A;                          // 2
-  wire instr_trya    = hi_9_or_A && lo_8;                          // 2
+  wire instr_load    = hi_A_or_B && ~lo_8_or_A && ~instr_branch;   // 3
+  wire instr_store   = hi_8_or_9 && ~lo_8_or_A && ~instr_branch;   // 3
+  wire instr_txa     = hi_8 && lo_A;                               // 1
+  wire instr_tax     = hi_A && lo_A;                               // 1
+  wire instr_txs     = hi_9 && lo_A;                               // 1
+  wire instr_tsx     = hi_B && lo_A;                               // 1
+  wire instr_tya     = hi_9 && lo_8;                               // 1
+  wire instr_tay     = hi_A && lo_8;                               // 1
   wire instr_incx    = hi_E && lo_8;                               // 1
   wire instr_incy    = hi_C && lo_8;                               // 1
   wire instr_decx    = hi_C && lo_A;                               // 1
   wire instr_decy    = hi_8 && lo_8;                               // 1
-  wire instr_shl     = hi_0_or_1_or_2_or_3 && lo_2_or_6_or_A_or_E; // 4
-  wire instr_shr     = hi_4_or_5_or_6_or_7 && lo_2_or_6_or_A_or_E; // 4
+  wire instr_asl     = hi_0_or_1 && lo_2_or_6_or_A_or_E;           // 1
+  wire instr_rol     = hi_2_or_3 && lo_2_or_6_or_A_or_E;           // 1
+  wire instr_lsr     = hi_4_or_5 && lo_2_or_6_or_A_or_E;           // 1
+  wire instr_ror     = hi_6_or_7 && lo_2_or_6_or_A_or_E;           // 1
   wire instr_cmp     = hi_C_or_D && lo_1_or_5_or_9_or_D;           // 1
   wire instr_cpx     = hi_E && lo_0_or_4_or_C;                     // 1
   wire instr_cpy     = hi_C && lo_0_or_4_or_C;                     // 1
@@ -177,12 +172,13 @@ module cpu(
   wire instr_decmem  = hi_C_or_D && lo_6_or_E;                     // 1
                                                                    // tot: 48
   // m2m/a2a (group6, accumulator mode indicates A2A)
-  wire instr_shift   = instr_shl || instr_shr;
+  // wire instr_shl     = instr_asl || instr_rol;
+  // wire instr_shr     = instr_lsr || instr_ror;
 
   // r2r
   wire instr_incxy   = instr_incx || instr_incy;
   wire instr_decxy   = instr_decx || instr_decy;
-  wire instr_trans   = instr_trxa || instr_trxs || instr_trya;
+  wire instr_trans   = hi_8_or_9_or_A_or_B && lo_A || hi_9_or_A && lo_8;
   wire instr_r2r     = instr_incxy || instr_decxy || instr_trans;
 
   // ma2a (group8)
@@ -284,20 +280,26 @@ module cpu(
 
   reg[5:0] alu_op;
   always @(*) begin
-    if (instr_incxy)
-      alu_op = alu_op_increm_a_by_1;
-    else if (instr_decxy)
-      alu_op = alu_op_decrem_a_by_1;
+    if (instr_r2r) begin
+      if (instr_incxy)
+        alu_op = alu_op_increm_a_by_1;
+      if (instr_decxy)
+        alu_op = alu_op_decrem_a_by_1;
+    end
     else
       alu_op = alu_op_lo_plus_index;
   end
 
   reg[7:0] alu_a;
   always @(*) begin
-    if (instr_incx || instr_decx)
-      alu_a = reg_x;
-    else if (instr_incy || instr_decy)
-      alu_a = reg_y;
+    if (instr_r2r) begin
+      if (instr_incx || instr_decx || instr_txa || instr_txs)
+        alu_a = reg_x;
+      if (instr_incy || instr_decy || instr_tya)
+        alu_a = reg_y;
+      if (instr_tax || instr_tay)
+        alu_a = reg_a;
+    end
     else if (curr_st == st_hi_byte) begin
       if (op_amode[bit_id]) begin
         if (op_amode[bit_xy])
@@ -314,7 +316,7 @@ module cpu(
     curr_st == st_indirect ||
     curr_st == st_carry_out ||
     curr_st == st_write_data && instr_incxy ||
-    curr_st == st_load_reg; // for instr_jmpind;
+    curr_st == st_load_reg;
 
   alu8 alu_1(
     .A(alu_a),
@@ -333,7 +335,7 @@ module cpu(
   always @(*) begin
     if (instr_load)
       st_load_or_write = st_load_reg;
-    else if (instr_store)
+    if (instr_store)
       st_load_or_write = st_write_data;
   end
 
@@ -392,9 +394,9 @@ module cpu(
   always @(*) begin
     if (op_group == group6)
       data_in = reg_x;
-    else if (op_group == group5)
+    if (op_group == group5)
       data_in = reg_y;
-    else if (op_group == group8)
+    if (op_group == group8)
       data_in = reg_a;
   end
 
@@ -402,6 +404,7 @@ module cpu(
     prev_addr <= addr_bus;
     case (curr_st)
       st_new_op: begin
+        reg_l <= 8'h00;
         reg_o <= data_out;
       end
       st_lo_byte: begin
@@ -411,26 +414,28 @@ module cpu(
         reg_l <= data_out;
       end
       st_hi_byte: begin
-        if (~instr_jmpind)
+        if (hi_addr_from_data_out && p_carry)
           reg_l <= data_out;
       end
       st_carry_out: begin
       end
       st_write_data: begin
         reg_p <= { 3'b000, alu_cout };
-        if (instr_incx || instr_decx)
+        if (instr_incx || instr_decx || instr_tax)
           reg_x <= alu_out;
-        if (instr_incy || instr_decy)
+        if (instr_incy || instr_decy || instr_tay)
           reg_y <= alu_out;
+        if (instr_tya || instr_txa)
+          reg_a <= alu_out;
       end
       st_load_reg: begin
         reg_l <= data_out;
         if (instr_load) begin
           if (op_group == group6)
             reg_x <= data_out;
-          else if (op_group == group5)
+          if (op_group == group5)
             reg_y <= data_out;
-          else if (op_group == group8)
+          if (op_group == group8)
             reg_a <= data_out;
         end
       end
