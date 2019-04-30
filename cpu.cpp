@@ -44,7 +44,13 @@ char * instructions[] = {
     "TYA",
     "TAX",
     "INY",
-    "TAY"
+    "TAY",
+    "ORA $02f7,y",
+    "AND $0b",
+    "EOR ($1e),y",
+    "ADC #11",
+    "ADC $02fc,x",
+    "SBC #44"
 };
 
 int indexOf(int state) {
@@ -78,7 +84,7 @@ int main(int argc, char **argv, char **env) {
 #endif
 
     int instruction = 0;
-    while (main_time < 199 && !Verilated::gotFinish()) {
+    while (main_time < 242 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (main_time > 1 && (main_time % 2) == 0) {
@@ -126,7 +132,7 @@ int main(int argc, char **argv, char **env) {
 
             VL_PRINTF ("%03d adr:%04x out:%02x in:%02x wr:%01x st:%s "
                 "pc_i:%01x pc_o:%04x pc_wr:%01x op:%02x a_op:%02x a_ci:%01x "
-                "a_a:%02x r_l:%02x a_out:%02x r_p:%02x r_x:%02x r_y:%02x r_a:%02x\n",
+                "a_a:%02x a_b:%02x a_out:%02x r_p:%02x r_x:%02x r_y:%02x r_a:%02x\n",
                 main_time,
                 cpu->addr_bus,
                 cpu->data_out,
@@ -140,7 +146,7 @@ int main(int argc, char **argv, char **env) {
                 cpu->alu_op,
                 cpu->alu_cin,
                 cpu->alu_a,
-                cpu->reg_l,
+                cpu->alu_b,
                 cpu->alu_out,
                 cpu->reg_p,
                 cpu->reg_x,

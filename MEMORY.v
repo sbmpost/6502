@@ -47,7 +47,6 @@ module MEMORY(
       // LDA ($1e),y (y=8, $1e=fc, $1f=02), should access $0304
       s_mem_contents[24] = {8'hb1};
       s_mem_contents[25] = {8'h1e};
-
       // JMP $0021
       s_mem_contents[26] = {8'h4c};
       s_mem_contents[27] = {8'h21};
@@ -125,6 +124,26 @@ module MEMORY(
       s_mem_contents[787] = {8'hc8};
       // TAY
       s_mem_contents[788] = {8'ha8};
+      // ORA $02f7,y (y=8)
+      s_mem_contents[789] = {8'h1d};
+      s_mem_contents[790] = {8'hf7};
+      s_mem_contents[791] = {8'h02};
+      // AND $0b
+      s_mem_contents[792] = {8'h25};
+      s_mem_contents[793] = {8'h0b};
+      // EOR ($1e),y (y=8)
+      s_mem_contents[794] = {8'h51};
+      s_mem_contents[795] = {8'h1e};
+      // ADC #11
+      s_mem_contents[796] = {8'h69};
+      s_mem_contents[797] = {8'h11};
+      // ADC $02fc,x (x=8)
+      s_mem_contents[798] = {8'h7d};
+      s_mem_contents[799] = {8'hfc};
+      s_mem_contents[800] = {8'h02};
+      // SBC #44
+      s_mem_contents[801] = {8'he9};
+      s_mem_contents[802] = {8'h44};
   end
 
   always @(posedge CLK) begin

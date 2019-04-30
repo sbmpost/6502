@@ -18,7 +18,7 @@ module cpu(
   output alu_op,
   output alu_cin,
   output alu_a,
-  output reg_l,
+  output alu_b,
   output alu_out,
   output reg_p,
   output reg_x,
@@ -182,8 +182,7 @@ module cpu(
   wire instr_r2r     = instr_incxy || instr_decxy || instr_trans;
 
   // ma2a (group8)
-  wire instr_logic   = instr_ora || instr_and || instr_eor;
-  wire instr_arith   = instr_adc || instr_sbc;
+  wire instr_acc     = instr_ora || instr_and || instr_eor || instr_adc || instr_sbc;
 
   // mr2p (cmp: group8, cpx/cpy/bit: group5)
   wire instr_compare = instr_cmp || instr_cpx || instr_cpy || instr_bit;
@@ -277,6 +276,13 @@ module cpu(
   parameter alu_op_lo_plus_index = 6'b011001;
   parameter alu_op_increm_a_by_1 = 6'b010000; // and set alu_cin
   parameter alu_op_decrem_a_by_1 = 6'b011111;
+  parameter alu_op_or = 6'b000001;
+  parameter alu_op_and = 6'b000100;
+  parameter alu_op_eor = 6'b001001;
+  parameter alu_op_adc = 6'b011001;
+  parameter alu_op_sbc = 6'b010110; // and set alu_cin
+  // parameter alu_op_asl = 6'b011100;
+  // parameter alu_op_lsr = 6'b100000;
 
   reg[5:0] alu_op;
   always @(*) begin
@@ -285,6 +291,18 @@ module cpu(
         alu_op = alu_op_increm_a_by_1;
       if (instr_decxy)
         alu_op = alu_op_decrem_a_by_1;
+    end
+    else if (curr_st == st_load_reg) begin
+      if (instr_ora)
+        alu_op = alu_op_or;
+      if (instr_and)
+        alu_op = alu_op_and;
+      if (instr_eor)
+        alu_op = alu_op_eor;
+      if (instr_adc)
+        alu_op = alu_op_adc;
+      if (instr_sbc)
+        alu_op = alu_op_sbc;
     end
     else
       alu_op = alu_op_lo_plus_index;
@@ -308,19 +326,37 @@ module cpu(
           alu_a = reg_y;
       end
     end
+    else if (curr_st == st_load_reg) begin
+      if (instr_acc)
+        alu_a = reg_a;
+      else
+        alu_a = 8'h00;
+    end
     else
       alu_a = 8'h00;
+  end
+
+  reg[7:0] alu_b;
+  always @(*) begin
+    if (curr_st == st_load_reg) begin
+      if (instr_acc)
+        alu_b = data_out;
+      else
+        alu_b = reg_l;
+    end
+    else
+      alu_b = reg_l;
   end
 
   wire alu_cin =
     curr_st == st_indirect ||
     curr_st == st_carry_out ||
     curr_st == st_write_data && instr_incxy ||
-    curr_st == st_load_reg;
+    curr_st == st_load_reg && (instr_jmpind || reg_p[0]);
 
   alu8 alu_1(
     .A(alu_a),
-    .B(reg_l),
+    .B(alu_b),
     .CI(alu_cin),
     .OP(alu_op),
     .CO(alu_cout),
@@ -420,7 +456,6 @@ module cpu(
       st_carry_out: begin
       end
       st_write_data: begin
-        reg_p <= { 3'b000, alu_cout };
         if (instr_incx || instr_decx || instr_tax)
           reg_x <= alu_out;
         if (instr_incy || instr_decy || instr_tay)
@@ -429,6 +464,7 @@ module cpu(
           reg_a <= alu_out;
       end
       st_load_reg: begin
+        reg_p <= { 3'b000, alu_cout };
         reg_l <= data_out;
         if (instr_load) begin
           if (op_group == group6)
@@ -438,6 +474,8 @@ module cpu(
           if (op_group == group8)
             reg_a <= data_out;
         end
+        else if (instr_acc)
+          reg_a <= alu_out;
       end
       default: begin
       end
