@@ -280,7 +280,7 @@ module cpu(
   parameter alu_op_and = 6'b000100;
   parameter alu_op_eor = 6'b001001;
   parameter alu_op_adc = 6'b011001;
-  parameter alu_op_sbc = 6'b010110; // and set alu_cin
+  parameter alu_op_sbc = 6'b010110;
   // parameter alu_op_asl = 6'b011100;
   // parameter alu_op_lsr = 6'b100000;
 
@@ -352,7 +352,7 @@ module cpu(
     curr_st == st_indirect ||
     curr_st == st_carry_out ||
     curr_st == st_write_data && instr_incxy ||
-    curr_st == st_load_reg && (instr_jmpind || reg_p[0]);
+    curr_st == st_load_reg && (instr_jmpind || reg_p[bit_carry]);
 
   alu8 alu_1(
     .A(alu_a),
@@ -440,8 +440,8 @@ module cpu(
     prev_addr <= addr_bus;
     case (curr_st)
       st_new_op: begin
-        reg_l <= 8'h00;
         reg_o <= data_out;
+        reg_l <= 8'h00;
       end
       st_lo_byte: begin
         reg_l <= data_out;

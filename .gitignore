@@ -14,3 +14,6 @@ a.out
 cpu.sublime-project
 cpu.sublime-workspace
 build
+synth.v
+breaks
+breaks-old
