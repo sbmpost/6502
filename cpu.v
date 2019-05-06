@@ -208,7 +208,8 @@ module cpu(
   wire[15:0] pc_out;
 
   pc pc_1(
-    .D({data_out, alu_out}),
+    // .D({data_out, alu_out}),
+    .D(addr_bus),
     .R(R),
     .WE(pc_write),
     .INC(pc_inc),
@@ -261,6 +262,25 @@ module cpu(
     endcase
   end
 
+  wire data_write = instr_store && (
+    curr_st == st_carry_out ||
+    curr_st == st_write_data
+  );
+
+  reg[7:0] reg_xya;
+  always @(*) begin
+    if (op_group == group6)
+      reg_xya = reg_x;
+    if (op_group == group5)
+      if (hi_E)
+        reg_xya = reg_x;
+      else
+        reg_xya = reg_y;
+    if (op_group == group8)
+      reg_xya = reg_a;
+  end
+
+  wire[7:0] data_in = reg_xya;
   MEMORY mem(
     .CLK(CLK),
     .WE(data_write),
@@ -295,13 +315,13 @@ module cpu(
     else if (curr_st == st_load_reg) begin
       if (instr_ora)
         alu_op = alu_op_or;
-      if (instr_and)
+      if (instr_and || instr_bit)
         alu_op = alu_op_and;
       if (instr_eor)
         alu_op = alu_op_eor;
       if (instr_adc)
         alu_op = alu_op_adc;
-      if (instr_sbc)
+      if (instr_sbc || instr_compare)
         alu_op = alu_op_sbc;
     end
     else
@@ -311,12 +331,7 @@ module cpu(
   reg[7:0] alu_a;
   always @(*) begin
     if (instr_r2r) begin
-      if (instr_incx || instr_decx || instr_txa || instr_txs)
-        alu_a = reg_x;
-      if (instr_incy || instr_decy || instr_tya)
-        alu_a = reg_y;
-      if (instr_tax || instr_tay)
-        alu_a = reg_a;
+      alu_a = reg_xya;
     end
     else if (curr_st == st_hi_byte) begin
       if (op_amode[bit_id]) begin
@@ -327,8 +342,8 @@ module cpu(
       end
     end
     else if (curr_st == st_load_reg) begin
-      if (instr_acc)
-        alu_a = reg_a;
+      if (instr_acc || instr_compare)
+        alu_a = reg_xya;
       else
         alu_a = 8'h00;
     end
@@ -339,7 +354,7 @@ module cpu(
   reg[7:0] alu_b;
   always @(*) begin
     if (curr_st == st_load_reg) begin
-      if (instr_acc)
+      if (instr_acc || instr_compare)
         alu_b = data_out;
       else
         alu_b = reg_l;
@@ -421,27 +436,11 @@ module cpu(
       endcase
   end
 
-  wire data_write = instr_store && (
-    curr_st == st_carry_out ||
-    curr_st == st_write_data
-  );
-
-  reg[7:0] data_in;
-  always @(*) begin
-    if (op_group == group6)
-      data_in = reg_x;
-    if (op_group == group5)
-      data_in = reg_y;
-    if (op_group == group8)
-      data_in = reg_a;
-  end
-
   always @(posedge CLK) begin
-    prev_addr <= addr_bus;
+    prev_addr <= addr_bus; // todo: needed?
     case (curr_st)
       st_new_op: begin
         reg_o <= data_out;
-        reg_l <= 8'h00;
       end
       st_lo_byte: begin
         reg_l <= data_out;
@@ -456,16 +455,29 @@ module cpu(
       st_carry_out: begin
       end
       st_write_data: begin
-        if (instr_incx || instr_decx || instr_tax)
+        if (instr_incx || instr_decx)
           reg_x <= alu_out;
-        if (instr_incy || instr_decy || instr_tay)
+        if (instr_incy || instr_decy)
           reg_y <= alu_out;
-        if (instr_tya || instr_txa)
-          reg_a <= alu_out;
+        if (instr_tax)
+          reg_x <= reg_a;
+        if (instr_txa)
+          reg_a <= reg_x;
+        if (instr_tay)
+          reg_y <= reg_a;
+        if (instr_tya)
+          reg_a <= reg_y;
       end
       st_load_reg: begin
-        reg_p <= { 3'b000, alu_cout };
         reg_l <= data_out;
+
+        if (instr_bit) begin
+          reg_p[bit_overflow] <= data_out[6];
+          reg_p[bit_negative] <= data_out[7];
+        end
+        else
+          reg_p <= { 3'b000, alu_cout }; // todo
+
         if (instr_load) begin
           if (op_group == group6)
             reg_x <= data_out;
