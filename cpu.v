@@ -182,7 +182,8 @@ module cpu(
   wire instr_r2r     = instr_incxy || instr_decxy || instr_trans;
 
   // ma2a (group8)
-  wire instr_acc     = instr_ora || instr_and || instr_eor || instr_adc || instr_sbc;
+  wire instr_arith   = instr_adc || instr_sbc;
+  wire instr_acc     = instr_ora || instr_and || instr_eor || instr_arith;
 
   // mr2p (cmp: group8, cpx/cpy/bit: group5)
   wire instr_compare = instr_cmp || instr_cpx || instr_cpy || instr_bit;
@@ -367,7 +368,8 @@ module cpu(
     curr_st == st_indirect ||
     curr_st == st_carry_out ||
     curr_st == st_write_data && instr_incxy ||
-    curr_st == st_load_reg && (instr_jmpind || reg_p[bit_carry]);
+    curr_st == st_load_reg && (instr_jmpind ||
+      instr_compare || reg_p[bit_carry]);
 
   alu8 alu_1(
     .A(alu_a),
@@ -475,8 +477,8 @@ module cpu(
           reg_p[bit_overflow] <= data_out[6];
           reg_p[bit_negative] <= data_out[7];
         end
-        else
-          reg_p <= { 3'b000, alu_cout }; // todo
+        else if (instr_arith || instr_compare)
+          reg_p[bit_carry] <= alu_cout;
 
         if (instr_load) begin
           if (op_group == group6)

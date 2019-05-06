@@ -45,12 +45,17 @@ char * instructions[] = {
     "TAX",
     "INY",
     "TAY",
-    "ORA $02f7,y",
+    "INY",
+    "ORA $02f7,x",
     "AND $0b",
     "EOR ($1e),y",
-    "ADC #11",
+    "ADC #08",
     "ADC $02fc,x",
-    "SBC #44"
+    "SBC #44",
+    "CPY $01",
+    "CPX $0304",
+    "CMP ($1e),y",
+    "INC $0304"
 };
 
 int indexOf(int state) {
@@ -84,7 +89,7 @@ int main(int argc, char **argv, char **env) {
 #endif
 
     int instruction = 0;
-    while (main_time < 242 && !Verilated::gotFinish()) {
+    while (main_time < 275 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (main_time > 1 && (main_time % 2) == 0) {

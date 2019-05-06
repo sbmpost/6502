@@ -18,7 +18,7 @@ module alu4(
   pg pg_2(.A(A[2]), .B(B[2]), .S(S), .G(g2), .P(p2));
   pg pg_3(.A(A[3]), .B(B[3]), .S(S), .G(g3), .P(p3));
 
-  assign F[0] = (p0 ^ g0) ^ 
+  assign F[0] = (p0 ^ g0) ^
     ((M & CI));
   assign F[1] = (p1 ^ g1) ^
     ((M & CI & p0          ) | (M & g0));
@@ -27,8 +27,8 @@ module alu4(
   assign F[3] = (p3 ^ g3) ^
     ((M & CI & p0 & p1 & p2) | (M & g0 & p1 & p2) | (M & g1 & p2) | (M & g2));
 
-  assign CO = CI & p0 & p1 & p2 & p3;
   assign G = (g0 & p1 & p2 & p3) | (g1 & p2 & p3) | (g2 & p3) | g3;
+  assign CO = (CI & p0 & p1 & p2 & p3) | G;
   assign P = (p0 & p1 & p2 & p3);
 
 endmodule
