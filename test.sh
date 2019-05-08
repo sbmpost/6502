@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ./compile && ./run > test_out.txt
+echo $(date) >> test_out.txt
 if [ $? -eq 0 ]; then
   cat test_results.txt | grep -v "clang++" | cut -d' ' -f16- > test_out1.txt
   cat test_out.txt | grep -v "clang++" | cut -d' ' -f16- > test_out2.txt

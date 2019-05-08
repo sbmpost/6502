@@ -55,7 +55,10 @@ char * instructions[] = {
     "CPY $01",
     "CPX $0304",
     "CMP ($1e),y",
-    "INC $0304"
+    "INC $02ff",
+    "LDX $02ff",
+    "DEC $08,x",
+    "LDY $08,x"
 };
 
 int indexOf(int state) {
@@ -89,7 +92,7 @@ int main(int argc, char **argv, char **env) {
 #endif
 
     int instruction = 0;
-    while (main_time < 275 && !Verilated::gotFinish()) {
+    while (main_time < 310 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (main_time > 1 && (main_time % 2) == 0) {

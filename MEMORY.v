@@ -156,8 +156,20 @@ module MEMORY(
       // CMP ($1e),y
       s_mem_contents[809] = 8'hd1;
       s_mem_contents[810] = 8'h1e;
-      // INC $0304
+      // INC $02ff
       s_mem_contents[811] = 8'hee;
+      s_mem_contents[812] = 8'hff;
+      s_mem_contents[813] = 8'h02;
+      // LDX $02ff
+      s_mem_contents[814] = 8'hae;
+      s_mem_contents[815] = 8'hff;
+      s_mem_contents[816] = 8'h02;
+      // DEC $08,x
+      s_mem_contents[817] = 8'hd6;
+      s_mem_contents[818] = 8'h08;
+      // LDY $08,x
+      s_mem_contents[819] = 8'hb4;
+      s_mem_contents[820] = 8'h08;
   end
 
   always @(posedge CLK) begin
