@@ -170,6 +170,42 @@ module MEMORY(
       // LDY $08,x
       s_mem_contents[819] = 8'hb4;
       s_mem_contents[820] = 8'h08;
+      // LSR $08,x
+      s_mem_contents[821] = 8'h56;
+      s_mem_contents[822] = 8'h08;
+      // LDY $08,x
+      s_mem_contents[823] = 8'hb4;
+      s_mem_contents[824] = 8'h08;
+      // ASL $08,x
+      s_mem_contents[825] = 8'h16;
+      s_mem_contents[826] = 8'h08;
+      // LDY $08,x
+      s_mem_contents[827] = 8'hb4;
+      s_mem_contents[828] = 8'h08;
+      // ROR $08,x
+      s_mem_contents[829] = 8'h76;
+      s_mem_contents[830] = 8'h08;
+      // LDY $08,x
+      s_mem_contents[831] = 8'hb4;
+      s_mem_contents[832] = 8'h08;
+      // ROL $08,x
+      s_mem_contents[833] = 8'h36;
+      s_mem_contents[834] = 8'h08;
+      // LDY $08,x
+      s_mem_contents[835] = 8'hb4;
+      s_mem_contents[836] = 8'h08;
+      // LSR A
+      s_mem_contents[837] = 8'h4a;
+      // ASL A
+      s_mem_contents[838] = 8'h0a;
+      // ROR A
+      s_mem_contents[839] = 8'h6a;
+      // ROL A
+      s_mem_contents[840] = 8'h2a;
+      // SEC
+      s_mem_contents[841] = 8'h38;
+      // CLC
+      s_mem_contents[842] = 8'h18;
   end
 
   always @(posedge CLK) begin
