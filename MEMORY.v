@@ -173,10 +173,10 @@ module MEMORY(
   end
 
   always @(posedge CLK) begin
-    if (WE) begin
+    if (WE)
       s_mem_contents[Address] <= DataIn;
-    end
-    DataOut <= s_mem_contents[Address];
+    else
+      DataOut <= s_mem_contents[Address];
   end
 
 endmodule
