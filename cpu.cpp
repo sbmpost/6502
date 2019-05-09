@@ -58,6 +58,11 @@ char * instructions[] = {
     "INC $02ff",
     "LDX $02ff",
     "DEC $08,x",
+    "LDA #81",
+    "LSR A",
+    "ROL A",
+    "ASL A",
+    "ROR A",
     "LDY $08,x",
     "LSR $08,x",
     "LDY $08,x",
@@ -67,10 +72,6 @@ char * instructions[] = {
     "LDY $08,x",
     "ROL $08,x",
     "LDY $08,x",
-    "LSR A",
-    "ASL A",
-    "ROR A",
-    "ROL A",
     "SEC",
     "CLC"
 };

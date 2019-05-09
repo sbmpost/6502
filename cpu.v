@@ -471,7 +471,8 @@ module cpu(
           reg_p[bit_overflow] <= data_out[6];
           reg_p[bit_negative] <= data_out[7];
         end
-        else if (instr_arith || instr_compare || instr_shift)
+        else if (instr_arith || instr_compare ||
+            instr_shift && accumulator)
           reg_p[bit_carry] <= alu_cout;
 
         if (instr_load) begin
