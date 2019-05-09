@@ -32,10 +32,14 @@ module cpu(
   parameter bit_xy = 0; // x/y reg (x)
 
   // bits in reg_p
-  parameter bit_negative = 3;
-  parameter bit_overflow = 2;
-  parameter bit_zero     = 1;
-  parameter bit_carry    = 0;
+  parameter bit_negative  = 7;
+  parameter bit_overflow  = 6;
+  parameter bit_ignored   = 5;
+  parameter bit_break     = 4;
+  parameter bit_decimal   = 3;
+  parameter bit_interrupt = 2;
+  parameter bit_zero      = 1;
+  parameter bit_carry     = 0;
 
   // cpu states
   parameter st_initial    = 8'b00000000; // 0x00
@@ -72,7 +76,7 @@ module cpu(
   reg[7:0] reg_x;
   reg[7:0] reg_y;
   reg[7:0] reg_a;
-  reg[3:0] reg_p;
+  reg[7:0] reg_p;
   reg[15:0] prev_addr;
 
   wire[7:0] data_out;
@@ -409,6 +413,7 @@ module cpu(
         st_new_op: begin
           if (instr_r2r)                           curr_st <= st_load_reg;
           else if (op_amode == immediate)          curr_st <= st_load_or_write;
+          else if (instr_setflag)                  curr_st <= st_new_op;
           else                                     curr_st <= st_lo_byte;
         end
         st_lo_byte: begin
@@ -447,6 +452,14 @@ module cpu(
     case (curr_st)
       st_new_op: begin
         reg_o <= data_out;
+        if (instr_setflag) begin
+          case (op_hi[3:2])
+            2'b00: reg_p[bit_carry]     <= op_hi[1];
+            2'b01: reg_p[bit_interrupt] <= op_hi[1];
+            2'b10: reg_p[bit_overflow]  <= op_hi[1];
+            2'b11: reg_p[bit_decimal]   <= op_hi[1];
+          endcase
+        end
       end
       st_lo_byte: begin
         reg_l <= data_out;

@@ -73,7 +73,13 @@ char * instructions[] = {
     "ROL $08,x",
     "LDY $08,x",
     "SEC",
-    "CLC"
+    "CLC",
+    "CLV",
+    "BVS $FF",
+    "BVC $01",
+    "LDX $01ab,y",
+    "STX $77,y",
+    "LDA ($ZP,x)"
 };
 
 int indexOf(int state) {
@@ -107,7 +113,7 @@ int main(int argc, char **argv, char **env) {
 #endif
 
     int instruction = 0;
-    while (main_time < 400 && !Verilated::gotFinish()) {
+    while (main_time < 460 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (main_time > 1 && (main_time % 2) == 0) {
