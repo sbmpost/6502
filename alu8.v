@@ -12,8 +12,8 @@ module alu8(
   wire[3:0] f_hi;
   wire co_hi;
 
-  wire[7:0] sr = {OP[7], A[7:1]};
-  wire[7:0] sl = {A[6:0], OP[7]};
+  wire[7:0] sr = { OP[7], A[7:1] };
+  wire[7:0] sl = { A[6:0], OP[7] };
 
   alu4 lo(.A(A[3:0]),
            .B(B[3:0]),
@@ -36,6 +36,6 @@ module alu8(
            .P());
 
   assign CO = OP[5] ? A[0] : (OP[6] ? A[7] : co_hi);
-  assign F = OP[5] ? sr : (OP[6] ? sl : {f_hi, f_lo});
+  assign F = OP[5] ? sr : (OP[6] ? sl : { f_hi, f_lo });
 
 endmodule

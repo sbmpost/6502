@@ -95,8 +95,24 @@ module MEMORY(
       s_mem_contents[272] = 8'hbb;
       s_mem_contents[503] = 8'hcc;
       s_mem_contents[512] = 8'h03;
-      s_mem_contents[767] = 8'h10; // 767 <-> 02ff
-      s_mem_contents[772] = 8'hff; // 772 <-> 0304
+
+      // LDX $01ab,y flip a_mode
+      s_mem_contents[721] = 8'hbe; // $02d1
+      s_mem_contents[722] = 8'hab;
+      s_mem_contents[723] = 8'h01;
+      // STX $77,y flip a_mode
+      s_mem_contents[724] = 8'h96;
+      s_mem_contents[725] = 8'h77;
+      // LDA ($99,x) not supported
+      s_mem_contents[726] = 8'ha1;
+      s_mem_contents[727] = 8'h99;
+      // BVC $79
+      s_mem_contents[728] = 8'h50;
+      s_mem_contents[729] = 8'h79; // $02d9
+
+      // data
+      s_mem_contents[767] = 8'h10; // $02ff
+      s_mem_contents[772] = 8'hff; // $0304
 
       // INX
       s_mem_contents[773] = 8'he8;
@@ -211,24 +227,12 @@ module MEMORY(
       s_mem_contents[844] = 8'h18;
       // CLV
       s_mem_contents[845] = 8'hb8;
-
-// TODO:
-      // BVS $FF
-      s_mem_contents[846] = 8'h70;
-      s_mem_contents[847] = 8'hff;
-      // BVC $01
-      s_mem_contents[848] = 8'h50;
-      s_mem_contents[849] = 8'h01;
-      // LDX $01ab,y flip a_mode
-      s_mem_contents[850] = 8'hbe;
-      s_mem_contents[851] = 8'hab;
-      s_mem_contents[852] = 8'h01;
-      // STX $77,y flip a_mode
-      s_mem_contents[853] = 8'h96;
-      s_mem_contents[854] = 8'h77;
-      // LDA ($ZP,x) not supported
-      s_mem_contents[855] = 8'ha1;
-      s_mem_contents[856] = 8'h99;
+      // BVS $01
+      s_mem_contents[846] = 8'h70; // $034e
+      s_mem_contents[847] = 8'h01; // $034f
+      // BVC $80
+      s_mem_contents[848] = 8'h50; // $0350
+      s_mem_contents[849] = 8'h80; // $0351
 
 // REMAINING:
       // NOP, TXS, TSX,
