@@ -56,7 +56,7 @@ module MEMORY(
       s_mem_contents[29] = 8'h00;
       s_mem_contents[30] = 8'hfc;
       s_mem_contents[31] = 8'h02;
-      s_mem_contents[32] = 8'h00;
+      s_mem_contents[32] = 8'hff;
 
       // STA $0108,y (y=8)
       s_mem_contents[33] = 8'h99;
@@ -96,19 +96,21 @@ module MEMORY(
       s_mem_contents[503] = 8'hcc;
       s_mem_contents[512] = 8'h03;
 
-      // LDX $01ab,y flip a_mode
+      // LDX $01ab,y
       s_mem_contents[721] = 8'hbe; // $02d1
       s_mem_contents[722] = 8'hab;
       s_mem_contents[723] = 8'h01;
-      // STX $77,y flip a_mode
+      // STX $77,y
       s_mem_contents[724] = 8'h96;
       s_mem_contents[725] = 8'h77;
-      // LDA ($99,x) not supported
-      s_mem_contents[726] = 8'ha1;
-      s_mem_contents[727] = 8'h99;
+      // DEX
+      s_mem_contents[726] = 8'hca;
+      // LDA ($20,x)
+      s_mem_contents[727] = 8'ha1;
+      s_mem_contents[728] = 8'h20;
       // BVC $79
-      s_mem_contents[728] = 8'h50;
-      s_mem_contents[729] = 8'h79; // $02d9
+      s_mem_contents[729] = 8'h50;
+      s_mem_contents[730] = 8'h78; // $02d9
 
       // data
       s_mem_contents[767] = 8'h10; // $02ff
@@ -183,7 +185,7 @@ module MEMORY(
       // DEC $08,x
       s_mem_contents[817] = 8'hd6;
       s_mem_contents[818] = 8'h08;
-      // LDA #81 (y=8)
+      // LDA #81
       s_mem_contents[819] = 8'ha9;
       s_mem_contents[820] = 8'h81;
       // LSR A
@@ -233,11 +235,24 @@ module MEMORY(
       // BVC $80
       s_mem_contents[848] = 8'h50; // $0350
       s_mem_contents[849] = 8'h80; // $0351
+      // INX
+      s_mem_contents[850] = 8'he8;
+      // DEX
+      s_mem_contents[851] = 8'hca;
+      // LDA #01
+      s_mem_contents[852] = 8'ha9;
+      s_mem_contents[853] = 8'h01;
+      // TXA
+      s_mem_contents[854] = 8'h8a;
+      // NOP
+      s_mem_contents[855] = 8'hea;
+      // NOP
+      s_mem_contents[856] = 8'hea;
 
 // REMAINING:
-      // NOP, TXS, TSX,
+      // TXS, TSX,
       // PHA, PHP, PLA, PLP,
-      // BRK, JSR, RTS, RTI
+      // JSR, RTS, BRK, RTI
   end
 
   always @(posedge CLK) begin

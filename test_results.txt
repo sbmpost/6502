@@ -2,8 +2,8 @@ clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -
 clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o verilated.o /usr/local/Cellar/verilator/4.010/share/verilator/include/verilated.cpp
 /usr/bin/perl /usr/local/Cellar/verilator/4.010/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vcpu.cpp > Vcpu__ALLcls.cpp
 /usr/bin/perl /usr/local/Cellar/verilator/4.010/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vcpu__Syms.cpp > Vcpu__ALLsup.cpp
-clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o Vcpu__ALLsup.o Vcpu__ALLsup.cpp
 clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o Vcpu__ALLcls.o Vcpu__ALLcls.cpp
+clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o Vcpu__ALLsup.o Vcpu__ALLsup.cpp
       Archiving Vcpu__ALL.a ...
 ar r Vcpu__ALL.a Vcpu__ALLcls.o Vcpu__ALLsup.o
 ranlib Vcpu__ALL.a
@@ -71,7 +71,7 @@ LDA ($1e),y
 079 adr:001e out:1e in:dd wr:0 st:SLO pc_i:0 pc_o:001a pc_wr:0 op:b1 a_op:19 a_ci:0 a_a:00 a_b:dd a_out:dd r_p:00 r_x:07 r_y:08 r_a:dd
 081 adr:001f out:fc in:1f wr:0 st:SIN pc_i:0 pc_o:001a pc_wr:0 op:b1 a_op:19 a_ci:1 a_a:00 a_b:1e a_out:1f r_p:00 r_x:07 r_y:08 r_a:dd
 083 adr:0204 out:02 in:04 wr:0 st:SHI pc_i:0 pc_o:001a pc_wr:0 op:b1 a_op:19 a_ci:0 a_a:08 a_b:fc a_out:04 r_p:00 r_x:07 r_y:08 r_a:dd
-085 adr:0304 out:00 in:03 wr:0 st:SCA pc_i:0 pc_o:001a pc_wr:0 op:b1 a_op:19 a_ci:1 a_a:00 a_b:02 a_out:03 r_p:00 r_x:07 r_y:08 r_a:dd
+085 adr:0304 out:00 in:03 wr:0 st:SCA pc_i:0 pc_o:001a pc_wr:0 op:b1 a_op:19 a_ci:1 a_a:02 a_b:00 a_out:03 r_p:00 r_x:07 r_y:08 r_a:dd
 087 adr:001a out:ff in:02 wr:0 st:SLR pc_i:1 pc_o:001a pc_wr:0 op:b1 a_op:19 a_ci:0 a_a:00 a_b:02 a_out:02 r_p:00 r_x:07 r_y:08 r_a:dd
 
 JMP $0021
@@ -147,24 +147,24 @@ JMP ($02ff)
 175 adr:0310 out:03 in:10 wr:0 st:SWD pc_i:1 pc_o:030d pc_wr:1 op:6c a_op:19 a_ci:0 a_a:00 a_b:10 a_out:10 r_p:00 r_x:07 r_y:08 r_a:20
 
 TXA
-177 adr:0311 out:8a in:17 wr:0 st:SOP pc_i:0 pc_o:0311 pc_wr:0 op:8a a_op:19 a_ci:0 a_a:07 a_b:10 a_out:17 r_p:00 r_x:07 r_y:08 r_a:20
-179 adr:0311 out:98 in:17 wr:0 st:SLR pc_i:1 pc_o:0311 pc_wr:0 op:8a a_op:19 a_ci:0 a_a:07 a_b:10 a_out:17 r_p:00 r_x:07 r_y:08 r_a:20
+177 adr:0311 out:8a in:10 wr:0 st:SOP pc_i:0 pc_o:0311 pc_wr:0 op:8a a_op:19 a_ci:0 a_a:00 a_b:10 a_out:10 r_p:00 r_x:07 r_y:08 r_a:20
+179 adr:0311 out:98 in:07 wr:0 st:SLR pc_i:1 pc_o:0311 pc_wr:0 op:8a a_op:19 a_ci:0 a_a:00 a_b:07 a_out:07 r_p:00 r_x:07 r_y:08 r_a:20
 
 TYA
-181 adr:0312 out:98 in:a0 wr:0 st:SOP pc_i:0 pc_o:0312 pc_wr:0 op:98 a_op:19 a_ci:0 a_a:08 a_b:98 a_out:a0 r_p:00 r_x:07 r_y:08 r_a:07
-183 adr:0312 out:aa in:a0 wr:0 st:SLR pc_i:1 pc_o:0312 pc_wr:0 op:98 a_op:19 a_ci:0 a_a:08 a_b:98 a_out:a0 r_p:00 r_x:07 r_y:08 r_a:07
+181 adr:0312 out:98 in:98 wr:0 st:SOP pc_i:0 pc_o:0312 pc_wr:0 op:98 a_op:19 a_ci:0 a_a:00 a_b:98 a_out:98 r_p:00 r_x:07 r_y:08 r_a:07
+183 adr:0312 out:aa in:08 wr:0 st:SLR pc_i:1 pc_o:0312 pc_wr:0 op:98 a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:00 r_x:07 r_y:08 r_a:07
 
 TAX
-185 adr:0313 out:aa in:b1 wr:0 st:SOP pc_i:0 pc_o:0313 pc_wr:0 op:aa a_op:19 a_ci:0 a_a:07 a_b:aa a_out:b1 r_p:00 r_x:07 r_y:08 r_a:08
-187 adr:0313 out:c8 in:b1 wr:0 st:SLR pc_i:1 pc_o:0313 pc_wr:0 op:aa a_op:19 a_ci:0 a_a:07 a_b:aa a_out:b1 r_p:00 r_x:07 r_y:08 r_a:08
+185 adr:0313 out:aa in:aa wr:0 st:SOP pc_i:0 pc_o:0313 pc_wr:0 op:aa a_op:19 a_ci:0 a_a:00 a_b:aa a_out:aa r_p:00 r_x:07 r_y:08 r_a:08
+187 adr:0313 out:c8 in:08 wr:0 st:SLR pc_i:1 pc_o:0313 pc_wr:0 op:aa a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:00 r_x:07 r_y:08 r_a:08
 
 INY
 189 adr:0314 out:c8 in:d0 wr:0 st:SOP pc_i:0 pc_o:0314 pc_wr:0 op:c8 a_op:19 a_ci:0 a_a:08 a_b:c8 a_out:d0 r_p:00 r_x:08 r_y:08 r_a:08
 191 adr:0314 out:a8 in:09 wr:0 st:SLR pc_i:1 pc_o:0314 pc_wr:0 op:c8 a_op:10 a_ci:1 a_a:08 a_b:c8 a_out:09 r_p:00 r_x:08 r_y:08 r_a:08
 
 TAY
-193 adr:0315 out:a8 in:b1 wr:0 st:SOP pc_i:0 pc_o:0315 pc_wr:0 op:a8 a_op:19 a_ci:0 a_a:09 a_b:a8 a_out:b1 r_p:00 r_x:08 r_y:09 r_a:08
-195 adr:0315 out:c8 in:b1 wr:0 st:SLR pc_i:1 pc_o:0315 pc_wr:0 op:a8 a_op:19 a_ci:0 a_a:09 a_b:a8 a_out:b1 r_p:00 r_x:08 r_y:09 r_a:08
+193 adr:0315 out:a8 in:a8 wr:0 st:SOP pc_i:0 pc_o:0315 pc_wr:0 op:a8 a_op:19 a_ci:0 a_a:00 a_b:a8 a_out:a8 r_p:00 r_x:08 r_y:09 r_a:08
+195 adr:0315 out:c8 in:08 wr:0 st:SLR pc_i:1 pc_o:0315 pc_wr:0 op:a8 a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:00 r_x:08 r_y:09 r_a:08
 
 INY
 197 adr:0316 out:c8 in:d0 wr:0 st:SOP pc_i:0 pc_o:0316 pc_wr:0 op:c8 a_op:19 a_ci:0 a_a:08 a_b:c8 a_out:d0 r_p:00 r_x:08 r_y:08 r_a:08
@@ -186,153 +186,153 @@ EOR ($1e),y
 217 adr:001e out:1e in:f0 wr:0 st:SLO pc_i:0 pc_o:031d pc_wr:0 op:51 a_op:19 a_ci:0 a_a:00 a_b:f0 a_out:f0 r_p:00 r_x:08 r_y:09 r_a:10
 219 adr:001f out:fc in:1f wr:0 st:SIN pc_i:0 pc_o:031d pc_wr:0 op:51 a_op:19 a_ci:1 a_a:00 a_b:1e a_out:1f r_p:00 r_x:08 r_y:09 r_a:10
 221 adr:0205 out:02 in:05 wr:0 st:SHI pc_i:0 pc_o:031d pc_wr:0 op:51 a_op:19 a_ci:0 a_a:09 a_b:fc a_out:05 r_p:00 r_x:08 r_y:09 r_a:10
-223 adr:0305 out:00 in:03 wr:0 st:SCA pc_i:0 pc_o:031d pc_wr:0 op:51 a_op:19 a_ci:1 a_a:00 a_b:02 a_out:03 r_p:00 r_x:08 r_y:09 r_a:10
+223 adr:0305 out:00 in:03 wr:0 st:SCA pc_i:0 pc_o:031d pc_wr:0 op:51 a_op:19 a_ci:1 a_a:02 a_b:00 a_out:03 r_p:00 r_x:08 r_y:09 r_a:10
 225 adr:031d out:e8 in:f8 wr:0 st:SLR pc_i:1 pc_o:031d pc_wr:0 op:51 a_op:09 a_ci:0 a_a:10 a_b:e8 a_out:f8 r_p:00 r_x:08 r_y:09 r_a:10
 
 ADC #08
-227 adr:031e out:69 in:e8 wr:0 st:SOP pc_i:1 pc_o:031e pc_wr:0 op:69 a_op:19 a_ci:0 a_a:00 a_b:e8 a_out:e8 r_p:00 r_x:08 r_y:09 r_a:f8
-229 adr:031f out:08 in:00 wr:0 st:SLR pc_i:1 pc_o:031f pc_wr:0 op:69 a_op:19 a_ci:0 a_a:f8 a_b:08 a_out:00 r_p:00 r_x:08 r_y:09 r_a:f8
+227 adr:031e out:69 in:e8 wr:0 st:SOP pc_i:1 pc_o:031e pc_wr:0 op:69 a_op:19 a_ci:0 a_a:00 a_b:e8 a_out:e8 r_p:c0 r_x:08 r_y:09 r_a:f8
+229 adr:031f out:08 in:00 wr:0 st:SLR pc_i:1 pc_o:031f pc_wr:0 op:69 a_op:19 a_ci:0 a_a:f8 a_b:08 a_out:00 r_p:c0 r_x:08 r_y:09 r_a:f8
 
 ADC $02fc,x
-231 adr:0320 out:7d in:08 wr:0 st:SOP pc_i:1 pc_o:0320 pc_wr:0 op:7d a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:01 r_x:08 r_y:09 r_a:00
-233 adr:0321 out:fc in:08 wr:0 st:SLO pc_i:0 pc_o:0321 pc_wr:0 op:7d a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:01 r_x:08 r_y:09 r_a:00
-235 adr:0204 out:02 in:04 wr:0 st:SHI pc_i:1 pc_o:0321 pc_wr:0 op:7d a_op:19 a_ci:0 a_a:08 a_b:fc a_out:04 r_p:01 r_x:08 r_y:09 r_a:00
-237 adr:0304 out:00 in:03 wr:0 st:SCA pc_i:0 pc_o:0322 pc_wr:0 op:7d a_op:19 a_ci:1 a_a:00 a_b:02 a_out:03 r_p:01 r_x:08 r_y:09 r_a:00
-239 adr:0322 out:ff in:00 wr:0 st:SLR pc_i:1 pc_o:0322 pc_wr:0 op:7d a_op:19 a_ci:1 a_a:00 a_b:ff a_out:00 r_p:01 r_x:08 r_y:09 r_a:00
+231 adr:0320 out:7d in:08 wr:0 st:SOP pc_i:1 pc_o:0320 pc_wr:0 op:7d a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:03 r_x:08 r_y:09 r_a:00
+233 adr:0321 out:fc in:08 wr:0 st:SLO pc_i:0 pc_o:0321 pc_wr:0 op:7d a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:03 r_x:08 r_y:09 r_a:00
+235 adr:0204 out:02 in:04 wr:0 st:SHI pc_i:1 pc_o:0321 pc_wr:0 op:7d a_op:19 a_ci:0 a_a:08 a_b:fc a_out:04 r_p:03 r_x:08 r_y:09 r_a:00
+237 adr:0304 out:00 in:03 wr:0 st:SCA pc_i:0 pc_o:0322 pc_wr:0 op:7d a_op:19 a_ci:1 a_a:02 a_b:00 a_out:03 r_p:03 r_x:08 r_y:09 r_a:00
+239 adr:0322 out:ff in:00 wr:0 st:SLR pc_i:1 pc_o:0322 pc_wr:0 op:7d a_op:19 a_ci:1 a_a:00 a_b:ff a_out:00 r_p:03 r_x:08 r_y:09 r_a:00
 
 SBC #44
-241 adr:0323 out:e9 in:ff wr:0 st:SOP pc_i:1 pc_o:0323 pc_wr:0 op:e9 a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:01 r_x:08 r_y:09 r_a:00
-243 adr:0324 out:44 in:bc wr:0 st:SLR pc_i:1 pc_o:0324 pc_wr:0 op:e9 a_op:16 a_ci:1 a_a:00 a_b:44 a_out:bc r_p:01 r_x:08 r_y:09 r_a:00
+241 adr:0323 out:e9 in:ff wr:0 st:SOP pc_i:1 pc_o:0323 pc_wr:0 op:e9 a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:43 r_x:08 r_y:09 r_a:00
+243 adr:0324 out:44 in:bc wr:0 st:SLR pc_i:1 pc_o:0324 pc_wr:0 op:e9 a_op:16 a_ci:1 a_a:00 a_b:44 a_out:bc r_p:43 r_x:08 r_y:09 r_a:00
 
 CPY $01
-245 adr:0325 out:c4 in:44 wr:0 st:SOP pc_i:1 pc_o:0325 pc_wr:0 op:c4 a_op:19 a_ci:0 a_a:00 a_b:44 a_out:44 r_p:00 r_x:08 r_y:09 r_a:bc
-247 adr:0001 out:01 in:44 wr:0 st:SLO pc_i:0 pc_o:0326 pc_wr:0 op:c4 a_op:19 a_ci:0 a_a:00 a_b:44 a_out:44 r_p:00 r_x:08 r_y:09 r_a:bc
-249 adr:0326 out:07 in:02 wr:0 st:SLR pc_i:1 pc_o:0326 pc_wr:0 op:c4 a_op:16 a_ci:1 a_a:09 a_b:07 a_out:02 r_p:00 r_x:08 r_y:09 r_a:bc
+245 adr:0325 out:c4 in:44 wr:0 st:SOP pc_i:1 pc_o:0325 pc_wr:0 op:c4 a_op:19 a_ci:0 a_a:00 a_b:44 a_out:44 r_p:80 r_x:08 r_y:09 r_a:bc
+247 adr:0001 out:01 in:44 wr:0 st:SLO pc_i:0 pc_o:0326 pc_wr:0 op:c4 a_op:19 a_ci:0 a_a:00 a_b:44 a_out:44 r_p:80 r_x:08 r_y:09 r_a:bc
+249 adr:0326 out:07 in:02 wr:0 st:SLR pc_i:1 pc_o:0326 pc_wr:0 op:c4 a_op:16 a_ci:1 a_a:09 a_b:07 a_out:02 r_p:80 r_x:08 r_y:09 r_a:bc
 
 CPX $0304
-251 adr:0327 out:ec in:07 wr:0 st:SOP pc_i:1 pc_o:0327 pc_wr:0 op:ec a_op:19 a_ci:0 a_a:00 a_b:07 a_out:07 r_p:01 r_x:08 r_y:09 r_a:bc
-253 adr:0328 out:04 in:07 wr:0 st:SLO pc_i:0 pc_o:0328 pc_wr:0 op:ec a_op:19 a_ci:0 a_a:00 a_b:07 a_out:07 r_p:01 r_x:08 r_y:09 r_a:bc
-255 adr:0304 out:03 in:04 wr:0 st:SHI pc_i:1 pc_o:0328 pc_wr:0 op:ec a_op:19 a_ci:0 a_a:00 a_b:04 a_out:04 r_p:01 r_x:08 r_y:09 r_a:bc
-257 adr:0329 out:ff in:09 wr:0 st:SLR pc_i:1 pc_o:0329 pc_wr:0 op:ec a_op:16 a_ci:1 a_a:08 a_b:ff a_out:09 r_p:01 r_x:08 r_y:09 r_a:bc
+251 adr:0327 out:ec in:07 wr:0 st:SOP pc_i:1 pc_o:0327 pc_wr:0 op:ec a_op:19 a_ci:0 a_a:00 a_b:07 a_out:07 r_p:41 r_x:08 r_y:09 r_a:bc
+253 adr:0328 out:04 in:07 wr:0 st:SLO pc_i:0 pc_o:0328 pc_wr:0 op:ec a_op:19 a_ci:0 a_a:00 a_b:07 a_out:07 r_p:41 r_x:08 r_y:09 r_a:bc
+255 adr:0304 out:03 in:04 wr:0 st:SHI pc_i:1 pc_o:0328 pc_wr:0 op:ec a_op:19 a_ci:0 a_a:00 a_b:04 a_out:04 r_p:41 r_x:08 r_y:09 r_a:bc
+257 adr:0329 out:ff in:09 wr:0 st:SLR pc_i:1 pc_o:0329 pc_wr:0 op:ec a_op:16 a_ci:1 a_a:08 a_b:ff a_out:09 r_p:41 r_x:08 r_y:09 r_a:bc
 
 CMP ($1e),y
-259 adr:032a out:d1 in:ff wr:0 st:SOP pc_i:1 pc_o:032a pc_wr:0 op:d1 a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:00 r_x:08 r_y:09 r_a:bc
-261 adr:001e out:1e in:ff wr:0 st:SLO pc_i:0 pc_o:032b pc_wr:0 op:d1 a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:00 r_x:08 r_y:09 r_a:bc
-263 adr:001f out:fc in:1f wr:0 st:SIN pc_i:0 pc_o:032b pc_wr:0 op:d1 a_op:19 a_ci:1 a_a:00 a_b:1e a_out:1f r_p:00 r_x:08 r_y:09 r_a:bc
-265 adr:0205 out:02 in:05 wr:0 st:SHI pc_i:0 pc_o:032b pc_wr:0 op:d1 a_op:19 a_ci:0 a_a:09 a_b:fc a_out:05 r_p:00 r_x:08 r_y:09 r_a:bc
-267 adr:0305 out:00 in:03 wr:0 st:SCA pc_i:0 pc_o:032b pc_wr:0 op:d1 a_op:19 a_ci:1 a_a:00 a_b:02 a_out:03 r_p:00 r_x:08 r_y:09 r_a:bc
-269 adr:032b out:e8 in:d4 wr:0 st:SLR pc_i:1 pc_o:032b pc_wr:0 op:d1 a_op:16 a_ci:1 a_a:bc a_b:e8 a_out:d4 r_p:00 r_x:08 r_y:09 r_a:bc
+259 adr:032a out:d1 in:ff wr:0 st:SOP pc_i:1 pc_o:032a pc_wr:0 op:d1 a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:40 r_x:08 r_y:09 r_a:bc
+261 adr:001e out:1e in:ff wr:0 st:SLO pc_i:0 pc_o:032b pc_wr:0 op:d1 a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:40 r_x:08 r_y:09 r_a:bc
+263 adr:001f out:fc in:1f wr:0 st:SIN pc_i:0 pc_o:032b pc_wr:0 op:d1 a_op:19 a_ci:1 a_a:00 a_b:1e a_out:1f r_p:40 r_x:08 r_y:09 r_a:bc
+265 adr:0205 out:02 in:05 wr:0 st:SHI pc_i:0 pc_o:032b pc_wr:0 op:d1 a_op:19 a_ci:0 a_a:09 a_b:fc a_out:05 r_p:40 r_x:08 r_y:09 r_a:bc
+267 adr:0305 out:00 in:03 wr:0 st:SCA pc_i:0 pc_o:032b pc_wr:0 op:d1 a_op:19 a_ci:1 a_a:02 a_b:00 a_out:03 r_p:40 r_x:08 r_y:09 r_a:bc
+269 adr:032b out:e8 in:d4 wr:0 st:SLR pc_i:1 pc_o:032b pc_wr:0 op:d1 a_op:16 a_ci:1 a_a:bc a_b:e8 a_out:d4 r_p:40 r_x:08 r_y:09 r_a:bc
 
 INC $02ff
-271 adr:032c out:ee in:e8 wr:0 st:SOP pc_i:1 pc_o:032c pc_wr:0 op:ee a_op:19 a_ci:0 a_a:00 a_b:e8 a_out:e8 r_p:00 r_x:08 r_y:09 r_a:bc
-273 adr:032d out:ff in:e8 wr:0 st:SLO pc_i:0 pc_o:032d pc_wr:0 op:ee a_op:19 a_ci:0 a_a:00 a_b:e8 a_out:e8 r_p:00 r_x:08 r_y:09 r_a:bc
-275 adr:02ff out:02 in:ff wr:0 st:SHI pc_i:1 pc_o:032d pc_wr:0 op:ee a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:00 r_x:08 r_y:09 r_a:bc
-277 adr:02ff out:10 in:11 wr:1 st:SWD pc_i:0 pc_o:032e pc_wr:0 op:ee a_op:10 a_ci:1 a_a:10 a_b:ff a_out:11 r_p:00 r_x:08 r_y:09 r_a:bc
-279 adr:032e out:10 in:00 wr:0 st:SLR pc_i:1 pc_o:032e pc_wr:0 op:ee a_op:10 a_ci:0 a_a:00 a_b:ff a_out:00 r_p:00 r_x:08 r_y:09 r_a:bc
+271 adr:032c out:ee in:e8 wr:0 st:SOP pc_i:1 pc_o:032c pc_wr:0 op:ee a_op:19 a_ci:0 a_a:00 a_b:e8 a_out:e8 r_p:80 r_x:08 r_y:09 r_a:bc
+273 adr:032d out:ff in:e8 wr:0 st:SLO pc_i:0 pc_o:032d pc_wr:0 op:ee a_op:19 a_ci:0 a_a:00 a_b:e8 a_out:e8 r_p:80 r_x:08 r_y:09 r_a:bc
+275 adr:02ff out:02 in:ff wr:0 st:SHI pc_i:1 pc_o:032d pc_wr:0 op:ee a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:80 r_x:08 r_y:09 r_a:bc
+277 adr:02ff out:10 in:11 wr:1 st:SWD pc_i:0 pc_o:032e pc_wr:0 op:ee a_op:10 a_ci:1 a_a:10 a_b:ff a_out:11 r_p:80 r_x:08 r_y:09 r_a:bc
+279 adr:032e out:10 in:00 wr:0 st:SLR pc_i:1 pc_o:032e pc_wr:0 op:ee a_op:10 a_ci:0 a_a:00 a_b:ff a_out:00 r_p:80 r_x:08 r_y:09 r_a:bc
 
 LDX $02ff
-281 adr:032f out:ae in:10 wr:0 st:SOP pc_i:1 pc_o:032f pc_wr:0 op:ae a_op:19 a_ci:0 a_a:00 a_b:10 a_out:10 r_p:00 r_x:08 r_y:09 r_a:bc
-283 adr:0330 out:ff in:10 wr:0 st:SLO pc_i:0 pc_o:0330 pc_wr:0 op:ae a_op:19 a_ci:0 a_a:00 a_b:10 a_out:10 r_p:00 r_x:08 r_y:09 r_a:bc
-285 adr:02ff out:02 in:ff wr:0 st:SHI pc_i:1 pc_o:0330 pc_wr:0 op:ae a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:00 r_x:08 r_y:09 r_a:bc
-287 adr:0331 out:11 in:ff wr:0 st:SLR pc_i:1 pc_o:0331 pc_wr:0 op:ae a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:00 r_x:08 r_y:09 r_a:bc
+281 adr:032f out:ae in:10 wr:0 st:SOP pc_i:1 pc_o:032f pc_wr:0 op:ae a_op:19 a_ci:0 a_a:00 a_b:10 a_out:10 r_p:02 r_x:08 r_y:09 r_a:bc
+283 adr:0330 out:ff in:10 wr:0 st:SLO pc_i:0 pc_o:0330 pc_wr:0 op:ae a_op:19 a_ci:0 a_a:00 a_b:10 a_out:10 r_p:02 r_x:08 r_y:09 r_a:bc
+285 adr:02ff out:02 in:ff wr:0 st:SHI pc_i:1 pc_o:0330 pc_wr:0 op:ae a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:02 r_x:08 r_y:09 r_a:bc
+287 adr:0331 out:11 in:ff wr:0 st:SLR pc_i:1 pc_o:0331 pc_wr:0 op:ae a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:02 r_x:08 r_y:09 r_a:bc
 
 DEC $08,x
-289 adr:0332 out:d6 in:11 wr:0 st:SOP pc_i:1 pc_o:0332 pc_wr:0 op:d6 a_op:19 a_ci:0 a_a:00 a_b:11 a_out:11 r_p:00 r_x:11 r_y:09 r_a:bc
-291 adr:0333 out:08 in:11 wr:0 st:SLO pc_i:0 pc_o:0333 pc_wr:0 op:d6 a_op:19 a_ci:0 a_a:00 a_b:11 a_out:11 r_p:00 r_x:11 r_y:09 r_a:bc
-293 adr:0019 out:a9 in:19 wr:0 st:SHI pc_i:0 pc_o:0333 pc_wr:0 op:d6 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:00 r_x:11 r_y:09 r_a:bc
-295 adr:0019 out:1e in:1d wr:1 st:SWD pc_i:0 pc_o:0333 pc_wr:0 op:d6 a_op:1f a_ci:0 a_a:1e a_b:08 a_out:1d r_p:00 r_x:11 r_y:09 r_a:bc
-297 adr:0333 out:1e in:ff wr:0 st:SLR pc_i:1 pc_o:0333 pc_wr:0 op:d6 a_op:1f a_ci:0 a_a:00 a_b:08 a_out:ff r_p:00 r_x:11 r_y:09 r_a:bc
+289 adr:0332 out:d6 in:11 wr:0 st:SOP pc_i:1 pc_o:0332 pc_wr:0 op:d6 a_op:19 a_ci:0 a_a:00 a_b:11 a_out:11 r_p:02 r_x:11 r_y:09 r_a:bc
+291 adr:0333 out:08 in:11 wr:0 st:SLO pc_i:0 pc_o:0333 pc_wr:0 op:d6 a_op:19 a_ci:0 a_a:00 a_b:11 a_out:11 r_p:02 r_x:11 r_y:09 r_a:bc
+293 adr:0019 out:a9 in:19 wr:0 st:SHI pc_i:0 pc_o:0333 pc_wr:0 op:d6 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:02 r_x:11 r_y:09 r_a:bc
+295 adr:0019 out:1e in:1d wr:1 st:SWD pc_i:0 pc_o:0333 pc_wr:0 op:d6 a_op:1f a_ci:0 a_a:1e a_b:08 a_out:1d r_p:02 r_x:11 r_y:09 r_a:bc
+297 adr:0333 out:1e in:ff wr:0 st:SLR pc_i:1 pc_o:0333 pc_wr:0 op:d6 a_op:1f a_ci:0 a_a:00 a_b:08 a_out:ff r_p:02 r_x:11 r_y:09 r_a:bc
 
 LDA #81
-299 adr:0334 out:a9 in:1e wr:0 st:SOP pc_i:1 pc_o:0334 pc_wr:0 op:a9 a_op:19 a_ci:0 a_a:00 a_b:1e a_out:1e r_p:00 r_x:11 r_y:09 r_a:bc
-301 adr:0335 out:81 in:1e wr:0 st:SLR pc_i:1 pc_o:0335 pc_wr:0 op:a9 a_op:19 a_ci:0 a_a:00 a_b:1e a_out:1e r_p:00 r_x:11 r_y:09 r_a:bc
+299 adr:0334 out:a9 in:1e wr:0 st:SOP pc_i:1 pc_o:0334 pc_wr:0 op:a9 a_op:19 a_ci:0 a_a:00 a_b:1e a_out:1e r_p:c0 r_x:11 r_y:09 r_a:bc
+301 adr:0335 out:81 in:1e wr:0 st:SLR pc_i:1 pc_o:0335 pc_wr:0 op:a9 a_op:19 a_ci:0 a_a:00 a_b:1e a_out:1e r_p:c0 r_x:11 r_y:09 r_a:bc
 
 LSR A
-303 adr:0336 out:4a in:02 wr:0 st:SOP pc_i:0 pc_o:0336 pc_wr:0 op:4a a_op:19 a_ci:0 a_a:81 a_b:81 a_out:02 r_p:00 r_x:11 r_y:09 r_a:81
-305 adr:0336 out:2a in:40 wr:0 st:SLR pc_i:1 pc_o:0336 pc_wr:0 op:4a a_op:20 a_ci:0 a_a:81 a_b:81 a_out:40 r_p:00 r_x:11 r_y:09 r_a:81
+303 adr:0336 out:4a in:02 wr:0 st:SOP pc_i:0 pc_o:0336 pc_wr:0 op:4a a_op:19 a_ci:0 a_a:81 a_b:81 a_out:02 r_p:c0 r_x:11 r_y:09 r_a:81
+305 adr:0336 out:2a in:40 wr:0 st:SLR pc_i:1 pc_o:0336 pc_wr:0 op:4a a_op:20 a_ci:0 a_a:81 a_b:81 a_out:40 r_p:c0 r_x:11 r_y:09 r_a:81
 
 ROL A
 307 adr:0337 out:2a in:6a wr:0 st:SOP pc_i:0 pc_o:0337 pc_wr:0 op:2a a_op:19 a_ci:0 a_a:40 a_b:2a a_out:6a r_p:01 r_x:11 r_y:09 r_a:40
 309 adr:0337 out:0a in:81 wr:0 st:SLR pc_i:1 pc_o:0337 pc_wr:0 op:2a a_op:c0 a_ci:1 a_a:40 a_b:2a a_out:81 r_p:01 r_x:11 r_y:09 r_a:40
 
 ASL A
-311 adr:0338 out:0a in:8b wr:0 st:SOP pc_i:0 pc_o:0338 pc_wr:0 op:0a a_op:19 a_ci:0 a_a:81 a_b:0a a_out:8b r_p:00 r_x:11 r_y:09 r_a:81
-313 adr:0338 out:6a in:02 wr:0 st:SLR pc_i:1 pc_o:0338 pc_wr:0 op:0a a_op:40 a_ci:0 a_a:81 a_b:0a a_out:02 r_p:00 r_x:11 r_y:09 r_a:81
+311 adr:0338 out:0a in:8b wr:0 st:SOP pc_i:0 pc_o:0338 pc_wr:0 op:0a a_op:19 a_ci:0 a_a:81 a_b:0a a_out:8b r_p:80 r_x:11 r_y:09 r_a:81
+313 adr:0338 out:6a in:02 wr:0 st:SLR pc_i:1 pc_o:0338 pc_wr:0 op:0a a_op:40 a_ci:0 a_a:81 a_b:0a a_out:02 r_p:80 r_x:11 r_y:09 r_a:81
 
 ROR A
 315 adr:0339 out:6a in:6c wr:0 st:SOP pc_i:0 pc_o:0339 pc_wr:0 op:6a a_op:19 a_ci:0 a_a:02 a_b:6a a_out:6c r_p:01 r_x:11 r_y:09 r_a:02
 317 adr:0339 out:b4 in:81 wr:0 st:SLR pc_i:1 pc_o:0339 pc_wr:0 op:6a a_op:a0 a_ci:1 a_a:02 a_b:6a a_out:81 r_p:01 r_x:11 r_y:09 r_a:02
 
 LDY $08,x
-319 adr:033a out:b4 in:b4 wr:0 st:SOP pc_i:1 pc_o:033a pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:b4 a_out:b4 r_p:00 r_x:11 r_y:09 r_a:81
-321 adr:033b out:08 in:b4 wr:0 st:SLO pc_i:0 pc_o:033b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:b4 a_out:b4 r_p:00 r_x:11 r_y:09 r_a:81
-323 adr:0019 out:56 in:19 wr:0 st:SHI pc_i:0 pc_o:033b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:00 r_x:11 r_y:09 r_a:81
-325 adr:033b out:1d in:08 wr:0 st:SLR pc_i:1 pc_o:033b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:00 r_x:11 r_y:09 r_a:81
+319 adr:033a out:b4 in:b4 wr:0 st:SOP pc_i:1 pc_o:033a pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:b4 a_out:b4 r_p:80 r_x:11 r_y:09 r_a:81
+321 adr:033b out:08 in:b4 wr:0 st:SLO pc_i:0 pc_o:033b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:b4 a_out:b4 r_p:80 r_x:11 r_y:09 r_a:81
+323 adr:0019 out:56 in:19 wr:0 st:SHI pc_i:0 pc_o:033b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:80 r_x:11 r_y:09 r_a:81
+325 adr:033b out:1d in:08 wr:0 st:SLR pc_i:1 pc_o:033b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:80 r_x:11 r_y:09 r_a:81
 
 LSR $08,x
-327 adr:033c out:56 in:1d wr:0 st:SOP pc_i:1 pc_o:033c pc_wr:0 op:56 a_op:19 a_ci:0 a_a:00 a_b:1d a_out:1d r_p:00 r_x:11 r_y:1d r_a:81
-329 adr:033d out:08 in:1d wr:0 st:SLO pc_i:0 pc_o:033d pc_wr:0 op:56 a_op:19 a_ci:0 a_a:00 a_b:1d a_out:1d r_p:00 r_x:11 r_y:1d r_a:81
-331 adr:0019 out:b4 in:19 wr:0 st:SHI pc_i:0 pc_o:033d pc_wr:0 op:56 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:00 r_x:11 r_y:1d r_a:81
-333 adr:0019 out:1d in:0e wr:1 st:SWD pc_i:0 pc_o:033d pc_wr:0 op:56 a_op:20 a_ci:0 a_a:1d a_b:08 a_out:0e r_p:00 r_x:11 r_y:1d r_a:81
-335 adr:033d out:1d in:00 wr:0 st:SLR pc_i:1 pc_o:033d pc_wr:0 op:56 a_op:20 a_ci:1 a_a:00 a_b:08 a_out:00 r_p:01 r_x:11 r_y:1d r_a:81
+327 adr:033c out:56 in:1d wr:0 st:SOP pc_i:1 pc_o:033c pc_wr:0 op:56 a_op:19 a_ci:0 a_a:00 a_b:1d a_out:1d r_p:80 r_x:11 r_y:1d r_a:81
+329 adr:033d out:08 in:1d wr:0 st:SLO pc_i:0 pc_o:033d pc_wr:0 op:56 a_op:19 a_ci:0 a_a:00 a_b:1d a_out:1d r_p:80 r_x:11 r_y:1d r_a:81
+331 adr:0019 out:b4 in:19 wr:0 st:SHI pc_i:0 pc_o:033d pc_wr:0 op:56 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:80 r_x:11 r_y:1d r_a:81
+333 adr:0019 out:1d in:0e wr:1 st:SWD pc_i:0 pc_o:033d pc_wr:0 op:56 a_op:20 a_ci:0 a_a:1d a_b:08 a_out:0e r_p:80 r_x:11 r_y:1d r_a:81
+335 adr:033d out:1d in:00 wr:0 st:SLR pc_i:1 pc_o:033d pc_wr:0 op:56 a_op:20 a_ci:1 a_a:00 a_b:08 a_out:00 r_p:81 r_x:11 r_y:1d r_a:81
 
 LDY $08,x
-337 adr:033e out:b4 in:1d wr:0 st:SOP pc_i:1 pc_o:033e pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:1d a_out:1d r_p:01 r_x:11 r_y:1d r_a:81
-339 adr:033f out:08 in:1d wr:0 st:SLO pc_i:0 pc_o:033f pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:1d a_out:1d r_p:01 r_x:11 r_y:1d r_a:81
-341 adr:0019 out:16 in:19 wr:0 st:SHI pc_i:0 pc_o:033f pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:01 r_x:11 r_y:1d r_a:81
-343 adr:033f out:0e in:09 wr:0 st:SLR pc_i:1 pc_o:033f pc_wr:0 op:b4 a_op:19 a_ci:1 a_a:00 a_b:08 a_out:09 r_p:01 r_x:11 r_y:1d r_a:81
+337 adr:033e out:b4 in:1d wr:0 st:SOP pc_i:1 pc_o:033e pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:1d a_out:1d r_p:42 r_x:11 r_y:1d r_a:81
+339 adr:033f out:08 in:1d wr:0 st:SLO pc_i:0 pc_o:033f pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:1d a_out:1d r_p:42 r_x:11 r_y:1d r_a:81
+341 adr:0019 out:16 in:19 wr:0 st:SHI pc_i:0 pc_o:033f pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:42 r_x:11 r_y:1d r_a:81
+343 adr:033f out:0e in:08 wr:0 st:SLR pc_i:1 pc_o:033f pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:42 r_x:11 r_y:1d r_a:81
 
 ASL $08,x
-345 adr:0340 out:16 in:0e wr:0 st:SOP pc_i:1 pc_o:0340 pc_wr:0 op:16 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:01 r_x:11 r_y:0e r_a:81
-347 adr:0341 out:08 in:0e wr:0 st:SLO pc_i:0 pc_o:0341 pc_wr:0 op:16 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:01 r_x:11 r_y:0e r_a:81
-349 adr:0019 out:b4 in:19 wr:0 st:SHI pc_i:0 pc_o:0341 pc_wr:0 op:16 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:01 r_x:11 r_y:0e r_a:81
-351 adr:0019 out:0e in:1c wr:1 st:SWD pc_i:0 pc_o:0341 pc_wr:0 op:16 a_op:40 a_ci:0 a_a:0e a_b:08 a_out:1c r_p:01 r_x:11 r_y:0e r_a:81
-353 adr:0341 out:0e in:00 wr:0 st:SLR pc_i:1 pc_o:0341 pc_wr:0 op:16 a_op:40 a_ci:0 a_a:00 a_b:08 a_out:00 r_p:00 r_x:11 r_y:0e r_a:81
+345 adr:0340 out:16 in:0e wr:0 st:SOP pc_i:1 pc_o:0340 pc_wr:0 op:16 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:42 r_x:11 r_y:0e r_a:81
+347 adr:0341 out:08 in:0e wr:0 st:SLO pc_i:0 pc_o:0341 pc_wr:0 op:16 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:42 r_x:11 r_y:0e r_a:81
+349 adr:0019 out:b4 in:19 wr:0 st:SHI pc_i:0 pc_o:0341 pc_wr:0 op:16 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:42 r_x:11 r_y:0e r_a:81
+351 adr:0019 out:0e in:1c wr:1 st:SWD pc_i:0 pc_o:0341 pc_wr:0 op:16 a_op:40 a_ci:0 a_a:0e a_b:08 a_out:1c r_p:42 r_x:11 r_y:0e r_a:81
+353 adr:0341 out:0e in:00 wr:0 st:SLR pc_i:1 pc_o:0341 pc_wr:0 op:16 a_op:40 a_ci:0 a_a:00 a_b:08 a_out:00 r_p:42 r_x:11 r_y:0e r_a:81
 
 LDY $08,x
-355 adr:0342 out:b4 in:0e wr:0 st:SOP pc_i:1 pc_o:0342 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:00 r_x:11 r_y:0e r_a:81
-357 adr:0343 out:08 in:0e wr:0 st:SLO pc_i:0 pc_o:0343 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:00 r_x:11 r_y:0e r_a:81
-359 adr:0019 out:76 in:19 wr:0 st:SHI pc_i:0 pc_o:0343 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:00 r_x:11 r_y:0e r_a:81
-361 adr:0343 out:1c in:08 wr:0 st:SLR pc_i:1 pc_o:0343 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:00 r_x:11 r_y:0e r_a:81
+355 adr:0342 out:b4 in:0e wr:0 st:SOP pc_i:1 pc_o:0342 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:02 r_x:11 r_y:0e r_a:81
+357 adr:0343 out:08 in:0e wr:0 st:SLO pc_i:0 pc_o:0343 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:02 r_x:11 r_y:0e r_a:81
+359 adr:0019 out:76 in:19 wr:0 st:SHI pc_i:0 pc_o:0343 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:02 r_x:11 r_y:0e r_a:81
+361 adr:0343 out:1c in:08 wr:0 st:SLR pc_i:1 pc_o:0343 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:02 r_x:11 r_y:0e r_a:81
 
 ROR $08,x
-363 adr:0344 out:76 in:1c wr:0 st:SOP pc_i:1 pc_o:0344 pc_wr:0 op:76 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:00 r_x:11 r_y:1c r_a:81
-365 adr:0345 out:08 in:1c wr:0 st:SLO pc_i:0 pc_o:0345 pc_wr:0 op:76 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:00 r_x:11 r_y:1c r_a:81
-367 adr:0019 out:b4 in:19 wr:0 st:SHI pc_i:0 pc_o:0345 pc_wr:0 op:76 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:00 r_x:11 r_y:1c r_a:81
-369 adr:0019 out:1c in:0e wr:1 st:SWD pc_i:0 pc_o:0345 pc_wr:0 op:76 a_op:20 a_ci:0 a_a:1c a_b:08 a_out:0e r_p:00 r_x:11 r_y:1c r_a:81
-371 adr:0345 out:1c in:00 wr:0 st:SLR pc_i:1 pc_o:0345 pc_wr:0 op:76 a_op:20 a_ci:0 a_a:00 a_b:08 a_out:00 r_p:00 r_x:11 r_y:1c r_a:81
+363 adr:0344 out:76 in:1c wr:0 st:SOP pc_i:1 pc_o:0344 pc_wr:0 op:76 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:02 r_x:11 r_y:1c r_a:81
+365 adr:0345 out:08 in:1c wr:0 st:SLO pc_i:0 pc_o:0345 pc_wr:0 op:76 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:02 r_x:11 r_y:1c r_a:81
+367 adr:0019 out:b4 in:19 wr:0 st:SHI pc_i:0 pc_o:0345 pc_wr:0 op:76 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:02 r_x:11 r_y:1c r_a:81
+369 adr:0019 out:1c in:0e wr:1 st:SWD pc_i:0 pc_o:0345 pc_wr:0 op:76 a_op:20 a_ci:0 a_a:1c a_b:08 a_out:0e r_p:02 r_x:11 r_y:1c r_a:81
+371 adr:0345 out:1c in:00 wr:0 st:SLR pc_i:1 pc_o:0345 pc_wr:0 op:76 a_op:20 a_ci:0 a_a:00 a_b:08 a_out:00 r_p:02 r_x:11 r_y:1c r_a:81
 
 LDY $08,x
-373 adr:0346 out:b4 in:1c wr:0 st:SOP pc_i:1 pc_o:0346 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:00 r_x:11 r_y:1c r_a:81
-375 adr:0347 out:08 in:1c wr:0 st:SLO pc_i:0 pc_o:0347 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:00 r_x:11 r_y:1c r_a:81
-377 adr:0019 out:36 in:19 wr:0 st:SHI pc_i:0 pc_o:0347 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:00 r_x:11 r_y:1c r_a:81
-379 adr:0347 out:0e in:08 wr:0 st:SLR pc_i:1 pc_o:0347 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:00 r_x:11 r_y:1c r_a:81
+373 adr:0346 out:b4 in:1c wr:0 st:SOP pc_i:1 pc_o:0346 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:02 r_x:11 r_y:1c r_a:81
+375 adr:0347 out:08 in:1c wr:0 st:SLO pc_i:0 pc_o:0347 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:02 r_x:11 r_y:1c r_a:81
+377 adr:0019 out:36 in:19 wr:0 st:SHI pc_i:0 pc_o:0347 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:02 r_x:11 r_y:1c r_a:81
+379 adr:0347 out:0e in:08 wr:0 st:SLR pc_i:1 pc_o:0347 pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:02 r_x:11 r_y:1c r_a:81
 
 ROL $08,x
-381 adr:0348 out:36 in:0e wr:0 st:SOP pc_i:1 pc_o:0348 pc_wr:0 op:36 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:00 r_x:11 r_y:0e r_a:81
-383 adr:0349 out:08 in:0e wr:0 st:SLO pc_i:0 pc_o:0349 pc_wr:0 op:36 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:00 r_x:11 r_y:0e r_a:81
-385 adr:0019 out:b4 in:19 wr:0 st:SHI pc_i:0 pc_o:0349 pc_wr:0 op:36 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:00 r_x:11 r_y:0e r_a:81
-387 adr:0019 out:0e in:1c wr:1 st:SWD pc_i:0 pc_o:0349 pc_wr:0 op:36 a_op:40 a_ci:0 a_a:0e a_b:08 a_out:1c r_p:00 r_x:11 r_y:0e r_a:81
-389 adr:0349 out:0e in:00 wr:0 st:SLR pc_i:1 pc_o:0349 pc_wr:0 op:36 a_op:40 a_ci:0 a_a:00 a_b:08 a_out:00 r_p:00 r_x:11 r_y:0e r_a:81
+381 adr:0348 out:36 in:0e wr:0 st:SOP pc_i:1 pc_o:0348 pc_wr:0 op:36 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:02 r_x:11 r_y:0e r_a:81
+383 adr:0349 out:08 in:0e wr:0 st:SLO pc_i:0 pc_o:0349 pc_wr:0 op:36 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:02 r_x:11 r_y:0e r_a:81
+385 adr:0019 out:b4 in:19 wr:0 st:SHI pc_i:0 pc_o:0349 pc_wr:0 op:36 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:02 r_x:11 r_y:0e r_a:81
+387 adr:0019 out:0e in:1c wr:1 st:SWD pc_i:0 pc_o:0349 pc_wr:0 op:36 a_op:40 a_ci:0 a_a:0e a_b:08 a_out:1c r_p:02 r_x:11 r_y:0e r_a:81
+389 adr:0349 out:0e in:00 wr:0 st:SLR pc_i:1 pc_o:0349 pc_wr:0 op:36 a_op:40 a_ci:0 a_a:00 a_b:08 a_out:00 r_p:02 r_x:11 r_y:0e r_a:81
 
 LDY $08,x
-391 adr:034a out:b4 in:0e wr:0 st:SOP pc_i:1 pc_o:034a pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:00 r_x:11 r_y:0e r_a:81
-393 adr:034b out:08 in:0e wr:0 st:SLO pc_i:0 pc_o:034b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:00 r_x:11 r_y:0e r_a:81
-395 adr:0019 out:38 in:19 wr:0 st:SHI pc_i:0 pc_o:034b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:00 r_x:11 r_y:0e r_a:81
-397 adr:034b out:1c in:08 wr:0 st:SLR pc_i:1 pc_o:034b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:00 r_x:11 r_y:0e r_a:81
+391 adr:034a out:b4 in:0e wr:0 st:SOP pc_i:1 pc_o:034a pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:02 r_x:11 r_y:0e r_a:81
+393 adr:034b out:08 in:0e wr:0 st:SLO pc_i:0 pc_o:034b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:0e a_out:0e r_p:02 r_x:11 r_y:0e r_a:81
+395 adr:0019 out:38 in:19 wr:0 st:SHI pc_i:0 pc_o:034b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:11 a_b:08 a_out:19 r_p:02 r_x:11 r_y:0e r_a:81
+397 adr:034b out:1c in:08 wr:0 st:SLR pc_i:1 pc_o:034b pc_wr:0 op:b4 a_op:19 a_ci:0 a_a:00 a_b:08 a_out:08 r_p:02 r_x:11 r_y:0e r_a:81
 
 SEC
-399 adr:034c out:38 in:1c wr:0 st:SOP pc_i:1 pc_o:034c pc_wr:0 op:38 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:00 r_x:11 r_y:1c r_a:81
+399 adr:034c out:38 in:1c wr:0 st:SOP pc_i:1 pc_o:034c pc_wr:0 op:38 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:02 r_x:11 r_y:1c r_a:81
 
 CLC
-401 adr:034d out:18 in:1c wr:0 st:SOP pc_i:1 pc_o:034d pc_wr:0 op:18 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:01 r_x:11 r_y:1c r_a:81
+401 adr:034d out:18 in:1c wr:0 st:SOP pc_i:1 pc_o:034d pc_wr:0 op:18 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:03 r_x:11 r_y:1c r_a:81
 
 CLV
-403 adr:034e out:b8 in:1c wr:0 st:SOP pc_i:1 pc_o:034e pc_wr:0 op:b8 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:00 r_x:11 r_y:1c r_a:81
+403 adr:034e out:b8 in:1c wr:0 st:SOP pc_i:1 pc_o:034e pc_wr:0 op:b8 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:02 r_x:11 r_y:1c r_a:81
 
 BVS $01
-405 adr:034f out:70 in:1c wr:0 st:SOP pc_i:1 pc_o:034f pc_wr:0 op:70 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:00 r_x:11 r_y:1c r_a:81
-407 adr:0350 out:01 in:1c wr:0 st:SLR pc_i:1 pc_o:0350 pc_wr:0 op:70 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:00 r_x:11 r_y:1c r_a:81
+405 adr:034f out:70 in:1c wr:0 st:SOP pc_i:1 pc_o:034f pc_wr:0 op:70 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:02 r_x:11 r_y:1c r_a:81
+407 adr:0350 out:01 in:1c wr:0 st:SLR pc_i:1 pc_o:0350 pc_wr:0 op:70 a_op:19 a_ci:0 a_a:00 a_b:1c a_out:1c r_p:02 r_x:11 r_y:1c r_a:81
 
 BVC $80
 409 adr:0351 out:50 in:01 wr:0 st:SOP pc_i:1 pc_o:0351 pc_wr:0 op:50 a_op:19 a_ci:0 a_a:00 a_b:01 a_out:01 r_p:00 r_x:11 r_y:1c r_a:81
@@ -348,20 +348,46 @@ LDX $01ab,y
 STX $77,y
 423 adr:02d5 out:96 in:00 wr:0 st:SOP pc_i:1 pc_o:02d5 pc_wr:0 op:96 a_op:19 a_ci:0 a_a:00 a_b:00 a_out:00 r_p:00 r_x:00 r_y:1c r_a:81
 425 adr:02d6 out:77 in:00 wr:0 st:SLO pc_i:0 pc_o:02d6 pc_wr:0 op:96 a_op:19 a_ci:0 a_a:00 a_b:00 a_out:00 r_p:00 r_x:00 r_y:1c r_a:81
-427 adr:0077 out:a1 in:00 wr:0 st:SHI pc_i:0 pc_o:02d6 pc_wr:0 op:96 a_op:19 a_ci:0 a_a:00 a_b:77 a_out:77 r_p:00 r_x:00 r_y:1c r_a:81
+427 adr:0077 out:ca in:00 wr:0 st:SHI pc_i:0 pc_o:02d6 pc_wr:0 op:96 a_op:19 a_ci:0 a_a:00 a_b:77 a_out:77 r_p:00 r_x:00 r_y:1c r_a:81
 429 adr:0077 out:00 in:00 wr:1 st:SWD pc_i:0 pc_o:02d6 pc_wr:0 op:96 a_op:19 a_ci:0 a_a:00 a_b:77 a_out:77 r_p:00 r_x:00 r_y:1c r_a:81
 431 adr:02d6 out:00 in:00 wr:0 st:SLR pc_i:1 pc_o:02d6 pc_wr:0 op:96 a_op:19 a_ci:0 a_a:00 a_b:77 a_out:77 r_p:00 r_x:00 r_y:1c r_a:81
 
-LDA ($99,x)
-433 adr:02d7 out:a1 in:00 wr:0 st:SOP pc_i:1 pc_o:02d7 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:00 a_out:00 r_p:00 r_x:00 r_y:1c r_a:81
-435 adr:02d8 out:99 in:00 wr:0 st:SLO pc_i:0 pc_o:02d8 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:00 a_out:00 r_p:00 r_x:00 r_y:1c r_a:81
-437 adr:0099 out:50 in:99 wr:0 st:SHI pc_i:0 pc_o:02d8 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:99 a_out:99 r_p:00 r_x:00 r_y:1c r_a:81
-439 adr:02d8 out:00 in:99 wr:0 st:SLR pc_i:1 pc_o:02d8 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:99 a_out:99 r_p:00 r_x:00 r_y:1c r_a:81
+DEX
+433 adr:02d7 out:ca in:00 wr:0 st:SOP pc_i:0 pc_o:02d7 pc_wr:0 op:ca a_op:19 a_ci:0 a_a:00 a_b:00 a_out:00 r_p:00 r_x:00 r_y:1c r_a:81
+435 adr:02d7 out:a1 in:ff wr:0 st:SLR pc_i:1 pc_o:02d7 pc_wr:0 op:ca a_op:1f a_ci:0 a_a:00 a_b:00 a_out:ff r_p:00 r_x:00 r_y:1c r_a:81
+
+LDA ($20,x)
+437 adr:02d8 out:a1 in:a1 wr:0 st:SOP pc_i:1 pc_o:02d8 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:a1 a_out:a1 r_p:80 r_x:ff r_y:1c r_a:81
+439 adr:0020 out:20 in:a1 wr:0 st:SLO pc_i:0 pc_o:02d9 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:a1 a_out:a1 r_p:80 r_x:ff r_y:1c r_a:81
+441 adr:001f out:ff in:1f wr:0 st:SIN pc_i:0 pc_o:02d9 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:ff a_b:20 a_out:1f r_p:80 r_x:ff r_y:1c r_a:81
+443 adr:02ff out:02 in:fe wr:0 st:SHI pc_i:0 pc_o:02d9 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:ff a_b:ff a_out:fe r_p:80 r_x:ff r_y:1c r_a:81
+445 adr:02d9 out:11 in:ff wr:0 st:SLR pc_i:1 pc_o:02d9 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:80 r_x:ff r_y:1c r_a:81
 
 BVC $79
-441 adr:02d9 out:50 in:00 wr:0 st:SOP pc_i:1 pc_o:02d9 pc_wr:0 op:50 a_op:19 a_ci:0 a_a:00 a_b:00 a_out:00 r_p:00 r_x:00 r_y:1c r_a:00
-443 adr:0252 out:79 in:52 wr:0 st:SHI pc_i:1 pc_o:02da pc_wr:1 op:50 a_op:19 a_ci:0 a_a:d9 a_b:79 a_out:52 r_p:00 r_x:00 r_y:1c r_a:00
-445 adr:0352 out:00 in:03 wr:0 st:SCA pc_i:1 pc_o:0253 pc_wr:1 op:50 a_op:19 a_ci:1 a_a:02 a_b:00 a_out:03 r_p:00 r_x:00 r_y:1c r_a:00
-447 adr:0353 out:00 in:02 wr:0 st:SOP pc_i:1 pc_o:0353 pc_wr:0 op:00 a_op:19 a_ci:0 a_a:00 a_b:02 a_out:02 r_p:00 r_x:00 r_y:1c r_a:00
-449 adr:0354 out:00 in:02 wr:0 st:SLR pc_i:1 pc_o:0354 pc_wr:0 op:00 a_op:19 a_ci:0 a_a:00 a_b:02 a_out:02 r_p:00 r_x:00 r_y:1c r_a:00
-Sun May 12 18:39:25 CEST 2019
+447 adr:02da out:50 in:11 wr:0 st:SOP pc_i:1 pc_o:02da pc_wr:0 op:50 a_op:19 a_ci:0 a_a:00 a_b:11 a_out:11 r_p:80 r_x:ff r_y:1c r_a:11
+449 adr:0252 out:78 in:52 wr:0 st:SHI pc_i:1 pc_o:02db pc_wr:1 op:50 a_op:19 a_ci:0 a_a:da a_b:78 a_out:52 r_p:80 r_x:ff r_y:1c r_a:11
+451 adr:0352 out:00 in:03 wr:0 st:SCA pc_i:1 pc_o:0253 pc_wr:1 op:50 a_op:19 a_ci:1 a_a:02 a_b:00 a_out:03 r_p:80 r_x:ff r_y:1c r_a:11
+
+INX
+453 adr:0353 out:e8 in:01 wr:0 st:SOP pc_i:0 pc_o:0353 pc_wr:0 op:e8 a_op:19 a_ci:0 a_a:ff a_b:02 a_out:01 r_p:80 r_x:ff r_y:1c r_a:11
+455 adr:0353 out:ca in:00 wr:0 st:SLR pc_i:1 pc_o:0353 pc_wr:0 op:e8 a_op:10 a_ci:1 a_a:ff a_b:02 a_out:00 r_p:80 r_x:ff r_y:1c r_a:11
+
+DEX
+457 adr:0354 out:ca in:ca wr:0 st:SOP pc_i:0 pc_o:0354 pc_wr:0 op:ca a_op:19 a_ci:0 a_a:00 a_b:ca a_out:ca r_p:02 r_x:00 r_y:1c r_a:11
+459 adr:0354 out:a9 in:ff wr:0 st:SLR pc_i:1 pc_o:0354 pc_wr:0 op:ca a_op:1f a_ci:0 a_a:00 a_b:ca a_out:ff r_p:02 r_x:00 r_y:1c r_a:11
+
+LDA #01
+461 adr:0355 out:a9 in:a9 wr:0 st:SOP pc_i:1 pc_o:0355 pc_wr:0 op:a9 a_op:19 a_ci:0 a_a:00 a_b:a9 a_out:a9 r_p:80 r_x:ff r_y:1c r_a:11
+463 adr:0356 out:01 in:a9 wr:0 st:SLR pc_i:1 pc_o:0356 pc_wr:0 op:a9 a_op:19 a_ci:0 a_a:00 a_b:a9 a_out:a9 r_p:80 r_x:ff r_y:1c r_a:11
+
+TXA
+465 adr:0357 out:8a in:01 wr:0 st:SOP pc_i:0 pc_o:0357 pc_wr:0 op:8a a_op:19 a_ci:0 a_a:00 a_b:01 a_out:01 r_p:80 r_x:ff r_y:1c r_a:01
+467 adr:0357 out:ea in:ff wr:0 st:SLR pc_i:1 pc_o:0357 pc_wr:0 op:8a a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:80 r_x:ff r_y:1c r_a:01
+
+NOP
+469 adr:0358 out:ea in:e9 wr:0 st:SOP pc_i:0 pc_o:0358 pc_wr:0 op:ea a_op:19 a_ci:0 a_a:ff a_b:ea a_out:e9 r_p:80 r_x:ff r_y:1c r_a:ff
+471 adr:0358 out:ea in:e9 wr:0 st:SLR pc_i:1 pc_o:0358 pc_wr:0 op:ea a_op:19 a_ci:0 a_a:ff a_b:ea a_out:e9 r_p:80 r_x:ff r_y:1c r_a:ff
+
+NOP
+473 adr:0359 out:ea in:e9 wr:0 st:SOP pc_i:0 pc_o:0359 pc_wr:0 op:ea a_op:19 a_ci:0 a_a:ff a_b:ea a_out:e9 r_p:80 r_x:ff r_y:1c r_a:ff
+Mon May 13 22:58:05 CEST 2019
