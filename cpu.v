@@ -77,6 +77,7 @@ module cpu(
   reg[7:0] reg_y;
   reg[7:0] reg_a;
   reg[7:0] reg_p;
+  reg[7:0] reg_s;
   reg[15:0] prev_addr;
 
   wire[7:0] data_out;
@@ -121,13 +122,14 @@ module cpu(
   wire lo_C = op_lo == 4'hC;
 
   // in terms of or's above?
+  wire hi_0 = op_hi == 4'h0;
   wire hi_2 = op_hi == 4'h2;
   wire hi_4 = op_hi == 4'h4;
   wire hi_6 = op_hi == 4'h6;
   wire hi_8 = op_hi == 4'h8;
   wire hi_9 = op_hi == 4'h9;
   wire hi_A = op_hi == 4'hA;
-  // wire hi_B = op_hi == 4'hB;
+  wire hi_B = op_hi == 4'hB;
   wire hi_C = op_hi == 4'hC;
   wire hi_E = op_hi == 4'hE;
 
@@ -148,8 +150,8 @@ module cpu(
   wire instr_store   = hi_8_or_9 && ~lo_8_or_A && ~instr_branch;   // 3
   wire instr_txa     = hi_8 && lo_A;                               // 1
   wire instr_tax     = hi_A && lo_A;                               // 1
-  // wire instr_txs     = hi_9 && lo_A;
-  // wire instr_tsx     = hi_B && lo_A;
+  wire instr_txs     = hi_9 && lo_A;                               // 1
+  wire instr_tsx     = hi_B && lo_A;                               // 1
   wire instr_tya     = hi_9 && lo_8;                               // 1
   wire instr_tay     = hi_A && lo_8;                               // 1
   wire instr_incx    = hi_E && lo_8;                               // 1
@@ -165,6 +167,13 @@ module cpu(
   wire instr_cpy     = hi_C && lo_0_or_4_or_C;                     // 1
   wire instr_bit     = hi_2 && lo_4_or_C;                          // 1
   wire instr_nop     = hi_E && lo_A;                               // 1
+  wire instr_php     = hi_0 && lo_8;                               // 1
+  wire instr_plp     = hi_2 && lo_8;                               // 1
+  wire instr_pha     = hi_4 && lo_8;                               // 1
+  wire instr_pla     = hi_6 && lo_8;                               // 1
+
+  wire instr_push = instr_php || instr_pha;
+  wire instr_pull = instr_plp || instr_pla;
 
   // Change program counter
   wire instr_jmpabs  = hi_4 && lo_C;                               // 1
@@ -177,7 +186,7 @@ module cpu(
   // m2m (group6)
   wire instr_incmem  = hi_E_or_F && lo_6_or_E;                     // 1
   wire instr_decmem  = hi_C_or_D && lo_6_or_E;                     // 1
-                                                                   // tot: 46
+                                                                   // tot: 52
   // m2m/a2a (group6, accumulator mode indicates A2A)
   wire instr_shl     = instr_asl || instr_rol;
   wire instr_shr     = instr_lsr || instr_ror;
@@ -201,12 +210,12 @@ module cpu(
 
   // m2r (lda: group8, ldy/sty: group5, ldx/stx: group6)
 
-  // REMAINING: txs, tsx, pha, php, pla, plp, jsr, rts, brk, rti   // tot: 10
+  // REMAINING: jsr, rts, brk, rti                                 // tot: 4
   // -----------------------------------------------------------------------------------
 
   wire pc_inc =
     curr_st == st_initial ||
-    curr_st == st_new_op && ~instr_r2r ||
+    curr_st == st_new_op && ~instr_r2r && ~instr_push && ~instr_pull ||
     curr_st == st_hi_byte && (op_amode[bit_ab] || instr_branch) ||
     curr_st == st_carry_add && instr_branch ||
     curr_st == st_carry_sub ||
@@ -237,6 +246,12 @@ module cpu(
   reg[15:0] addr_bus;
   always @(*) begin
     case (curr_st)
+      st_new_op: begin
+        if (instr_push || instr_pull)
+          addr_bus = { 8'h01, alu_out };
+        else
+          addr_bus = pc_out;
+      end
       st_lo_byte: begin
         if (lo_addr_from_data_out)
           addr_bus = { 8'h00, data_out };
@@ -278,10 +293,8 @@ module cpu(
     endcase
   end
 
-  wire data_write = (
-    curr_st == st_carry_add ||
-    curr_st == st_write_data
-  ) && instr_wrmem;
+  wire data_write = curr_st == st_new_op && instr_push ||
+    (curr_st == st_carry_add || curr_st == st_write_data) && instr_wrmem;
 
   reg[7:0] reg_xya;
   always @(*) begin
@@ -299,7 +312,18 @@ module cpu(
       reg_xya = reg_a;
   end
 
-  wire[7:0] data_in = instr_store ? reg_xya : alu_out;
+  reg[7:0] data_in;
+  always @(*) begin
+    if (instr_store)
+      data_in = reg_xya;
+    else if (instr_php)
+      data_in = reg_p;
+    else if (instr_pha)
+      data_in = reg_a;
+    else
+      data_in = alu_out;
+  end
+
   MEMORY mem(
     .CLK(CLK),
     .WE(data_write),
@@ -323,7 +347,9 @@ module cpu(
 
   reg[7:0] alu_op;
   always @(*) begin
-    if (curr_st == st_carry_add && instr_branch)
+    if (curr_st == st_new_op && instr_push)
+      alu_op = alu_op_sbc;
+    else if (curr_st == st_carry_add && instr_branch)
       alu_op = alu_op_adc;
     else if (curr_st == st_carry_sub && instr_branch)
       alu_op = alu_op_sbc;
@@ -356,6 +382,8 @@ module cpu(
         alu_op = alu_op_sbc;
       if (instr_shift)
         alu_op = { shift_in, instr_shl, instr_shr, 5'b00000 };
+      if (instr_pull)
+        alu_op = alu_op_adc;
     end
     else
       alu_op = alu_op_adc;
@@ -368,6 +396,9 @@ module cpu(
     end
     else begin
       case (curr_st)
+        st_new_op: begin
+          alu_a = reg_s;
+        end
         st_indirect: begin
           if (op_amode == zp_x_in)
             alu_a = reg_x;
@@ -393,6 +424,8 @@ module cpu(
         st_load_reg: begin
           if (instr_acc || instr_compare)
             alu_a = reg_xya;
+          else if (instr_pull)
+            alu_a = reg_s;
           else
             alu_a = 8'h00;
         end
@@ -419,11 +452,18 @@ module cpu(
       reg_xyas = reg_a;
     if (instr_tya)
       reg_xyas = reg_y;
+    if (instr_tsx)
+      reg_xyas = reg_s;
+    if (instr_txs)
+      reg_xyas = reg_x;
   end
 
   reg[7:0] alu_b;
   always @(*) begin
     case (curr_st)
+      st_new_op: begin
+        alu_b = 8'h00;
+      end
       st_hi_byte: begin
         if (instr_branch)
           alu_b = data_out;
@@ -439,6 +479,8 @@ module cpu(
           alu_b = data_out;
         else if (instr_trans)
           alu_b = reg_xyas;
+        else if (instr_pull)
+          alu_b = 8'h00;
         else
           alu_b = reg_l;
       end
@@ -454,7 +496,7 @@ module cpu(
     curr_st == st_write_data && instr_incmem ||
     curr_st == st_load_reg && (
       instr_jmpind || instr_incxy ||
-      instr_compare || reg_p[bit_carry]
+      instr_compare || reg_p[bit_carry] || instr_pull
     );
 
   alu8 alu_1(
@@ -497,7 +539,7 @@ module cpu(
         st_initial: begin                              curr_st <= st_new_op;
         end
         st_new_op: begin
-          if (instr_r2r)                               curr_st <= st_load_reg;
+          if (instr_r2r || instr_push || instr_pull)   curr_st <= st_load_reg;
           else if (instr_setflag || instr_nop)         curr_st <= st_new_op;
           else if (instr_branch) begin
             if (op_hi[1] == branch_test_bit)           curr_st <= st_hi_byte;
@@ -555,6 +597,8 @@ module cpu(
             2'b11: reg_p[bit_decimal]   <= op_hi[1];
           endcase
         end
+        if (instr_push)
+          reg_s <= alu_out;
       end
       st_lo_byte: begin
         reg_l <= data_out;
@@ -575,7 +619,13 @@ module cpu(
       st_load_reg: begin
         reg_l <= data_out;
 
-        if (instr_bit) begin
+        if (instr_pull)
+          reg_s <= alu_out;
+        if (instr_pla)
+          reg_a <= data_out;
+        if (instr_plp)
+          reg_p <= data_out;
+        else if (instr_bit) begin
           reg_p[bit_zero] <= alu_zero;
           reg_p[bit_negative] <= data_out[7];
           reg_p[bit_overflow] <= data_out[6];
@@ -610,6 +660,10 @@ module cpu(
           reg_y <= alu_out;
         if (instr_tya)
           reg_a <= alu_out;
+        if (instr_tsx)
+          reg_x <= alu_out;
+        if (instr_txs)
+          reg_s <= alu_out;
         if (instr_acc)
           reg_a <= alu_out;
         if (instr_shift && accumulator)

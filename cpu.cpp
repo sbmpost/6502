@@ -86,7 +86,12 @@ char * instructions[] = {
     "DEX",
     "LDA #01",
     "TXA",
+    "TSX",
     "NOP",
+    "PHP",
+    "PHA",
+    "PLP",
+    "PLA",
     "NOP"
 };
 
@@ -121,7 +126,7 @@ int main(int argc, char **argv, char **env) {
 #endif
 
     int instruction = 0;
-    while (main_time < 474 && !Verilated::gotFinish()) {
+    while (main_time < 496 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (main_time > 1 && (main_time % 2) == 0) {

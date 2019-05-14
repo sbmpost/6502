@@ -245,14 +245,22 @@ module MEMORY(
       s_mem_contents[853] = 8'h01;
       // TXA
       s_mem_contents[854] = 8'h8a;
-      // NOP
-      s_mem_contents[855] = 8'hea;
+      // TSX
+      s_mem_contents[855] = 8'hba;
       // NOP
       s_mem_contents[856] = 8'hea;
+      // PHP
+      s_mem_contents[857] = 8'h08;
+      // PHA
+      s_mem_contents[858] = 8'h48;
+      // PLP
+      s_mem_contents[859] = 8'h28;
+      // PLA
+      s_mem_contents[860] = 8'h68;
+      // NOP
+      s_mem_contents[861] = 8'hea;
 
 // REMAINING:
-      // TXS, TSX,
-      // PHA, PHP, PLA, PLP,
       // JSR, RTS, BRK, RTI
   end
 

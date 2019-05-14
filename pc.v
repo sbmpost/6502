@@ -12,7 +12,7 @@ module pc(
     if (R)
       PC <= 16'h0000;
     else
-      PC <= prv + {15'b0 , INC};
+      PC <= prv + { 15'b0, INC };
   end
 
 endmodule
