@@ -56,7 +56,7 @@ module MEMORY(
       s_mem_contents[29] = 8'h00;
       s_mem_contents[30] = 8'hfc;
       s_mem_contents[31] = 8'h02;
-      s_mem_contents[32] = 8'hff;
+      s_mem_contents[32] = 8'hfe;
 
       // STA $0108,y (y=8)
       s_mem_contents[33] = 8'h99;
@@ -113,6 +113,7 @@ module MEMORY(
       s_mem_contents[730] = 8'h78; // $02d9
 
       // data
+      s_mem_contents[766] = 8'h33; // $02fe
       s_mem_contents[767] = 8'h10; // $02ff
       s_mem_contents[772] = 8'hff; // $0304
 

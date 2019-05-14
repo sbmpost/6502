@@ -2,8 +2,8 @@ clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -
 clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o verilated.o /usr/local/Cellar/verilator/4.010/share/verilator/include/verilated.cpp
 /usr/bin/perl /usr/local/Cellar/verilator/4.010/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vcpu.cpp > Vcpu__ALLcls.cpp
 /usr/bin/perl /usr/local/Cellar/verilator/4.010/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vcpu__Syms.cpp > Vcpu__ALLsup.cpp
-clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o Vcpu__ALLcls.o Vcpu__ALLcls.cpp
 clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o Vcpu__ALLsup.o Vcpu__ALLsup.cpp
+clang++  -I.  -MMD -I/usr/local/Cellar/verilator/4.010/share/verilator/include -I/usr/local/Cellar/verilator/4.010/share/verilator/include/vltstd -DVL_PRINTF=printf -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fbracket-depth=4096 -Qunused-arguments -Wno-parentheses-equality -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -DVL_DEBUG=0 -Wno-write-strings   -c -o Vcpu__ALLcls.o Vcpu__ALLcls.cpp
       Archiving Vcpu__ALL.a ...
 ar r Vcpu__ALL.a Vcpu__ALLcls.o Vcpu__ALLsup.o
 ranlib Vcpu__ALL.a
@@ -359,26 +359,26 @@ DEX
 LDA ($20,x)
 437 adr:02d8 out:a1 in:a1 wr:0 st:SOP pc_i:1 pc_o:02d8 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:a1 a_out:a1 r_p:80 r_x:ff r_y:1c r_a:81
 439 adr:0020 out:20 in:a1 wr:0 st:SLO pc_i:0 pc_o:02d9 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:a1 a_out:a1 r_p:80 r_x:ff r_y:1c r_a:81
-441 adr:001f out:ff in:1f wr:0 st:SIN pc_i:0 pc_o:02d9 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:ff a_b:20 a_out:1f r_p:80 r_x:ff r_y:1c r_a:81
-443 adr:02ff out:02 in:fe wr:0 st:SHI pc_i:0 pc_o:02d9 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:ff a_b:ff a_out:fe r_p:80 r_x:ff r_y:1c r_a:81
-445 adr:02d9 out:11 in:ff wr:0 st:SLR pc_i:1 pc_o:02d9 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:ff a_out:ff r_p:80 r_x:ff r_y:1c r_a:81
+441 adr:001f out:fe in:1f wr:0 st:SIN pc_i:0 pc_o:02d9 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:ff a_b:20 a_out:1f r_p:80 r_x:ff r_y:1c r_a:81
+443 adr:02fe out:02 in:fe wr:0 st:SHI pc_i:0 pc_o:02d9 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:fe a_out:fe r_p:80 r_x:ff r_y:1c r_a:81
+445 adr:02d9 out:33 in:fe wr:0 st:SLR pc_i:1 pc_o:02d9 pc_wr:0 op:a1 a_op:19 a_ci:0 a_a:00 a_b:fe a_out:fe r_p:80 r_x:ff r_y:1c r_a:81
 
 BVC $79
-447 adr:02da out:50 in:11 wr:0 st:SOP pc_i:1 pc_o:02da pc_wr:0 op:50 a_op:19 a_ci:0 a_a:00 a_b:11 a_out:11 r_p:80 r_x:ff r_y:1c r_a:11
-449 adr:0252 out:78 in:52 wr:0 st:SHI pc_i:1 pc_o:02db pc_wr:1 op:50 a_op:19 a_ci:0 a_a:da a_b:78 a_out:52 r_p:80 r_x:ff r_y:1c r_a:11
-451 adr:0352 out:00 in:03 wr:0 st:SCA pc_i:1 pc_o:0253 pc_wr:1 op:50 a_op:19 a_ci:1 a_a:02 a_b:00 a_out:03 r_p:80 r_x:ff r_y:1c r_a:11
+447 adr:02da out:50 in:33 wr:0 st:SOP pc_i:1 pc_o:02da pc_wr:0 op:50 a_op:19 a_ci:0 a_a:00 a_b:33 a_out:33 r_p:80 r_x:ff r_y:1c r_a:33
+449 adr:0252 out:78 in:52 wr:0 st:SHI pc_i:1 pc_o:02db pc_wr:1 op:50 a_op:19 a_ci:0 a_a:da a_b:78 a_out:52 r_p:80 r_x:ff r_y:1c r_a:33
+451 adr:0352 out:00 in:03 wr:0 st:SCA pc_i:1 pc_o:0253 pc_wr:1 op:50 a_op:19 a_ci:1 a_a:02 a_b:00 a_out:03 r_p:80 r_x:ff r_y:1c r_a:33
 
 INX
-453 adr:0353 out:e8 in:01 wr:0 st:SOP pc_i:0 pc_o:0353 pc_wr:0 op:e8 a_op:19 a_ci:0 a_a:ff a_b:02 a_out:01 r_p:80 r_x:ff r_y:1c r_a:11
-455 adr:0353 out:ca in:00 wr:0 st:SLR pc_i:1 pc_o:0353 pc_wr:0 op:e8 a_op:10 a_ci:1 a_a:ff a_b:02 a_out:00 r_p:80 r_x:ff r_y:1c r_a:11
+453 adr:0353 out:e8 in:01 wr:0 st:SOP pc_i:0 pc_o:0353 pc_wr:0 op:e8 a_op:19 a_ci:0 a_a:ff a_b:02 a_out:01 r_p:80 r_x:ff r_y:1c r_a:33
+455 adr:0353 out:ca in:00 wr:0 st:SLR pc_i:1 pc_o:0353 pc_wr:0 op:e8 a_op:10 a_ci:1 a_a:ff a_b:02 a_out:00 r_p:80 r_x:ff r_y:1c r_a:33
 
 DEX
-457 adr:0354 out:ca in:ca wr:0 st:SOP pc_i:0 pc_o:0354 pc_wr:0 op:ca a_op:19 a_ci:0 a_a:00 a_b:ca a_out:ca r_p:02 r_x:00 r_y:1c r_a:11
-459 adr:0354 out:a9 in:ff wr:0 st:SLR pc_i:1 pc_o:0354 pc_wr:0 op:ca a_op:1f a_ci:0 a_a:00 a_b:ca a_out:ff r_p:02 r_x:00 r_y:1c r_a:11
+457 adr:0354 out:ca in:ca wr:0 st:SOP pc_i:0 pc_o:0354 pc_wr:0 op:ca a_op:19 a_ci:0 a_a:00 a_b:ca a_out:ca r_p:02 r_x:00 r_y:1c r_a:33
+459 adr:0354 out:a9 in:ff wr:0 st:SLR pc_i:1 pc_o:0354 pc_wr:0 op:ca a_op:1f a_ci:0 a_a:00 a_b:ca a_out:ff r_p:02 r_x:00 r_y:1c r_a:33
 
 LDA #01
-461 adr:0355 out:a9 in:a9 wr:0 st:SOP pc_i:1 pc_o:0355 pc_wr:0 op:a9 a_op:19 a_ci:0 a_a:00 a_b:a9 a_out:a9 r_p:80 r_x:ff r_y:1c r_a:11
-463 adr:0356 out:01 in:a9 wr:0 st:SLR pc_i:1 pc_o:0356 pc_wr:0 op:a9 a_op:19 a_ci:0 a_a:00 a_b:a9 a_out:a9 r_p:80 r_x:ff r_y:1c r_a:11
+461 adr:0355 out:a9 in:a9 wr:0 st:SOP pc_i:1 pc_o:0355 pc_wr:0 op:a9 a_op:19 a_ci:0 a_a:00 a_b:a9 a_out:a9 r_p:80 r_x:ff r_y:1c r_a:33
+463 adr:0356 out:01 in:a9 wr:0 st:SLR pc_i:1 pc_o:0356 pc_wr:0 op:a9 a_op:19 a_ci:0 a_a:00 a_b:a9 a_out:a9 r_p:80 r_x:ff r_y:1c r_a:33
 
 TXA
 465 adr:0357 out:8a in:01 wr:0 st:SOP pc_i:0 pc_o:0357 pc_wr:0 op:8a a_op:19 a_ci:0 a_a:00 a_b:01 a_out:01 r_p:80 r_x:ff r_y:1c r_a:01
@@ -390,4 +390,4 @@ NOP
 
 NOP
 473 adr:0359 out:ea in:e9 wr:0 st:SOP pc_i:0 pc_o:0359 pc_wr:0 op:ea a_op:19 a_ci:0 a_a:ff a_b:ea a_out:e9 r_p:80 r_x:ff r_y:1c r_a:ff
-Mon May 13 22:58:05 CEST 2019
+Tue May 14 17:04:36 CEST 2019

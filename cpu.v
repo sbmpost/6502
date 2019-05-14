@@ -230,9 +230,9 @@ module cpu(
     .PC(pc_out)
   );
 
-  wire indirect = op_amode == zp_y_in || op_amode == zp_x_in;
-  wire lo_addr_from_data_out = op_amode == zp || indirect;
-  wire hi_addr_from_data_out = op_amode[bit_ab] || op_amode == zp_y_in;
+  wire amode_zp_indirect = op_amode == zp_x_in || op_amode == zp_y_in;
+  wire lo_addr_from_data_out = op_amode == zp || amode_zp_indirect;
+  wire hi_addr_from_data_out = op_amode[bit_ab] || amode_zp_indirect;
 
   reg[15:0] addr_bus;
   always @(*) begin
@@ -248,8 +248,6 @@ module cpu(
           addr_bus = { prev_addr[15:8], alu_out };
         else if (hi_addr_from_data_out)
           addr_bus = { data_out, alu_out };
-        else if (op_amode == zp_x_in)
-          addr_bus = { data_out, reg_l };
         else
           addr_bus = { 8'h00, alu_out};
       end
@@ -379,6 +377,8 @@ module cpu(
         st_hi_byte: begin
           if (instr_branch)
             alu_a = prev_addr[7:0];
+          else if (op_amode == zp_x_in)
+            alu_a = 8'h00;
           else if (op_amode[bit_id]) begin
             if (op_amode[bit_xy])
               alu_a = reg_x;
@@ -507,7 +507,7 @@ module cpu(
           else                                         curr_st <= st_lo_byte;
         end
         st_lo_byte: begin
-          if (indirect)                                curr_st <= st_indirect;
+          if (amode_zp_indirect)                       curr_st <= st_indirect;
           else if (op_amode == zp)                     curr_st <= st_load_or_write;
           else                                         curr_st <= st_hi_byte;
         end
