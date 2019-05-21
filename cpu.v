@@ -472,7 +472,7 @@ module cpu(
       st_load_reg: begin
         if (instr_acc)
           alu_b = data_out;
-        if (instr_r2r)
+        if (instr_load || instr_r2r)
           alu_b = 8'h00;
       end
       default: begin
@@ -654,8 +654,8 @@ always @(posedge CLK) begin
       if (~instr_store) begin
         reg_p[bit_zero] <= alu_zero;
         reg_p[bit_negative] <= alu_negative;
-        reg_p[bit_carry] <= alu_cout;
-        reg_p[bit_overflow] <= alu_overflow;
+        if (instr_sh_mem)
+          reg_p[bit_carry] <= alu_cout;
       end
     end
     st_load_reg: begin
@@ -671,7 +671,7 @@ always @(posedge CLK) begin
         reg_p[bit_negative] <= alu_negative;
         if (instr_acc) begin
           reg_p[bit_carry] <= alu_cout;
-          if (~instr_compare)
+          if (instr_adc || instr_sbc)
             reg_p[bit_overflow] <= alu_overflow;
         end
       end
