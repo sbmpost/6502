@@ -436,7 +436,7 @@ module cpu(
         st_write_data: begin
           if (instr_wrmem)
             alu_a = data_out;
-          else
+          if (instr_jmpind)
             alu_a = reg_l;
         end
         default: begin
@@ -452,31 +452,27 @@ module cpu(
       st_indirect: begin
         if (op_amode == zp_x_in)
           alu_b = reg_x;
-        else
+        else if (instr_load)
           alu_b = 8'h00;
       end
       st_hi_byte: begin
         if (instr_branch)
           alu_b = data_out;
-        else if (op_amode[bit_id]) begin
-          if (op_amode[bit_xy])
-            alu_b = reg_x;
-          else
-            alu_b = reg_y;
+        else begin
+          if (op_amode[bit_id]) begin
+            if (op_amode[bit_xy])
+              alu_b = reg_x;
+            else
+              alu_b = reg_y;
+          end
+          if (op_amode == zp_x_in)
+            alu_b = 8'h00;
         end
-        else
-          alu_b = 8'h00;
-      end
-      st_write_data: begin
-        if (instr_incmem || instr_decmem || instr_jmpind)
-          alu_b = 8'h00;
-        else
-          alu_b = data_out;
       end
       st_load_reg: begin
         if (instr_acc)
           alu_b = data_out;
-        else
+        if (instr_r2r)
           alu_b = 8'h00;
       end
       default: begin
