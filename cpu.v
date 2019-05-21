@@ -417,38 +417,27 @@ module cpu(
         st_new_op: begin
           alu_a = reg_s;
         end
-        st_indirect: begin
-          alu_a = reg_l;
-        end
         st_hi_byte: begin
           if (instr_branch)
             alu_a = prev_addr[7:0];
-          else if (op_amode == zp_x_in)
-            alu_a = reg_l;
           else
             alu_a = reg_l;
-        end
-        st_carry_add,
-        st_carry_sub: begin
-          alu_a = reg_l;
         end
         st_load_reg: begin
           if (instr_load)
             alu_a = data_out;
-          else if (instr_acc)
+          if (instr_acc)
             alu_a = reg_xya;
-          else if (instr_trans)
+          if (instr_trans)
             alu_a = reg_xyas;
-          else if (instr_pull)
+          if (instr_pull)
             alu_a = reg_s;
-          else
-            alu_a = reg_l;
         end
         st_write_data: begin
-          if (instr_jmpind)
-            alu_a = reg_l;
-          else
+          if (instr_wrmem)
             alu_a = data_out;
+          else
+            alu_a = reg_l;
         end
         default: begin
           alu_a = reg_l;
@@ -460,9 +449,6 @@ module cpu(
   reg[7:0] alu_b;
   always @(*) begin
     case (curr_st)
-      st_new_op: begin
-        alu_b = 8'h00;
-      end
       st_indirect: begin
         if (op_amode == zp_x_in)
           alu_b = reg_x;
@@ -478,32 +464,18 @@ module cpu(
           else
             alu_b = reg_y;
         end
-        else if (op_amode == zp_x_in)
-          alu_b = 8'h00;
         else
           alu_b = 8'h00;
-      end
-      st_carry_add,
-      st_carry_sub: begin
-        alu_b = 8'h00;
       end
       st_write_data: begin
-        if (instr_incmem || instr_decmem)
-          alu_b = 8'h00;
-        else if (instr_jmpind)
+        if (instr_incmem || instr_decmem || instr_jmpind)
           alu_b = 8'h00;
         else
-          alu_b = reg_l;
+          alu_b = data_out;
       end
       st_load_reg: begin
-        if (instr_load)
-          alu_b = 8'h00;
-        else if (instr_acc)
+        if (instr_acc)
           alu_b = data_out;
-        else if (instr_trans)
-          alu_b = 8'h00;
-        else if (instr_pull)
-          alu_b = 8'h00;
         else
           alu_b = 8'h00;
       end
