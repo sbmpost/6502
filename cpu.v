@@ -26,21 +26,6 @@ module cpu(
   output reg_a
 );
 
-  // bits in a_mode
-  parameter bit_id = 2; // indexed (i)
-  parameter bit_ab = 1; // absolute (a)
-  parameter bit_xy = 0; // x/y reg (x)
-
-  // bits in reg_p
-  parameter bit_negative  = 7; // 0x80
-  parameter bit_overflow  = 6; // 0x40
-  parameter bit_ignored   = 5; // 0x20
-  parameter bit_break     = 4; // 0x10
-  parameter bit_decimal   = 3; // 0x08
-  parameter bit_interrupt = 2; // 0x04
-  parameter bit_zero      = 1; // 0x02
-  parameter bit_carry     = 0; // 0x01
-
   // cpu states
   parameter st_initial    = 8'b00000000; // 0x00
   parameter st_new_op     = 8'b00000001; // 0x01
@@ -52,15 +37,34 @@ module cpu(
   parameter st_write_data = 8'b01000000; // 0x40
   parameter st_load_reg   = 8'b10000000; // 0x80
 
+  // bits in reg_p
+  parameter bit_negative  = 7; // 0x80
+  parameter bit_overflow  = 6; // 0x40
+  parameter bit_ignored   = 5; // 0x20
+  parameter bit_break     = 4; // 0x10
+  parameter bit_decimal   = 3; // 0x08
+  parameter bit_interrupt = 2; // 0x04
+  parameter bit_zero      = 1; // 0x02
+  parameter bit_carry     = 0; // 0x01
+
+  // bits in a_mode
+  parameter bit_id = 2; // indexed (i)
+  parameter bit_ab = 1; // absolute (a)
+  parameter bit_xy = 0; // x/y reg (x)
+
   //                     iax
   parameter zp_x_in = 3'b000;
   parameter imm     = 3'b010;
   parameter zp_y_in = 3'b100;
   parameter zp      = 3'b001;
-  parameter ab_y    = 3'b110;
-  parameter ab      = 3'b011;
-  parameter zp_x    = 3'b000;
-  parameter ab_x    = 3'b111;
+  // parameter ab_y    = 3'b110;
+  // parameter ab      = 3'b011;
+  // parameter zp_x    = 3'b101;
+  // parameter ab_x    = 3'b111;
+
+  wire amode_zp_indirect = op_amode == zp_x_in || op_amode == zp_y_in;
+  wire lo_addr_from_data_out = op_amode == zp || amode_zp_indirect;
+  wire hi_addr_from_data_out = op_amode[bit_ab] || amode_zp_indirect;
 
   // nr of addressing modes
   parameter group8 = 2'b01;
@@ -241,10 +245,6 @@ module cpu(
     .PC(pc_out)
   );
 
-  wire amode_zp_indirect = op_amode == zp_x_in || op_amode == zp_y_in;
-  wire lo_addr_from_data_out = op_amode == zp || amode_zp_indirect;
-  wire hi_addr_from_data_out = op_amode[bit_ab] || amode_zp_indirect;
-
   reg[15:0] addr_bus;
   always @(*) begin
     case (curr_st)
@@ -295,9 +295,6 @@ module cpu(
     endcase
   end
 
-  wire data_write = curr_st == st_new_op && instr_push ||
-    (curr_st == st_carry_add || curr_st == st_write_data) && instr_wrmem;
-
   reg[7:0] reg_xya;
   always @(*) begin
     if (op_group == group6)
@@ -325,6 +322,9 @@ module cpu(
     else
       data_in = alu_out;
   end
+
+  wire data_write = curr_st == st_new_op && instr_push ||
+    (curr_st == st_carry_add || curr_st == st_write_data) && instr_wrmem;
 
   MEMORY mem(
     .CLK(CLK),
@@ -669,7 +669,7 @@ always @(posedge CLK) begin
       else if (~instr_wrmem && ~instr_jmpind && ~instr_nop) begin
         reg_p[bit_zero] <= alu_zero;
         reg_p[bit_negative] <= alu_negative;
-        if (instr_acc) begin
+        if (instr_acc || instr_sh_acc) begin
           reg_p[bit_carry] <= alu_cout;
           if (instr_adc || instr_sbc)
             reg_p[bit_overflow] <= alu_overflow;
