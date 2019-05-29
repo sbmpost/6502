@@ -485,10 +485,9 @@ module cpu(
     curr_st == st_indirect && op_amode == zp_y_in ||
     curr_st == st_carry_add ||
     curr_st == st_write_data && instr_incmem ||
-    curr_st == st_load_reg && (
-      instr_jmpind || instr_incxy ||
-      instr_compare || (reg_p[bit_carry] && ~instr_load) // todo: make more specific
-      || instr_pull
+    curr_st == st_load_reg && (instr_incxy ||
+      instr_jmpind || instr_compare || instr_pull ||
+      (reg_p[bit_carry] && (instr_adc || instr_sbc))
     );
 
   alu8 alu_1(
@@ -576,29 +575,19 @@ module cpu(
       endcase
   end
 
+  wire[7:0] prev_data =
+    curr_st == st_hi_byte && instr_branch ? prev_addr[15:8] : data_out;
+
   always @(posedge CLK) begin
     prev_addr <= addr_bus;
+    reg_l <= prev_data;
     case (curr_st)
       st_new_op: begin
         reg_o <= data_out;
         if (instr_push)
           reg_s <= alu_out;
       end
-      st_lo_byte: begin
-        reg_l <= data_out;
-      end
-      st_indirect: begin
-        reg_l <= data_out;
-      end
-      st_hi_byte: begin
-        if (instr_branch)
-          reg_l <= prev_addr[15:8];
-        else if (hi_addr_from_data_out && alu_cout)
-          reg_l <= data_out;
-      end
       st_load_reg: begin
-        reg_l <= data_out;
-
         if (instr_pull)
           reg_s <= alu_out;
         if (instr_pla)
