@@ -1,5 +1,17 @@
 // copyright by sbmpost
 
+// todo: use $display
+// todo: update test_results.txt
+// todo: consider rom predecoder
+// todo: sl by adding to itself?
+// todo: check alu_overflow
+// todo: check pc implementation
+// todo: simplify alu_op logic
+// todo: implement remaining 4 instructions
+// todo: more serious testing
+// todo: implement decimal mode?
+// todo: sync logisim circuit?
+
 module cpu(
   input CLK,
   input R,
@@ -40,8 +52,8 @@ module cpu(
   // bits in reg_p
   parameter bit_negative  = 7; // 0x80
   parameter bit_overflow  = 6; // 0x40
-  parameter bit_ignored   = 5; // 0x20
-  parameter bit_break     = 4; // 0x10
+  // parameter bit_ignored   = 5; // 0x20
+  // parameter bit_break     = 4; // 0x10
   parameter bit_decimal   = 3; // 0x08
   parameter bit_interrupt = 2; // 0x04
   parameter bit_zero      = 1; // 0x02
@@ -337,15 +349,14 @@ module cpu(
   wire alu_cout;
   wire[7:0] alu_out;
 
-  // shift in, sl, sr, mode, s3-s0
-  wire shift_in = instr_rotate ? reg_p[bit_carry] : 1'b0;
-  parameter alu_op_or = 8'b00000001;
-  parameter alu_op_and = 8'b00000100;
-  parameter alu_op_eor = 8'b00001001;
-  parameter alu_op_adc = 8'b00011001;
-  parameter alu_op_sbc = 8'b00010110;
+  // sl, sr, mode, s3-s0
+  parameter alu_op_or = 7'b0000001;
+  parameter alu_op_and = 7'b0000100;
+  parameter alu_op_eor = 7'b0001001;
+  parameter alu_op_adc = 7'b0011001;
+  parameter alu_op_sbc = 7'b0010110;
 
-  reg[7:0] alu_op;
+  reg[6:0] alu_op;
   always @(*) begin
     if (curr_st == st_new_op && instr_push)
       alu_op = alu_op_sbc;
@@ -362,7 +373,7 @@ module cpu(
         if (instr_decmem)
           alu_op = alu_op_sbc;
         if (instr_shift)
-          alu_op = { shift_in, instr_shl, instr_shr, 5'b00000 };
+          alu_op = { instr_shl, instr_shr, 5'b00000 };
       end
     end
     else if (curr_st == st_load_reg) begin
@@ -383,7 +394,7 @@ module cpu(
       if (instr_sbc || instr_compare)
         alu_op = alu_op_sbc;
       if (instr_shift)
-        alu_op = { shift_in, instr_shl, instr_shr, 5'b00000 };
+        alu_op = { instr_shl, instr_shr, 5'b00000 };
       if (instr_pull)
         alu_op = alu_op_adc;
     end
@@ -485,9 +496,9 @@ module cpu(
     curr_st == st_indirect && op_amode == zp_y_in ||
     curr_st == st_carry_add ||
     curr_st == st_write_data && instr_incmem ||
-    curr_st == st_load_reg && (instr_incxy ||
-      instr_jmpind || instr_compare || instr_pull ||
-      (reg_p[bit_carry] && (instr_adc || instr_sbc))
+    curr_st == st_load_reg && (
+      instr_incxy || instr_jmpind || instr_compare || instr_pull ||
+      (reg_p[bit_carry] && (instr_adc || instr_sbc || instr_rotate))
     );
 
   alu8 alu_1(

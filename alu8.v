@@ -2,7 +2,7 @@ module alu8(
   input[7:0] A,
   input[7:0] B,
   input CI,
-  input[7:0] OP, // shift in bit, shift left, shift right, mode, s3-s0
+  input[6:0] OP, // shift left, shift right, mode, s3-s0
   output CO,
   output[7:0] F
 );
@@ -12,8 +12,8 @@ module alu8(
   wire[3:0] f_hi;
   wire co_hi;
 
-  wire[7:0] sr = { OP[7], A[7:1] };
-  wire[7:0] sl = { A[6:0], OP[7] };
+  wire[7:0] sr = { CI, A[7:1] };
+  wire[7:0] sl = { A[6:0], CI };
 
   alu4 lo(.A(A[3:0]),
            .B(B[3:0]),
