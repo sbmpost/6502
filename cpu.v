@@ -133,6 +133,7 @@ module cpu(
   wire hi_E_or_F = hi_C_or_D_or_E_or_F && op_hi[1] == 1'b1;
 
   wire lo_0 = op_lo == 4'h0;
+  wire lo_6 = op_lo == 4'h6;
   wire lo_8 = op_lo == 4'h8;
   wire lo_A = op_lo == 4'hA;
   wire lo_C = op_lo == 4'hC;
@@ -195,6 +196,10 @@ module cpu(
   wire instr_jmpabs  = hi_4 && lo_C;                               // 1
   wire instr_jmpind  = hi_6 && lo_C;
   wire instr_branch  = op_hi[0] == 1'b1 && lo_0;                   // 8
+  wire instr_jsr = hi_2 && lo_0;                                   // 1
+  wire instr_rts = hi_2 && lo_6;                                   // 1
+  wire instr_brk = hi_0 && lo_0;                                   // 1
+  wire instr_rti = hi_4 && lo_0;                                   // 1
 
   // Set/Clear bits in reg_p
   wire instr_setflag = op_hi[0] == 1'b1 && ~hi_9 && lo_8;          // 7
@@ -358,9 +363,7 @@ module cpu(
 
   reg[6:0] alu_op;
   always @(*) begin
-    if (curr_st == st_new_op && instr_push)
-      alu_op = alu_op_sbc;
-    else if (curr_st == st_carry_add && instr_branch)
+    if (curr_st == st_carry_add && instr_branch)
       alu_op = alu_op_adc;
     else if (curr_st == st_carry_sub && instr_branch)
       alu_op = alu_op_sbc;
@@ -395,8 +398,8 @@ module cpu(
         alu_op = alu_op_sbc;
       if (instr_shift)
         alu_op = { instr_shl, instr_shr, 5'b00000 };
-      if (instr_pull)
-        alu_op = alu_op_adc;
+      if (instr_push)
+        alu_op = alu_op_sbc;
     end
     else
       alu_op = alu_op_adc;
@@ -434,6 +437,12 @@ module cpu(
           else
             alu_a = reg_l;
         end
+        st_write_data: begin
+          if (instr_wrmem)
+            alu_a = data_out;
+          if (instr_jmpind)
+            alu_a = reg_l;
+        end
         st_load_reg: begin
           if (instr_load)
             alu_a = data_out;
@@ -441,14 +450,8 @@ module cpu(
             alu_a = reg_xya;
           if (instr_trans)
             alu_a = reg_xyas;
-          if (instr_pull)
+          if (instr_push)
             alu_a = reg_s;
-        end
-        st_write_data: begin
-          if (instr_wrmem)
-            alu_a = data_out;
-          if (instr_jmpind)
-            alu_a = reg_l;
         end
         default: begin
           alu_a = reg_l;
@@ -493,11 +496,11 @@ module cpu(
   end
 
   wire alu_cin =
+    curr_st == st_new_op && instr_pull ||
     curr_st == st_indirect && op_amode == zp_y_in ||
     curr_st == st_carry_add ||
     curr_st == st_write_data && instr_incmem ||
-    curr_st == st_load_reg && (
-      instr_incxy || instr_jmpind || instr_compare || instr_pull ||
+    curr_st == st_load_reg && (instr_incxy || instr_jmpind || instr_compare ||
       (reg_p[bit_carry] && (instr_adc || instr_sbc || instr_rotate))
     );
 
@@ -578,7 +581,7 @@ module cpu(
           else                                         curr_st <= st_new_op;
         end
         st_load_reg: begin
-          if (instr_jmpind)                            curr_st <= st_write_data;
+          if (instr_jmpind)                            curr_st <= st_write_data; // dirty
           else                                         curr_st <= st_new_op;
         end
         default: begin
@@ -593,13 +596,16 @@ module cpu(
     prev_addr <= addr_bus;
     reg_l <= prev_data;
     case (curr_st)
+      st_initial: begin
+        reg_s <= 8'hff;
+      end
       st_new_op: begin
         reg_o <= data_out;
-        if (instr_push)
+        if (instr_pull)
           reg_s <= alu_out;
       end
       st_load_reg: begin
-        if (instr_pull)
+        if (instr_push)
           reg_s <= alu_out;
         if (instr_pla)
           reg_a <= data_out;
