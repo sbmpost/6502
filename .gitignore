@@ -17,3 +17,4 @@ build
 synth.v
 breaks
 breaks-old
+circ/experiments.circ

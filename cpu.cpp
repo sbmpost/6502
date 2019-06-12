@@ -94,9 +94,9 @@ char * instructions[] = {
     "PLA",
     "NOP",
     "JSR $0364",
-    "JMP $0366",
     "NOP",
     "RTS",
+    "JMP $0366",
     "NOP"
 };
 

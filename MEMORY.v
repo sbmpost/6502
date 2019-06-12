@@ -260,13 +260,13 @@ module MEMORY(
       // NOP
       s_mem_contents[861] = 8'hea;
       // JSR $0364
-      s_mem_contents[862] = 8'h20;
-      s_mem_contents[863] = 8'h64;
-      s_mem_contents[864] = 8'h03;
+      s_mem_contents[862] = 8'h20; // $035e
+      s_mem_contents[863] = 8'h64; // $035f
+      s_mem_contents[864] = 8'h03; // $0360
       // JMP $0366
-      s_mem_contents[865] = 8'h4c;
-      s_mem_contents[866] = 8'h66;
-      s_mem_contents[867] = 8'h03;
+      s_mem_contents[865] = 8'h4c; // $0361
+      s_mem_contents[866] = 8'h66; // $0362
+      s_mem_contents[867] = 8'h03; // $0363
       // NOP
       s_mem_contents[868] = 8'hea; // $0364
       // RTS
@@ -275,7 +275,7 @@ module MEMORY(
       s_mem_contents[870] = 8'hea; // $0366
 
 // REMAINING:
-      // BRK, RTI
+      // RTS, BRK, RTI
   end
 
   always @(posedge CLK) begin
