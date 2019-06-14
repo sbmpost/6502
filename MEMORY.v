@@ -273,9 +273,6 @@ module MEMORY(
       s_mem_contents[869] = 8'h60; // $0365
       // NOP
       s_mem_contents[870] = 8'hea; // $0366
-
-// REMAINING:
-      // RTS, BRK, RTI
   end
 
   always @(posedge CLK) begin
