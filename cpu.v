@@ -75,17 +75,20 @@ module cpu(
   // parameter zp_x    = 3'b101;
   // parameter ab_x    = 3'b111;
 
-  wire amode_zp_indirect = ~instr_jump && (op_amode == zp_x_in || op_amode == zp_y_in);
-  wire lo_addr_from_data_out = op_amode == zp || amode_zp_indirect;
-  wire hi_addr_from_data_out = op_amode[bit_ab] || amode_zp_indirect;
-
   // nr of addressing modes
   parameter group8 = 2'b01;
   parameter group6 = 2'b10;
   parameter group5 = 2'b00;
 
+  wire amode_zpx_indirect = op_group == group8 && op_amode == zp_x_in;
+  wire amode_zpy_indirect = op_group == group8 && op_amode == zp_y_in;
+  wire amode_zp_indirect = amode_zpx_indirect || amode_zpy_indirect;
+  wire lo_addr_from_data_out = op_amode == zp || amode_zp_indirect;
+  wire hi_addr_from_data_out = op_amode[bit_ab] || amode_zp_indirect;
   wire accumulator = op_group == group6 && op_amode == imm;
   wire[2:0] immediate = op_group == group8 ? imm : zp_x_in;
+
+// 178139, todo: fix bit instruction
 
   reg[7:0] curr_st;
   reg[7:0] reg_o;
@@ -272,7 +275,7 @@ module cpu(
         if (instr_rts)
           addr_bus = { 8'h01, alu_out };
         else if (lo_addr_from_data_out)
-          addr_bus = { 8'h00, data_out };
+          addr_bus = { 8'h00, alu_out };
         else
           addr_bus = pc_out;
       end
@@ -447,9 +450,14 @@ module cpu(
     end
     else begin
       case (curr_st)
-        st_new_op,
-        st_lo_byte: begin
+        st_new_op: begin
           alu_a = reg_s;
+        end
+        st_lo_byte: begin
+          if (instr_rts)
+            alu_a = reg_s;
+          else if (lo_addr_from_data_out)
+            alu_a = data_out;
         end
         st_hi_byte: begin
           if (instr_branch)
@@ -487,8 +495,14 @@ module cpu(
   reg[7:0] alu_b;
   always @(*) begin
     case (curr_st)
+      st_lo_byte: begin
+        if (amode_zpx_indirect)
+          alu_b = reg_x;
+        else
+          alu_b = 8'h00;
+      end
       st_indirect: begin
-        if (op_amode == zp_x_in && ~instr_jsr)
+        if (amode_zpx_indirect)
           alu_b = reg_x;
         else if (instr_load)
           alu_b = 8'h00;
@@ -503,7 +517,7 @@ module cpu(
             else
               alu_b = reg_y;
           end
-          if (op_amode == zp_x_in || instr_jsr || instr_rts)
+          if (amode_zpx_indirect || instr_jsr || instr_rts)
             alu_b = 8'h00;
         end
       end
@@ -522,9 +536,9 @@ module cpu(
   wire alu_cin =
     curr_st == st_new_op && (instr_pull || instr_rts) ||
     curr_st == st_lo_byte && instr_rts ||
-    curr_st == st_indirect && op_amode == zp_y_in ||
-    curr_st == st_carry_add ||
+    curr_st == st_indirect && amode_zp_indirect ||
     curr_st == st_hi_byte && (instr_branch || instr_rts) ||
+    curr_st == st_carry_add ||
     curr_st == st_write_data && (instr_incmem || instr_jmpind) ||
     curr_st == st_load_reg && (instr_incxy || instr_compare ||
       (reg_p[bit_carry] && (instr_adc || instr_sbc || instr_rotate))
