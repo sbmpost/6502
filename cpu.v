@@ -4,11 +4,9 @@
 // todo: update test_results.txt
 // todo: consider pla decoder
 // todo: sl by adding to itself?
-// todo: check alu_overflow
-// todo: check pc implementation
+// todo: improve alu_overflow
 // todo: simplify alu_op logic
 // todo: implement remaining 2 instructions
-// todo: more serious testing
 // todo: implement decimal mode?
 // todo: sync logisim circuit?
 
@@ -480,6 +478,8 @@ module cpu(
             alu_a = reg_xya;
           if (instr_trans)
             alu_a = reg_xyas;
+          if (instr_bit)
+            alu_a = reg_a;
           if (instr_push || instr_jsr)
             alu_a = reg_s;
           if (instr_jmpind)
@@ -522,7 +522,7 @@ module cpu(
         end
       end
       st_load_reg: begin
-        if (instr_acc)
+        if (instr_acc || instr_bit)
           alu_b = data_out;
         if (instr_load || instr_r2r || instr_jump || instr_pla)
           alu_b = 8'h00;
@@ -539,7 +539,8 @@ module cpu(
     curr_st == st_indirect && amode_zp_indirect ||
     curr_st == st_hi_byte && (instr_branch || instr_rts) ||
     curr_st == st_carry_add ||
-    curr_st == st_write_data && (instr_incmem || instr_jmpind) ||
+    curr_st == st_write_data && (instr_incmem || instr_jmpind ||
+      (reg_p[bit_carry] && instr_rotate)) ||
     curr_st == st_load_reg && (instr_incxy || instr_compare ||
       (reg_p[bit_carry] && (instr_adc || instr_sbc || instr_rotate))
     );
@@ -555,7 +556,15 @@ module cpu(
 
   wire alu_zero = alu_out == 8'h00;
   wire alu_negative = alu_out[7];
-  wire alu_overflow = alu_cin ^ alu_out[7];
+  wire alu_overflow =
+    instr_adc && (
+      ~alu_a[7] && ~alu_b[7] && alu_out[7] ||
+      alu_a[7] && alu_b[7] && ~alu_out[7]
+    ) ||
+    instr_sbc && (
+      ~alu_a[7] && alu_b[7] && alu_out[7] ||
+      alu_a[7] && ~alu_b[7] && ~alu_out[7]
+    );
 
   reg[7:0] st_load_or_write;
   always @(*) begin
