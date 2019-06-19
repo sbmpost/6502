@@ -86,8 +86,6 @@ module cpu(
   wire accumulator = op_group == group6 && op_amode == imm;
   wire[2:0] immediate = op_group == group8 ? imm : zp_x_in;
 
-// 178139, todo: fix bit instruction
-
   reg[7:0] curr_st;
   reg[7:0] reg_o;
   reg[7:0] reg_l;
