@@ -75,13 +75,13 @@ char * instructions[] = {
     "SEC",
     "CLC",
     "CLV",
-    "BVS $01",
+    "BVS $02",
     "BVC $80",
     "LDX $01ab,y",
     "STX $77,y",
     "DEX",
     "LDA ($20,x)",
-    "BVC $79",
+    "BVC $74",
     "INX",
     "DEX",
     "LDA #01",
@@ -131,7 +131,8 @@ int main(int argc, char **argv, char **env) {
 #endif
 
     int instruction = 0;
-    while (main_time < 300000 && !Verilated::gotFinish()) {
+//    while (main_time < 300000 && !Verilated::gotFinish()) {
+    while (main_time < 524 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (main_time > 1 && (main_time % 2) == 0) {
@@ -175,9 +176,9 @@ int main(int argc, char **argv, char **env) {
         if (cpu->CLK) {
             if (cpu->curr_st == 0x01 && cpu->op != 0x00 && cpu->op != 0xfc &&
                 instruction < sizeof(instructions)/sizeof(char *))
-                VL_PRINTF("\nNEW\n");
+//                VL_PRINTF("\nNEW\n");
 
-//                VL_PRINTF("\n%s\n", instructions[instruction++]);
+                VL_PRINTF("\n%s\n", instructions[instruction++]);
 
             VL_PRINTF ("%03d adr:%04x out:%02x in:%02x wr:%01x st:%s "
                 "pc_i:%01x pc_o:%04x pc_wr:%01x op:%02x a_op:%02x a_ci:%01x "

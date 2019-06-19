@@ -10,7 +10,7 @@ module MEMORY(
 //  reg [7:0] s_mem_contents[1023:0];
 
   initial begin
-/*
+///*
       // LDX #07 (x=7)
       s_mem_contents[00] = 8'ha2;
       s_mem_contents[01] = 8'h07;
@@ -98,20 +98,20 @@ module MEMORY(
       s_mem_contents[512] = 8'h03;
 
       // LDX $01ab,y
-      s_mem_contents[721] = 8'hbe; // $02d1
-      s_mem_contents[722] = 8'hab;
-      s_mem_contents[723] = 8'h01;
+      s_mem_contents[724] = 8'hbe; // $02d4
+      s_mem_contents[725] = 8'hab;
+      s_mem_contents[726] = 8'h01;
       // STX $77,y
-      s_mem_contents[724] = 8'h96;
-      s_mem_contents[725] = 8'h77;
+      s_mem_contents[727] = 8'h96;
+      s_mem_contents[728] = 8'h77;
       // DEX
-      s_mem_contents[726] = 8'hca;
+      s_mem_contents[729] = 8'hca;
       // LDA ($20,x)
-      s_mem_contents[727] = 8'ha1;
-      s_mem_contents[728] = 8'h20;
-      // BVC $79
-      s_mem_contents[729] = 8'h50;
-      s_mem_contents[730] = 8'h78; // $02d9
+      s_mem_contents[730] = 8'ha1;
+      s_mem_contents[731] = 8'h20;
+      // BVC $74
+      s_mem_contents[732] = 8'h50;
+      s_mem_contents[733] = 8'h74; // $02dc
 
       // data
       s_mem_contents[766] = 8'h33; // $02fe
@@ -231,9 +231,9 @@ module MEMORY(
       s_mem_contents[844] = 8'h18;
       // CLV
       s_mem_contents[845] = 8'hb8;
-      // BVS $01
+      // BVS $02
       s_mem_contents[846] = 8'h70; // $034e
-      s_mem_contents[847] = 8'h01; // $034f
+      s_mem_contents[847] = 8'h02; // $034f
       // BVC $80
       s_mem_contents[848] = 8'h50; // $0350
       s_mem_contents[849] = 8'h80; // $0351
@@ -274,8 +274,9 @@ module MEMORY(
       s_mem_contents[869] = 8'h60; // $0365
       // NOP
       s_mem_contents[870] = 8'hea; // $0366
-*/
+//*/
 
+/*
 s_mem_contents[16'h0000] = 8'h00;
 s_mem_contents[16'h0001] = 8'h00;
 s_mem_contents[16'h0002] = 8'h00;
@@ -13891,6 +13892,7 @@ s_mem_contents[16'h352b] = 8'h00;
 s_mem_contents[16'h352c] = 8'h04;
 s_mem_contents[16'h352d] = 8'h88;
 s_mem_contents[16'h352e] = 8'h88;
+*/
 
   end
 

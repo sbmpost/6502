@@ -1,11 +1,11 @@
 // copyright by sbmpost
 
-// todo: use $display
-// todo: update test_results.txt
+// todo: consider use $display
 // todo: consider pla decoder
 // todo: sl by adding to itself?
-// todo: improve alu_overflow
+// todo: improve alu_overflow logic
 // todo: simplify alu_op logic
+// todo: reg_s should be setup by the code?
 // todo: implement remaining 2 instructions
 // todo: implement decimal mode?
 // todo: sync logisim circuit?
@@ -253,10 +253,10 @@ module cpu(
     curr_st == st_load_reg && instr_jump;
 
   reg[15:0] pc_out;
-  always @(posedge CLK or posedge R) begin
-    if (R)
-      pc_out <= 16'h0400;
-    else
+  always @(posedge CLK) begin // or posedge R) begin
+//    if (R)
+//      pc_out <= 16'h0400;
+//    else
       pc_out <= (pc_write ? addr_bus : pc_out) + { 15'b0, pc_inc };
   end
 
