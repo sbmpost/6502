@@ -7,4 +7,12 @@ set_io --warn-no-port led5 C5
 set_io --warn-no-port led6 C4
 set_io --warn-no-port led7 B3
 set_io --warn-no-port led8 C3
+
+set_io --warn-no-port x K14
+set_io --warn-no-port y K15
+set_io --warn-no-port r M16
+set_io --warn-no-port g N16
+set_io --warn-no-port b P16
+
 set_io --warn-no-port hwclk J3
+
