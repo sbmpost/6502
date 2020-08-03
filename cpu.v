@@ -12,7 +12,7 @@
 
 module cpu(
   input CLK,
-  input R,
+  input R,///*
   output opcode,
   output op_amode,
   output op_group,
@@ -33,8 +33,8 @@ module cpu(
   output reg_s,
   output reg_p,
   output reg_x,
-  output reg_y,
-  output reg_a
+  output reg_y,//*/
+  output reg[7:0] reg_a
 );
 
   // cpu states
@@ -251,10 +251,10 @@ module cpu(
     curr_st == st_load_reg && instr_jump;
 
   reg[15:0] pc_out;
-  always @(posedge CLK) begin // or posedge R) begin
-//    if (R)
-//      pc_out <= 16'h0400;
-//    else
+  always @(posedge CLK or posedge R) begin
+    if (R)
+      pc_out <= 16'h0000; // 16'h0400;
+    else
       pc_out <= (pc_write ? addr_bus : pc_out) + { 15'b0, pc_inc };
   end
 

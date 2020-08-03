@@ -1,4 +1,4 @@
-module top (hwclk, led1, led2, led3, led4, led5, led6, led7, led8 );
+module top (hwclk, led1, led2, led3, led4, led5, led6, led7, led8);
   input hwclk;
   output led1;
   output led2;
@@ -26,14 +26,14 @@ module top (hwclk, led1, led2, led3, led4, led5, led6, led7, led8 );
 
   reg res = 1'b0;
   reg [7:0] cntr_2 = 8'b0;
-  parameter loop_50 = 50;
+  parameter loop = 15;
 
   always @(posedge clk_1) begin
     cntr_2 <= cntr_2 + 1;
     if (cntr_2 == 0) begin
       res <= 1'b1;
     end
-    else if (cntr_2 == loop_50) begin
+    else if (cntr_2 == loop) begin
       cntr_2 <= 8'b0;
     end
     else

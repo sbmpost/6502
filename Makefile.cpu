@@ -5,7 +5,7 @@ DEVICE    = 8k
 FOOTPRINT = ct256
 
 # Files
-FILES = cpu.v alu8.v alu4.v pc.v pg.v MEMORY.v
+FILES = cpu.v alu8.v alu4.v pg.v MEMORY.v
 
 .PHONY: all clean
 
@@ -21,14 +21,6 @@ all:
 	-p "techmap; opt" \
 	-p "show -format ps -prefix .yosys_show_2 -viewer echo" \
 	$(FILES)
-
-burn:
-	yosys -p "synth_ice40 -top top -blif $(BUILD)/$(PROJ).blif" $(FILES)
-	# Place and route using arachne
-	arachne-pnr -d $(DEVICE) -P $(FOOTPRINT) -o $(BUILD)/$(PROJ).asc -p pinmap.pcf $(BUILD)/$(PROJ).blif
-	# Convert to bitstream using IcePack
-	icepack $(BUILD)/$(PROJ).asc $(BUILD)/$(PROJ).bin
-	iceprog $(BUILD)/$(PROJ).bin
 
 clean:
 	rm build/*

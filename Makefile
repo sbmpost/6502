@@ -5,15 +5,9 @@ DEVICE    = 8k
 FOOTPRINT = ct256
 
 # Files
-FILES = top.v
-FILES += cpu.v
-FILES += alu8.v
-FILES += alu4.v
-FILES += pc.v
-FILES += pg.v
-FILES += MEMORY.v
+FILES = top.v cpu.v alu8.v alu4.v pg.v MEMORY.v
 
-.PHONY: all clean burn
+.PHONY: all burn clean
 
 all:
 	# if build folder doesn't exist, create it
@@ -26,7 +20,7 @@ all:
 	icepack $(BUILD)/$(PROJ).asc $(BUILD)/$(PROJ).bin
 
 burn:
-	iceprog $(BUILD)/$(PROJ).bin
+	iceprog -S $(BUILD)/$(PROJ).bin
 
 clean:
 	rm build/*
