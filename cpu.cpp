@@ -132,14 +132,14 @@ int main(int argc, char **argv, char **env) {
 
     int instruction = 0;
 //    while (main_time < 300000 && !Verilated::gotFinish()) {
-    while (main_time < 524 && !Verilated::gotFinish()) {
+    while (main_time < 523 && !Verilated::gotFinish()) {
         cpu->eval();
 
-        if (main_time > 1 && (main_time % 2) == 0) {
+        if (/*main_time > 1 && */(main_time % 2) == 0) {
             cpu->CLK = 0x00;
         }
 
-        if (main_time > 1 && (main_time % 2) == 1) {
+        if (/*main_time > 1 && */(main_time % 2) == 1) {
             cpu->CLK = 0x01;
         }
 
@@ -179,7 +179,7 @@ int main(int argc, char **argv, char **env) {
 //                VL_PRINTF("\nNEW\n");
 
                 VL_PRINTF("\n%s\n", instructions[instruction++]);
-
+///*
             VL_PRINTF ("%03d adr:%04x out:%02x in:%02x wr:%01x st:%s "
                 "pc_i:%01x pc_o:%04x pc_wr:%01x op:%02x a_op:%02x a_ci:%01x "
                 "a_a:%02x a_b:%02x a_out:%02x r_p:%02x r_x:%02x r_y:%02x r_a:%02x r_s:%02x\n",
@@ -204,6 +204,15 @@ int main(int argc, char **argv, char **env) {
                 cpu->reg_a,
                 cpu->reg_s
             );
+//*/
+/*
+            VL_PRINTF ("%03d clk:%03d R:%d r_a:%02x\n",
+                main_time,
+                cpu->CLK,
+                cpu->R,
+                cpu->reg_a
+            );
+*/
         }
 
     	main_time++;
