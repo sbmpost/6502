@@ -5,7 +5,7 @@ module alu4(
   input M,
   input[3:0] S,   // operation
   output CO,
-  output [3:0] F,
+  output[3:0] F,
   output G,       // generate
   output P        // propagate
 );

@@ -4,7 +4,7 @@ module alu8(
   input CI,
   input[6:0] OP, // shift left, shift right, mode, s3-s0
   output CO,
-  output[7:0] F
+  output wire[7:0] F
 );
 
   wire g_lo, p_lo;
@@ -15,12 +15,15 @@ module alu8(
   wire[7:0] sr = { CI, A[7:1] };
   wire[7:0] sl = { A[6:0], CI };
 
+  wire co_lo;       // unused
+  wire g_hi, p_hi;  // unused
+
   alu4 lo(.A(A[3:0]),
            .B(B[3:0]),
            .CI(CI),
            .M(OP[4]),
            .S(OP[3:0]),
-           .CO(),
+           .CO(co_lo),
            .F(f_lo),
            .G(g_lo),
            .P(p_lo));
@@ -32,8 +35,8 @@ module alu8(
            .S(OP[3:0]),
            .CO(co_hi),
            .F(f_hi),
-           .G(),
-           .P());
+           .G(g_hi),
+           .P(p_hi));
 
   assign CO = OP[5] ? A[0] : (OP[6] ? A[7] : co_hi);
   assign F = OP[5] ? sr : (OP[6] ? sl : { f_hi, f_lo });

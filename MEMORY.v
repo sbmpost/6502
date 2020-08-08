@@ -6,8 +6,8 @@ module MEMORY(
   output reg[7:0] DataOut
 );
 
-  reg [7:0] s_mem_contents[65535:0];
-//  reg [7:0] s_mem_contents[1023:0];
+//  reg [7:0] s_mem_contents[65535:0];
+  reg [7:0] s_mem_contents[16383:0];
 
   initial begin
 ///*
@@ -1301,6 +1301,19 @@ s_mem_contents[16'h03fc] = 8'hff;
 s_mem_contents[16'h03fd] = 8'hff;
 s_mem_contents[16'h03fe] = 8'hff;
 s_mem_contents[16'h03ff] = 8'hff;
+*/
+
+/*
+s_mem_contents[16'h0400] = 8'ha9;
+s_mem_contents[16'h0401] = 8'haa;
+s_mem_contents[16'h0402] = 8'ha9;
+s_mem_contents[16'h0403] = 8'h00;
+s_mem_contents[16'h0404] = 8'h4c;
+s_mem_contents[16'h0405] = 8'h00;
+s_mem_contents[16'h0406] = 8'h04;
+*/
+
+/*
 s_mem_contents[16'h0400] = 8'hd8;
 s_mem_contents[16'h0401] = 8'ha2;
 s_mem_contents[16'h0402] = 8'hff;
@@ -13898,9 +13911,9 @@ s_mem_contents[16'h352e] = 8'h88;
 
   always @(posedge CLK) begin
     if (WE)
-      s_mem_contents[Address] <= DataIn;
+      s_mem_contents[Address[13:0]] <= DataIn;
     else
-      DataOut <= s_mem_contents[Address];
+      DataOut <= s_mem_contents[Address[13:0]];
   end
 
 endmodule

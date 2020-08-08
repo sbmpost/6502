@@ -1,7 +1,7 @@
 module pg(
   input A,
   input B,
-  input [3:0] S, // operation
+  input[3:0] S,  // operation
   output G,      // generate
   output P       // propagate
 );
