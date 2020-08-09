@@ -181,9 +181,6 @@ int main(int argc, char **argv, char **env) {
 //                VL_PRINTF("\nNEW\n");
                 VL_PRINTF("\n%s\n", instructions[instruction++]);
 
-            unsigned int reg_a = cpu->led1 | cpu->led2 << 1 | cpu->led3 << 2 |
-                cpu->led4 << 3 | cpu->led5 << 4 | cpu->led6 << 5 | cpu->led7 << 6 |
-                cpu->led8 << 7;
             VL_PRINTF ("%03d adr:%04x out:%02x in:%02x wr:%01x st:%s "
                 "pc_i:%01x pc_o:%04x pc_wr:%01x op:%02x a_op:%02x a_ci:%01x "
                 "a_a:%02x a_b:%02x a_out:%02x r_p:%02x r_x:%02x r_y:%02x r_a:%02x r_s:%02x\n",
@@ -205,7 +202,7 @@ int main(int argc, char **argv, char **env) {
                 cpu->reg_p,
                 cpu->reg_x,
                 cpu->reg_y,
-                reg_a,
+                cpu->reg_a,
                 cpu->reg_s
             );
         }

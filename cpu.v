@@ -30,28 +30,12 @@ module cpu(
   output[7:0] alu_a,
   output[7:0] alu_b,
   output[7:0] alu_out,
-  output[7:0] reg_s,
   output[7:0] reg_p,
   output[7:0] reg_x,
   output[7:0] reg_y,
-  output led1,
-  output led2,
-  output led3,
-  output led4,
-  output led5,
-  output led6,
-  output led7,
-  output led8
+  output[7:0] reg_a,
+  output[7:0] reg_s
 );
-
-  assign led1 = reg_a[0];
-  assign led2 = reg_a[1];
-  assign led3 = reg_a[2];
-  assign led4 = reg_a[3];
-  assign led5 = reg_a[4];
-  assign led6 = reg_a[5];
-  assign led7 = reg_a[6];
-  assign led8 = reg_a[7];
 
   // cpu states
   parameter st_initial    = 8'b00000000; // 0x00
