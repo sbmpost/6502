@@ -131,6 +131,7 @@ int main(int argc, char **argv, char **env) {
 #endif
 
     int instruction = 0;
+//    while (main_time < 137615200 && !Verilated::gotFinish()) {
 //    while (main_time < 137615142 && !Verilated::gotFinish()) {
 //    while (main_time < 300000 && !Verilated::gotFinish()) {
     while (main_time < 523 && !Verilated::gotFinish()) {
@@ -183,7 +184,6 @@ int main(int argc, char **argv, char **env) {
             unsigned int reg_a = cpu->led1 | cpu->led2 << 1 | cpu->led3 << 2 |
                 cpu->led4 << 3 | cpu->led5 << 4 | cpu->led6 << 5 | cpu->led7 << 6 |
                 cpu->led8 << 7;
-///*
             VL_PRINTF ("%03d adr:%04x out:%02x in:%02x wr:%01x st:%s "
                 "pc_i:%01x pc_o:%04x pc_wr:%01x op:%02x a_op:%02x a_ci:%01x "
                 "a_a:%02x a_b:%02x a_out:%02x r_p:%02x r_x:%02x r_y:%02x r_a:%02x r_s:%02x\n",
@@ -208,15 +208,6 @@ int main(int argc, char **argv, char **env) {
                 reg_a,
                 cpu->reg_s
             );
-//*/
-/*
-            VL_PRINTF ("%03d clk:%03d R:%d r_a:%02x\n",
-                main_time,
-                cpu->CLK,
-                cpu->R,
-                reg_a
-            );
-*/
         }
 
     	main_time++;

@@ -311,8 +311,8 @@ module cpu(
       end
       st_write_data: begin
         case (1'b1) // synopsys parallel_case
-          instr_jsr: addr_bus = { 8'h01, alu_out };
           instr_jmpind: addr_bus = { prev_addr[15:8], alu_out };
+          instr_jsr: addr_bus = { 8'h01, alu_out };
           instr_wrmem: addr_bus = prev_addr;
           default: addr_bus = pc_out;
         endcase
@@ -452,10 +452,11 @@ module cpu(
           endcase
         end
         st_write_data: begin
-          if (instr_wrmem)
-            alu_a = data_out;
-          else
-            alu_a = reg_s;
+          case (1'b1) // synopsys parallel_case
+            instr_jmpind: alu_a = prev_addr[7:0];
+            instr_wrmem: alu_a = data_out;
+            default: alu_a = reg_s;
+          endcase
         end
         st_load_reg: begin
           case (1'b1) // synopsys parallel_case
