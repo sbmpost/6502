@@ -284,8 +284,7 @@ module cpu(
         case (1'b1) // synopsys parallel_case
           instr_jsr: addr_bus = { 8'h01, alu_out };
           instr_branch: addr_bus = { prev_addr[15:8], alu_out };
-          instr_rts,
-          hi_addr_from_data_out: addr_bus = { data_out, alu_out };
+          instr_rts || hi_addr_from_data_out: addr_bus = { data_out, alu_out };
           default: addr_bus = { 8'h00, alu_out};
         endcase
       end
@@ -476,16 +475,16 @@ module cpu(
           alu_b = 8'h00;
       end
       st_hi_byte: begin
-        case (1'b1) // synopsys parallel_case
-          instr_branch: alu_b = data_out;
-          op_amode[bit_id]: begin
-            if (op_amode[bit_xy] && ~(hi_9_or_B && lo_6_or_E))
-              alu_b = reg_x;
-            else
-              alu_b = reg_y;
-          end
-          default: alu_b = 8'h00;
-        endcase
+        if (instr_branch)
+          alu_b = data_out;
+        else if (op_amode[bit_id]) begin
+          if (op_amode[bit_xy] && ~(hi_9_or_B && lo_6_or_E))
+            alu_b = reg_x;
+          else
+            alu_b = reg_y;
+        end
+        else
+          alu_b = 8'h00;
       end
       st_load_reg: begin
         if (instr_acc || instr_bit)

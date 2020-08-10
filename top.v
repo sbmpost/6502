@@ -12,23 +12,24 @@ module top (CLK, led1, led2, led3, led4, led5, led6, led7, led8);
   // 1 Hz clock generation (from 12 MHz)
   reg clk_1 = 0;
   reg[31:0] clk_count = 0;
-  reg[31:0] cntr_1 = 32'b0;
-  reg started = 0;
-  parameter period_1 = 60000;
+//  reg[31:0] cntr_1 = 32'b0;
+//  parameter period_1 = 6000000;
+  parameter start = 100;
+  parameter stop = 519+start;
 
   reg res = 1'b1;
   always @(posedge CLK) begin
-    cntr_1 <= cntr_1 + 1;
-    if (cntr_1 == period_1) begin
-      cntr_1 <= 32'b0;
-      clk_count <= clk_count + 1;
-      if ((started || clk_count > 5) && clk_count < 528) begin
-        started <= 1'b1;
-        clk_1 <= ~clk_1;
+//    cntr_1 <= cntr_1 + 1;
+//    if (cntr_1 == period_1) begin
+//      cntr_1 <= 32'b0;
+      if (clk_count != stop) begin
+        clk_count <= clk_count + 1;
+        if (clk_count >= start) begin
+          clk_1 <= ~clk_1;
+          res <= 1'b0;
+        end
       end
-      if (clk_count > 2)
-        res <= 1'b0;
-    end
+//    end
   end
 
   wire[2:0] opcode;
@@ -81,6 +82,7 @@ module top (CLK, led1, led2, led3, led4, led5, led6, led7, led8);
     .reg_s(reg_s)
   );
 
-  assign {led1, led2, led3, led4, led5, led6, led7, led8} = reg_a;
+  // assign {led2, led1} = {clk_1, res};
+  assign {led8, led7, led6, led5, led4, led3, led2, led1} = op;
 
 endmodule
