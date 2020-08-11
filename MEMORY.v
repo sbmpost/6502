@@ -10,7 +10,7 @@ module MEMORY(
   reg [7:0] s_mem_contents[16383:0];
 
   initial begin
-///*
+/*
       // LDX #07 (x=7)
       s_mem_contents[00] = 8'ha2;
       s_mem_contents[01] = 8'h07;
@@ -274,9 +274,9 @@ module MEMORY(
       s_mem_contents[869] = 8'h60; // $0365
       // NOP
       s_mem_contents[870] = 8'hea; // $0366
-//*/
+*/
 
-/*
+///*
 s_mem_contents[14'h0000] = 8'h00;
 s_mem_contents[14'h0001] = 8'h00;
 s_mem_contents[14'h0002] = 8'h00;
@@ -13892,7 +13892,7 @@ s_mem_contents[14'h352b] = 8'h00;
 s_mem_contents[14'h352c] = 8'h04;
 s_mem_contents[14'h352d] = 8'h88;
 s_mem_contents[14'h352e] = 8'h88;
-*/
+//*/
 
   end
 

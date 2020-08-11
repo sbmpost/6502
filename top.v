@@ -15,7 +15,8 @@ module top (CLK, led1, led2, led3, led4, led5, led6, led7, led8);
 //  reg[31:0] cntr_1 = 32'b0;
 //  parameter period_1 = 6000000;
   parameter start = 100;
-  parameter stop = 519+start;
+//  parameter stop = 519+start;
+  parameter stop = 137615200+start;
 
   reg res = 1'b1;
   always @(posedge CLK) begin
@@ -83,6 +84,6 @@ module top (CLK, led1, led2, led3, led4, led5, led6, led7, led8);
   );
 
   // assign {led2, led1} = {clk_1, res};
-  assign {led8, led7, led6, led5, led4, led3, led2, led1} = op;
+  assign {led8, led7, led6, led5, led4, led3, led2, led1} = reg_a;
 
 endmodule
