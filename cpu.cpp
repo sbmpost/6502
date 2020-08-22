@@ -103,14 +103,15 @@ char * instructions[] = {
 int indexOf(int state) {
     int index = 0;
     switch(state) {
-        case 0x01: index = 1; break;
-        case 0x02: index = 2; break;
-        case 0x04: index = 3; break;
-        case 0x08: index = 4; break;
-        case 0x10: index = 5; break;
-        case 0x20: index = 6; break;
-        case 0x40: index = 7; break;
-        case 0x80: index = 8; break;
+        case 0x01: index = 0; break;
+        case 0x02: index = 1; break;
+        case 0x04: index = 2; break;
+        case 0x08: index = 3; break;
+        case 0x10: index = 4; break;
+        case 0x20: index = 5; break;
+        case 0x40: index = 6; break;
+        case 0x80: index = 7; break;
+        case 0x100: index = 8; break;
     }
     return index;
 }
@@ -176,7 +177,7 @@ int main(int argc, char **argv, char **env) {
     	if (tfp) tfp->dump (main_time);
     #endif
         if (cpu->CLK) {
-            if (cpu->curr_st == 0x01 && cpu->op != 0x00 && cpu->op != 0xfc &&
+            if (cpu->curr_st == 0x02 && cpu->op != 0x00 && cpu->op != 0xfc &&
                 instruction < sizeof(instructions)/sizeof(char *))
 //                VL_PRINTF("\nNEW\n");
                 VL_PRINTF("\n%s\n", instructions[instruction++]);

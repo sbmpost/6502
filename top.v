@@ -40,7 +40,7 @@ module top (CLK, led1, led2, led3, led4, led5, led6, led7, led8);
   wire[7:0] data_out;
   wire[7:0] data_in;
   wire data_write;
-  wire[7:0] curr_st;
+  wire[8:0] curr_st;
   wire pc_inc;
   wire[15:0] pc_out;
   wire pc_write;
