@@ -76,7 +76,7 @@ char * instructions[] = {
     "CLC",
     "CLV",
     "BVS $02",
-    "BVC $80",
+    "BVC $82",
     "LDX $01ab,y",
     "STX $77,y",
     "DEX",
@@ -135,7 +135,7 @@ int main(int argc, char **argv, char **env) {
 //    while (main_time < 137615200 && !Verilated::gotFinish()) {
 //    while (main_time < 137615142 && !Verilated::gotFinish()) {
 //    while (main_time < 300000 && !Verilated::gotFinish()) {
-    while (main_time < 523 && !Verilated::gotFinish()) {
+    while (main_time < 519 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (/*main_time > 1 && */(main_time % 2) == 0) {

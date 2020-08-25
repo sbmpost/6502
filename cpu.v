@@ -93,7 +93,7 @@ module cpu(
   reg[7:0] reg_x;
   reg[7:0] reg_y;
   reg[7:0] reg_a;
-  reg[7:0] reg_p;
+  reg[7:0] reg_p; // = 8'h30;
   reg[7:0] reg_s;
   reg[15:0] prev_addr;
 
@@ -254,7 +254,7 @@ module cpu(
   reg[15:0] pc_out;
   always @(posedge CLK or posedge R) begin
     if (R)
-      pc_out <= 16'h0400;
+      pc_out <= 16'h0400; // 16'h0000;
     else
       pc_out <= (pc_write ? addr_bus : pc_out) + { 15'b0, pc_inc };
   end

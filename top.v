@@ -54,7 +54,7 @@ module top (CLK, led1, led2, led3, led4, led5, led6, led7, led8);
   wire[7:0] reg_x;
   wire[7:0] reg_y;
   wire[7:0] reg_s;
-  reg[7:0] reg_a;
+  wire[7:0] reg_a;
 
   cpu cpu_6502(
     .CLK(clk_1),

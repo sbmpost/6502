@@ -10,6 +10,7 @@ module MEMORY(
   reg [7:0] s_mem_contents[16383:0];
   parameter b_lo = 8'h00;
   parameter b_hi = 8'h04;
+//  parameter b_hi = 8'h00;
   parameter base = {b_hi, b_lo};
 
   initial begin
@@ -118,7 +119,7 @@ module MEMORY(
       s_mem_contents[base + 731] = 8'h20;
       // BVC $74
       s_mem_contents[base + 732] = 8'h50;
-      s_mem_contents[base + 733] = 8'h74; // $02dc
+      s_mem_contents[base + 733] = 8'h74; // $02dd
 
       // data
       s_mem_contents[766] = 8'h33; // $02fe
@@ -242,9 +243,9 @@ module MEMORY(
       // BVS $02
       s_mem_contents[base + 846] = 8'h70; // $034e
       s_mem_contents[base + 847] = 8'h02; // $034f
-      // BVC $80
+      // BVC $82
       s_mem_contents[base + 848] = 8'h50; // $0350
-      s_mem_contents[base + 849] = 8'h80; // $0351
+      s_mem_contents[base + 849] = 8'h82; // $0351
       // INX
       s_mem_contents[base + 850] = 8'he8;
       // DEX
