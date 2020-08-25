@@ -135,7 +135,7 @@ int main(int argc, char **argv, char **env) {
 //    while (main_time < 137615200 && !Verilated::gotFinish()) {
 //    while (main_time < 137615142 && !Verilated::gotFinish()) {
 //    while (main_time < 300000 && !Verilated::gotFinish()) {
-    while (main_time < 519 && !Verilated::gotFinish()) {
+    while (main_time < 570 && !Verilated::gotFinish()) {
         cpu->eval();
 
         if (/*main_time > 1 && */(main_time % 2) == 0) {
@@ -176,6 +176,7 @@ int main(int argc, char **argv, char **env) {
     #if VM_TRACE
     	if (tfp) tfp->dump (main_time);
     #endif
+/*
         if (cpu->CLK) {
             if (cpu->curr_st == 0x02 && cpu->op != 0x00 && cpu->op != 0xfc &&
                 instruction < sizeof(instructions)/sizeof(char *))
@@ -207,7 +208,7 @@ int main(int argc, char **argv, char **env) {
                 cpu->reg_s
             );
         }
-
+*/
     	main_time++;
     }
 

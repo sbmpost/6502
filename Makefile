@@ -5,7 +5,8 @@ DEVICE    = 8k
 FOOTPRINT = ct256
 
 # Files
-FILES = cpu.v alu8.v alu4.v pg.v MEMORY.v
+#FILES = cpu.v alu8.v alu4.v pg.v MEMORY.v
+FILES = cpu.v ALU.v MEMORY.v
 
 .PHONY: all compile analyze burn stats svg ps1 ps2 verilator run test clean
 
@@ -62,11 +63,14 @@ ps2:
 	$(FILES)
 
 verilator:
-	verilator -CFLAGS "-DVL_DEBUG=0 -Wno-write-strings" -cc cpu.v --exe cpu.cpp
-	make -j -C obj_dir -f Vcpu.mk && obj_dir/Vcpu > test_out.txt;
+	#verilator -CFLAGS "-DVL_DEBUG=0 -Wno-write-strings" -cc cpu.v --exe cpu.cpp
+	#make -j -C obj_dir -f Vcpu.mk && obj_dir/Vcpu > test_out.txt
+	verilator -CFLAGS "-DVL_DEBUG=0 -Wno-write-strings" -Wno-CASEX -Wno-CASEINCOMPLETE -Wno-CASEOVERLAP -cc cpu.v --exe cpu.cpp
+	make -j -C obj_dir -f Vcpu.mk
 
 run:
-	less test_out.txt
+	#less test_out.txt
+	obj_dir/Vcpu
 
 test:
 	./test.sh

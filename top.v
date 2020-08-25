@@ -16,7 +16,8 @@ module top (CLK, led1, led2, led3, led4, led5, led6, led7, led8);
 //  parameter period_1 = 6000000;
   parameter start = 100;
 //  parameter stop = 519+start;
-  parameter stop = 137615200+start;
+//  parameter stop = 137615200+start;
+  parameter stop = 237615200+start;
 
   reg res = 1'b1;
   always @(posedge CLK) begin
